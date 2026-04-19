@@ -1,0 +1,64 @@
+project:
+  type: book
+  output-dir: ../docs
+
+book:
+  title: "Chaos and Complexity in Cancer"
+  author: Ali Al-Timimi, PhD
+  chapters:
+    - index.qmd
+    - part: "Theory"
+      chapters:
+        - theory/overview.qmd
+        - theory/cell.qmd
+        - theory/cancer_cas.qmd
+        - theory/theory_summary.qmd
+    - part: "Methods"
+      chapters: 
+        - methods/dataset_description.qmd
+        - methods/filtering.qmd
+        - methods/preprocessing_pipeline_overview.qmd
+        - methods/analysis_pipeline_overview.qmd
+        - methods/complexity_and_entropy_measures.qmd
+    - part: "Results and Discussion: Carcinomas"
+      chapters:
+      - reports/generated_reports/comparison_report_blad_tcc.qmd
+      - reports/generated_reports/comparison_report_br_brad.qmd
+      - reports/generated_reports/comparison_report_col_coadread.qmd
+      - reports/generated_reports/comparison_report_kid_rcc.qmd
+      - reports/generated_reports/comparison_report_lu_luad.qmd
+      - reports/generated_reports/comparison_report_ov_ovad.qmd
+      - reports/generated_reports/comparison_report_pa_paad.qmd
+      - reports/generated_reports/comparison_report_ut_eac.qmd
+      
+    - part: "Results and Discussion: Blastomas"
+      chapters:
+      - reports/generated_reports/comparison_report_brain_gbm.qmd
+      - reports/generated_reports/comparison_report_brain_mb.qmd
+
+    - part: "Results and Discussion: Lymphomas"
+      chapters:
+      - reports/generated_reports/comparison_report_gc_fl.qmd
+      - reports/generated_reports/comparison_report_gc_lbcl.qmd
+
+    - part: "Results and Discussion: Leukemias"
+      chapters:
+      - reports/generated_reports/comparison_report_pb_b_all.qmd
+      - reports/generated_reports/comparison_report_pb_t_all.qmd
+
+    - part: "Conclusions"
+      chapters:
+      - results/upset_plots.qmd
+      - results/summary.qmd
+
+resources:
+  - output/global_cancer/plots/**
+  - output/global_cancer/tables/**
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+  pdf:
+    documentclass: scrbook

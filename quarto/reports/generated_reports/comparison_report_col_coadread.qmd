@@ -1,0 +1,219 @@
+---
+title: "Comparison Report: COL/COADREAD"
+author: "XXX"
+format: html
+params:
+  data_file: "C:/Users/drziy/OneDrive/Desktop/Ali/scientific_research_current/global-cancer-complexity/output/global_cancer/RData/comparison_data/comparison_data_col_coadread.rds"
+execute:
+  eval: true
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(readr)
+library(stringr)
+library(glue)
+library(purrr)
+library(knitr)
+library(kableExtra)
+
+if (is.null(params$data_file) || !file.exists(params$data_file)) {
+  stop("Please provide a valid 'data_file' parameter pointing to an existing RDS file")
+}
+
+comp_data <- readRDS(params$data_file)
+
+comparison     <- comp_data$comparison
+summaries_df   <- comp_data$summaries_df
+complexity_df  <- comp_data$complexity_df
+entropy_df     <- comp_data$entropy_df
+res_35k        <- comp_data$res_35k
+res_6800       <- comp_data$res_6800
+
+count_35k <- comp_data$count_35k
+count_6800 <- comp_data$count_6800
+
+summary_all <- summaries_df %>% filter(mode == "ALL")
+summary_go <- summaries_df %>% filter(mode == "GO")
+summary_kegg <- summaries_df %>% filter(mode == "KEGG")
+summary_msig <- summaries_df %>% filter(mode == "MSIG")
+
+# Cleaned name for image file references
+clean_name <- gsub("[^a-zA-Z0-9]", "_", tolower(comparison))
+
+plot_base <- file.path("..", "..", "resources", "plots")
+table_base <- file.path("..", "..", "resources", "tables")
+
+probes_path <- file.path(plot_base, "probes", paste0(clean_name, "_probe_counts.png"))
+go_complex_path <- file.path(plot_base, "go", paste0(clean_name, "_go_complexity.png"))
+go_entropy_path <- file.path(plot_base, "go", paste0(clean_name, "_go_entropy.png"))
+kegg_complex_path <- file.path(plot_base, "kegg", paste0(clean_name, "_kegg_complexity.png"))
+kegg_entropy_path <- file.path(plot_base, "kegg", paste0(clean_name, "_kegg_entropy.png"))
+
+go_complex_table_path <- file.path(table_base, paste0(clean_name, "_go_complexity.html"))
+go_entropy_table_path <- file.path(table_base, paste0(clean_name, "_go_entropy.html"))
+kegg_complex_table_path <- file.path(table_base, paste0(clean_name, "_kegg_complexity.html"))
+kegg_entropy_table_path <- file.path(table_base, paste0(clean_name, "_kegg_entropy.html"))
+msig_complex_table_path <- file.path(table_base, paste0(clean_name, "_msig_complexity.html"))
+msig_entropy_table_path <- file.path(table_base, paste0(clean_name, "_msig_entropy.html"))
+
+go_complex_clusters_table_path <- file.path(table_base, "clusters", "go", paste0(clean_name, "_go_clusters.html"))
+go_entropy_clusters_table_path <- file.path(table_base, "clusters", "go", paste0(clean_name, "_go_entropy_clusters.html"))
+
+# Are we producing these plots?
+# msig_complex_path <- file.path(plot_base, "msig", paste0(clean_name, "_msig_complexity.png"))
+# msig_entropy_path <- file.path(plot_base, "mish", paste0(clean_name, "_msig_entropy.png"))
+
+safe_include_image <- function(path, width = "75%") {
+  if (file.exists(path)) {
+    knitr::include_graphics(path)
+  } else {
+    cat(glue::glue("⚠️ Plot not available.\n\n"))
+  }
+}
+
+safe_include_html <- function(path) {
+  if (file.exists(path)) {
+    cat(paste(readLines(path, warn = FALSE), collapse = "\n"))
+  } else {
+    cat(glue::glue("⚠️ Table not available.\n\n"))
+  }
+}
+
+```
+
+::: {.panel-tabset}
+
+### `r comparison` Overview
+
+::: {.panel-tabset}
+
+#### Probes
+> -   **Cancer Category:** `r summaries_df %>% filter(mode == "ALL") %>% pull(cancer_category) %>% unique()`
+> -   **Chip hu35ksuba**: `r count_35k` filtered probes
+> -   **Chip hu6800**: `r count_6800` filtered probes
+
+```{r probe_image, echo=FALSE}
+safe_include_image(probes_path)
+```
+
+#### Summary Assessment
+
+**Overall Complexity & Entropy Assessment**
+
+| Measure | All Filtered Probes | GO MF Terms | KEGG Pathways | HALLMARK Genes |
+|---------|---------------------|-----------------------------|---------------|----------------|
+| **Complexity** | `r summary_all$complexity_strength_label` (`r summary_all$complexity_confidence_label`) | `r summary_go$complexity_strength_label` (`r summary_go$complexity_confidence_label`) | `r summary_kegg$complexity_strength_label` (`r summary_kegg$complexity_confidence_label`) | `r summary_msig$complexity_strength_label` (`r summary_msig$complexity_confidence_label`) |
+| **Shannon Entropy** | `r summary_all$strength_label_shannon` (`r summary_all$confidence_label_shannon`) | `r summary_go$strength_label_shannon` (`r summary_go$confidence_label_shannon`) | `r summary_kegg$strength_label_shannon` (`r summary_kegg$confidence_label_shannon`) | `r summary_msig$strength_label_shannon` (`r summary_msig$confidence_label_shannon`) |
+| **Spectral Entropy** | `r summary_all$strength_label_spectral` (`r summary_all$confidence_label_spectral`) | `r summary_go$strength_label_spectral` (`r summary_go$confidence_label_spectral`) | `r summary_kegg$strength_label_spectral` (`r summary_kegg$confidence_label_spectral`) | `r summary_msig$strength_label_spectral` (`r summary_msig$confidence_label_spectral`) |
+
+**Notes**
+-   **Gain** = increased complexity from normal to tumor\
+-   **Loss** = complexity reduction from normal to tumor\
+-   **Chaotic** = increased entropy from normal to tumor\
+-   **Anti-Chaotic** = entropy reduction from normal to tumor\
+-   All p-values unadjusted unless noted
+
+:::
+
+### GO Biological Process Clusters
+
+::: {.panel-tabset}
+
+#### Complexity Change
+
+```{r go_bp_complex_clusters, echo=FALSE, results='asis'}
+safe_include_html(go_complex_clusters_table_path)
+```
+
+#### Spectral Entropy Change
+
+```{r go_bp_entropy_clusters, echo=FALSE, results='asis'}
+safe_include_html(go_entropy_clusters_table_path)
+```
+
+:::
+
+### GO Molecular Function Terms
+
+::: {.panel-tabset}
+
+#### Complexity Change
+
+**Significant GO Molecular Function Terms (Complexity)**
+
+```{r go_complexity_plot, echo=FALSE}
+safe_include_image(go_complex_path)
+```
+
+```{r go_mf_terms_complexity, echo=FALSE, results = 'asis'}
+safe_include_html(go_complex_table_path)
+```
+
+#### Spectral Entropy Change
+
+**Significant GO Molecular Function Terms (Spectral Entropy)**
+
+```{r go_entropy_plot, echo=FALSE}
+safe_include_image(go_entropy_path)
+```
+
+```{r go_mf_terms_entropy, echo=FALSE, results='asis'}
+safe_include_html(go_entropy_table_path)
+```
+
+:::
+
+### KEGG Pathway Analysis
+
+::: {.panel-tabset}
+
+#### Complexity Change
+
+**Significant KEGG Pathways (Complexity)**
+
+```{r kegg_complexity_plot, echo=FALSE}
+safe_include_image(kegg_complex_path)
+```
+
+```{r kegg_pathways_complexity, echo=FALSE, results = 'asis'}
+safe_include_html(kegg_complex_table_path)
+```
+
+#### Spectral Entropy Change
+
+**Significant KEGG Pathways (Spectral Entropy)**
+
+```{r kegg_entropy_plot, echo=FALSE}
+safe_include_image(kegg_entropy_path)
+```
+
+```{r kegg_pathways_entropy, echo=FALSE, results='asis'}
+safe_include_html(kegg_entropy_table_path)
+```
+
+:::
+
+### HALLMARK Genes Analysis
+
+::: {.panel-tabset}
+
+#### Complexity Change
+
+**Significant HALLMARK Genes (Complexity)**
+
+```{r msig_pathways_complexity, echo=FALSE, results='asis'}
+safe_include_html(msig_complex_table_path)
+```
+
+#### Spectral Entropy Change
+
+**Significant HALLMARK Genes (Spectral Entropy)**
+
+```{r msig_pathways_entropy, echo=FALSE, results='asis'}
+safe_include_html(msig_entropy_table_path)
+```
+
+:::
+
+:::

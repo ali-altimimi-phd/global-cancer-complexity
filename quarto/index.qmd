@@ -1,0 +1,120 @@
+---
+title: "Chaos and Complexity in Cancer"
+subtitle: "Cancer as a dynamical system: complexity, entropy, and transcriptomic reorganization"
+author: "Ali M. Al-Timimi"
+format:
+  html:
+    toc: false
+    number-sections: false
+---
+
+## Overview
+
+Cancer is often described as a disease of increasing disorder.  
+This project tests whether that intuition is actually correct.
+
+This site presents a reconstruction and extension of my doctoral dissertation, *Chaos and Complexity in Cancer* (George Mason University, 2004), using a computational framework that treats cancer as a **dynamical system**.
+
+Rather than assuming uniform increases in randomness, the analysis examines how **complexity, entropy, and regulatory structure are reorganized** as tissue transitions from normal to malignant states.
+
+Across cancer types, the results suggest a recurring pattern of **regulatory simplification** accompanied by **selective consolidation of functional pathways**, rather than simple increases in disorder.
+
+---
+
+## Central Question
+
+> **How is biological complexity reorganized during tumorigenesis?**
+
+This project evaluates whether cancer exhibits:
+
+- **chaotic dynamics** (increased heterogeneity and disorder)  
+- **anti-chaotic dynamics** (constraint, clonality, reduced variability)  
+- or a **context-dependent interplay between both**
+
+---
+
+## Example: BLAD/TCC
+
+A representative comparison (bladder normal vs transitional cell carcinoma) illustrates the type of structure detected.
+
+- **Complexity:** net decrease with localized functional gains  
+- **Entropy:** heterogeneous (coexisting chaotic and anti-chaotic behavior)  
+- **Structure:** selective organization in functional pathways  
+
+> Tumorigenesis appears as a **reorganization of biological complexity**,  
+> involving loss of regulatory flexibility alongside  
+> consolidation of functional and process-specific pathways.
+
+[View full report →](reports/generated_reports/comparison_report_blad_tcc.html)
+
+---
+
+## Project Structure
+
+This site is organized into:
+
+- **Theory** — conceptual framework for complexity in biological systems  
+- **Methods** — data, preprocessing, and analytical design  
+- **Results and Discussion** — comparison-specific reports across cancer types  
+- **Conclusions** — synthesis of observed patterns  
+
+---
+
+## Conceptual Perspective
+
+Cells are modeled as **high-dimensional dynamical systems** with:
+
+- nonlinear regulatory interactions  
+- multiple attractor states  
+- sensitivity to perturbation  
+
+Within this framework, cancer is interpreted as a **state transition process** in gene regulatory space.
+
+Rather than uniform chaos, different cancers exhibit different balances of:
+
+- **destabilization** (chaotic behavior)  
+- **constraint** (anti-chaotic, structured states)
+
+---
+
+## Data
+
+The analysis uses the Ramaswamy et al. (2001) dataset:
+
+- **GEO accession:** GSE68928  
+- Affymetrix microarrays (~16,000 genes)  
+
+Raw **CEL files** are processed within this project, enabling full control over normalization, annotation, and filtering.
+
+The dataset is reorganized into **paired normal vs tumor comparisons** across multiple cancer categories.
+
+---
+
+## Computational Framework
+
+The analysis is implemented as a three-stage system:
+
+1. **Preprocessing** — normalization, metadata integration, annotation  
+2. **Analysis** — comparison mapping, filtering, complexity and entropy computation  
+3. **Reporting** — structured summaries and Quarto-generated reports  
+
+---
+
+## Future Directions
+
+This framework is being extended using:
+
+- latent-space modeling  
+- variational autoencoders (VAE)  
+- geometric representations of biological state  
+
+---
+
+## Acknowledgments
+
+This work reconstructs and extends my doctoral dissertation, *Chaos and Complexity in Cancer* (George Mason University, 2004).
+
+I also acknowledge the intellectual influence of:
+
+- **Curtis Jamison**, dissertation director  
+- **Harold J. Morowitz**, whose work on complexity in living systems shaped the conceptual foundation of this research  

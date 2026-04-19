@@ -1,0 +1,197 @@
+---
+title: "Latent space geometry results"
+format: html
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Latent Space Geometry of Cancer
+
+### Setup
+
+```{r}
+library(tidyverse)
+library(gt)
+
+# csvs <- file.path("quarto", "resources", "tables", "probes")
+
+# Paths (adjust if needed)
+taxonomy_path <- "latent_taxonomy_table.csv"
+summary_path  <- "latent_regime_summary_table.csv"
+narrative_path <- "latent_regime_summary_narrative.csv"
+
+taxonomy <- read_csv(taxonomy_path, show_col_types = FALSE)
+regime_summary <- read_csv(summary_path, show_col_types = FALSE)
+regime_narrative <- read_csv(narrative_path, show_col_types = FALSE)
+```
+
+------------------------------------------------------------------------
+
+# Methods
+
+## Latent Representation
+
+Gene expression data were embedded into a low-dimensional latent space
+using a variational autoencoder (VAE). Input features consisted of the
+top 3000 probes selected by variance. The encoder maps each sample to a
+latent vector, and all subsequent analyses are performed in this learned
+space.
+
+## Tissue-Specific Comparisons
+
+Samples were grouped by tissue and disease state (normal vs tumor). For
+each tissue, latent representations were partitioned into normal and
+tumor groups, defining a tissue-specific transition.
+
+## Geometric Measures
+
+For each group, covariance matrices were computed and decomposed into
+eigenvalues. From these, the following measures were derived:
+
+-   **Participation Ratio (PR):** effective dimensionality
+
+-   **Effective Rank (EffRank):** spectral uniformity
+
+-   **Condition Number (κ):** axis dominance
+
+-   **Anisotropy:** leading eigenvalue fraction
+
+Spatial measures included centroid distance and group radius.
+
+## Delta Metrics
+
+For each metric MMM, changes were defined as:
+
+ΔM=Mtumor−Mnormal\Delta M = M\_{\text{tumor}} -
+M\_{\text{normal}}ΔM=Mtumor​−Mnormal​
+
+## Taxonomy Construction
+
+A geometric taxonomy was defined using the joint behavior of ΔEffRank
+and ΔPR:
+
+-   **Regime A:** anisotropic expansion (EffRank ↓, PR ↑)
+
+-   **Regime B:** compression / canalization (EffRank ↑, PR ↓)
+
+-   **Regime C:** uniform expansion (EffRank ↑, PR ↑)
+
+-   **Regime D:** collapse / simplification (EffRank ↓, PR ↓)
+
+Transformation types were defined using centroid distance and magnitude
+of ΔEffRank.
+
+------------------------------------------------------------------------
+
+# Results
+
+## Regime Summary
+
+```{r}
+regime_summary %>%
+  gt() %>%
+  tab_header(
+    title = "Latent-Space Regime Summary",
+    subtitle = "Counts and percentages of geometric transformation regimes"
+  ) %>%
+  fmt_number(columns = where(is.numeric), decimals = 2)
+```
+
+------------------------------------------------------------------------
+
+## Narrative Summary
+
+```{r}
+regime_narrative %>%
+  select(regime_code, regime_label, summary_phrase) %>%
+  gt() %>%
+  tab_header(
+    title = "Narrative Summary of Regimes"
+  )
+```
+
+------------------------------------------------------------------------
+
+## Dominant Transformation Pattern
+
+Across all comparisons, the dominant regime is **anisotropic
+expansion**, characterized by increasing dimensional spread (PR) and
+decreasing spectral uniformity (EffRank).
+
+This indicates that tumor states expand into additional degrees of
+freedom, but in a highly uneven manner.
+
+------------------------------------------------------------------------
+
+## Taxonomy Table (Detailed)
+
+```{r}
+taxonomy %>%
+  select(
+    comparison,
+    regime_label,
+    transformation_type,
+    effrank_delta,
+    pr_delta,
+    centroid_distance,
+    summary_phrase
+  ) %>%
+  arrange(regime_label, desc(centroid_distance)) %>%
+  gt() %>%
+  tab_header(
+    title = "Latent Geometry Taxonomy Table",
+    subtitle = "Per-comparison geometric classification and summary"
+  ) %>%
+  fmt_number(
+    columns = c(effrank_delta, pr_delta, centroid_distance),
+    decimals = 3
+  )
+```
+
+------------------------------------------------------------------------
+
+## Decoupling of Dimensionality and Spectral Structure
+
+A moderate negative correlation (≈ −0.41) was observed between ΔEffRank
+and ΔPR, indicating that increases in dimensionality are accompanied by
+decreased spectral uniformity. This reflects anisotropic expansion
+rather than uniform dispersion.
+
+------------------------------------------------------------------------
+
+## Spatial vs Structural Transformation
+
+Centroid displacement and structural change were negatively correlated
+(≈ −0.47), indicating that:
+
+-    some cancers undergo **large spatial shifts with minimal
+    restructuring**
+
+-    others exhibit **substantial internal reorganization with limited
+    movement**
+
+These represent distinct transformation modes.
+
+------------------------------------------------------------------------
+
+## Secondary Geometric Effects
+
+Changes in condition number (κ) and anisotropy were weakly correlated,
+suggesting that axis dominance and global anisotropy represent partially
+independent geometric features.
+
+------------------------------------------------------------------------
+
+## Summary
+
+Tumor progression in latent space is characterized by:
+
+-    dominant **anisotropic expansion**
+
+-    **decoupling** of dimensionality and spectral structure
+
+-    separation of **spatial movement** and **internal reorganization**
+
+These findings support a geometric, multidimensional view of cancer
+complexity rather than a scalar notion of disorder.

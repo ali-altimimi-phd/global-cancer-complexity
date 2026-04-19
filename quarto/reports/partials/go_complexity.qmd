@@ -1,0 +1,54 @@
+**Significant GO Molecular Function Terms (Complexity)**
+
+```{r go_complexity_plot, echo=FALSE}
+safe_include_image(go_complex_path)
+```
+
+```{r go_mf_terms_complexity, echo=FALSE, results = 'asis'}
+
+# --- Complexity-based GO MF terms ---
+go_complex <- complexity_df %>%
+  filter(mode == "GO", p_perm <= 0.05) %>%
+  mutate(direction = factor(direction, levels = c("gained", "lost"))) %>%
+  arrange(direction, gene_set_name, p_perm)
+
+if (nrow(go_complex) > 0) {
+  go_complex_split <- go_complex %>%
+    group_split(direction)
+  
+  for (subgroup in go_complex_split) {
+    subgroup_title <- stringr::str_to_title(unique(subgroup$direction))
+    
+    cat(glue::glue("**{subgroup_title} Complexity**\n\n"))
+    
+    tbl <- subgroup %>%
+      select(GeneSet = gene_set_name, `p-value` = p_perm) %>%
+      arrange(GeneSet) %>%
+      mutate(`p-value` = sprintf("%.3f", `p-value`))
+    
+    if (knitr::is_html_output()) {
+      tbl %>%
+        kableExtra::kable(format = "html", align = c("l", "r", "c")) %>%
+        kableExtra::kable_styling(
+          bootstrap_options = c("striped", "hover", "condensed"),
+          full_width = TRUE
+        ) %>%
+        print()
+    } else if (knitr::is_latex_output()) {
+      tbl %>%
+        kableExtra::kable(
+          format = "latex",
+          booktabs = TRUE,
+          align = c("l", "r", "c")
+        ) %>%
+        kableExtra::kable_styling(latex_options = "striped", full_width = TRUE) %>%
+        print()
+    }
+
+  }
+} else {
+  cat("No significant GO terms found.\n")
+}
+
+```
+

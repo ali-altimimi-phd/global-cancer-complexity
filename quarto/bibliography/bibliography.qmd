@@ -1,0 +1,219 @@
+---
+title: "bibliography"
+format: html
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# References
+
+-   Abarbanel, H. D. I. (1996). Analysis of observed chaotic data. New
+    York, Springer.
+-   Adams, M. D., S. E. Celniker, et al. (2000). "The genome sequence of
+    Drosophila melanogaster." Science 287(5461): 2185-95.
+-   Ashburner, M., C. A. Ball, et al. (2000). "Gene ontology: tool for
+    the unification of biology. The Gene Ontology Consortium." Nat Genet
+    25(1): 25-9.
+-   Bak, P. (1996). How nature works : the science of self-organized
+    criticality. New York, NY, USA, Copernicus.
+-   Bar-Joseph, Z., G. K. Gerber, et al. (2003). "Continuous
+    representations of time-series gene expression data." J Comput Biol
+    10(3-4): 341-56.
+-   Cantor, C. R., C. L. Smith, et al. (1999). Genomics : the science
+    and technology behind the Human Genome Project. New York, Wiley.
+-   Castro, R. (2000). System Reconstruction from Spike Trains.
+    Institute of Computational Sciences and Informatics. Fairfax, VA,
+    George Mason University: 80.
+-   Cohn-Cedermark, G., E. Mansson-Brahme, et al. (1999). "Metastatic
+    patterns, clinical outcome, and malignant phenotype in malignant
+    cutaneous melanoma." Acta Oncol 38(5): 549-57.
+-   Crick, F. H. (1958). "On protein synthesis." Symp Soc Exp Biol 12:
+    138-63.
+-   Cros, E., L. Jordheim, et al. (2004). "Problems related to
+    resistance to cytarabine in acute myeloid leukemia." Leuk Lymphoma
+    45(6): 1123-32.
+-   Drozdz, S., J. Kwapien, et al. (2002). "Identifying complexity by
+    means of matrices." Physica A: Statistical Mechanics and its
+    Applications 314(1-4): 355-361.
+-   Duesberg, P., A. Fabarius, et al. (2004). "Aneuploidy, the primary
+    cause of the multilateral genomic instability of neoplastic and
+    preneoplastic cells." IUBMB Life 56(2): 65-81.
+-   Edmonds, B. (1999). Syntactic Measures of Complexity. Manchester,
+    UK, University of Manchester.
+-   Eigen, M. and P. Schuster (1979). The hypercycle, a principle of
+    natural self-organization. Berlin ; New York, Springer-Verlag.
+-   Emden, M. H. v. (1971). An analysis of complexity. Amsterdam,,
+    Mathematisch Centrum.
+-   Esmaeli, B., X. Wang, et al. (2001). "Patterns of regional and
+    distant metastasis in patients with conjunctival melanoma:
+    experience at a cancer center over four decades." Ophthalmology
+    108(11): 2101-5.
+-   Friedmann, T. (1989). "Progress toward human gene therapy." Science
+    244(4910): 1275-81.
+-   Furusawa, C. and K. Kaneko (2003). "Zipf's law in gene expression."
+    Phys Rev Lett 90(8):88102.
+-   Gallager, R. G. (1968). Information theory and reliable
+    communication. New York,, Wiley.
+-   Gell-Mann, M. (1995). "What is complexity?" Complexity 1(1).
+-   Gell-Mann, M. and S. Lloyd (1998). "Information measures, effective
+    complexity, and total information." Complexity 2(1): 44-52.
+-   Hirsch, M. W., S. Smale, et al. (2004). Differential equations,
+    dynamical systems, and an introduction to chaos. San Diego, CA,
+    Academic Press.
+-   Hughes, T. R., M. J. Marton, et al. (2000). "Functional discovery
+    via a compendium of expression profiles." Cell 102(1): 109-26.
+-   Jouanneau, J., G. C. Tucker, et al. (1991). "Epithelial cell
+    plasticity in neoplasia." Cancer Cells 3(12): 525-9.
+-   Kaneko, K. and I. Tsuda (2001). Complex systems : chaos and beyond :
+    a constructive approach with applications in life sciences. Berlin ;
+    New York, Springer.
+-   Kantz, H. and T. Schreiber (1997). Nonlinear time series analysis.
+    Cambridge ; New York, Cambridge University Press.111
+-   Kauffman, S. A. (1993). The origins of order: self-organization and
+    selection in evolution. New York, Oxford University Press.
+-   Lander, E. S., L. M. Linton, et al. (2001). "Initial sequencing and
+    analysis of the human genome." Nature 409(6822): 860-921.
+-   Lewontin, R. C. (2000). The triple helix : gene, organism, and
+    environment. Cambridge, Mass., Harvard University Press.
+-   Liebert, W., K. Pawelzik, et al. (1991). "Optimal embeddings of
+    chaotic attractors from topological considerations." Europhysics
+    Letters 14(6): 521-6.
+-   Lloyd, S. (2001). "Measures of complexity: a nonexhaustive list."
+    IEEE Control Systems Magazine 21(4): 7-8. Mayr, E. (1997). This is
+    biology : the science of the living world. Cambridge, Mass., Belknap
+    Press of Harvard University Press.112
+-   Morowitz, H. J. (1992). Beginnings of cellular life : metabolism
+    recapitulates biogenesis. New Haven, Yale University Press.
+-   Morowitz, H. J. (1998). "Evolutionary complexity." Complexity 3(6):
+    12-14.
+-   Morowitz, H. J. (2002). The emergence of everything : how the world
+    became complex. New York, Oxford University Press.
+-   Pruitt, K. and C. J. Der (2001). "Ras and Rho regulation of the cell
+    cycle and oncogenesis." Cancer Lett 171(1): 1-10.
+-   Ruelle, D. (1989). Chaotic evolution and strange attractors : the
+    statistical analysis of time series for deterministic nonlinear
+    systems. Cambridge ; New York, Cambridge University Press.
+-   Sauer, T., J. Yorke, et al. (1991). "Embedology." J Stat Phys 65:
+    395-400.
+-   Shalizi, C. (2003). Complexity, Entropy and the Physics of gzip.
+-   Stevens, C. F. (2004). "Systems biology versus molecular biology."
+    Curr Biol 14(2): R51-2.
+-   Szallasi, Z. and S. Liang (1998). "Modeling the normal and
+    neoplastic cell cycle with "realistic Boolean genetic networks":
+    their application for understanding carcinogenesis and assessing
+    therapeutic strategies." Pac Symp Biocomput: 66-76.
+-   Takens, F. (1981). Detecting strange attractors in turbulence.
+    Dynamical systems and turbulence, Warwick 1980 : proceedings of a
+    symposium held at the University of Warwick 1979-80. D. A.
+    Rand, L. S. Young and University of Warwick. Berlin ; New York,
+    Springer-Verlag: vi, 390 p.
+-   Wolfrom, C., N. P. Chau, et al. (2000). "Evidence for deterministic
+    chaos in aperiodic oscillations of proliferative activity in
+    long-term cultured Fao hepatoma cells." J Cell Sci 113 ( Pt 6):
+    1069-74.
+
+
+## Theoretical basis for the study
+-   Baish, J. W. and R. K. Jain (1998). "Cancer, angiogenesis and
+    fractals." Nat Med 4(9): 984.
+-   Calin, G. A., C. Vasilescu, et al. (2003). "Genetic chaos and
+    antichaos in human cancers." Med Hypotheses 60(2): 258-62.
+-   Coffey, D. S. (1998). "Self-organization, complexity and chaos: the
+    new biology for medicine." Nat Med 4(8): 882-5.
+-   Cross, S. S. and D. W. Cotton (1994). "Chaos and antichaos in
+    pathology." Hum Pathol 25(7): 630-7.
+-   Cucuianu, A. (1998). "Chaos in cancer?" Nat Med 4(12): 1342-3.108.
+-   Finkel, G. C. (1995). "Chaos and antichaos in pathology." Hum Pathol
+    26(3): 354-5.
+-   Gatenby, R. A. and P. K. Maini (2003). "Mathematical oncology:
+    cancer summed up." Nature 421(6921): 321.
+-   Kaplan, D. T., J. M. Smith, et al. (1988). "Nonlinear dynamics in
+    cardiac conduction." Math Biosci 90: 19-48.
+-   Rew, D. A. (1999). "Tumour biology, chaos and non-linear dynamics."
+    Eur J Surg Oncol 25(1): 86-9.
+-   Sarbadhikari, S. N. and K. Chakrabarty (2001). "Chaos in the brain:
+    a short review alluding to epilepsy, depression, exercise and
+    lateralization." Med Eng Phys 23(7): 445-55.113
+-   Sedivy, R. (1999). "Chaodynamic loss of complexity and
+    self-similarity in cancer." Med Hypotheses 52(4): 271-4.
+-   Toro, M. G., J. S. Ruiz, et al. (1999). "Chaos theories and
+    therapeutic commonalities among depression, Parkinson's disease, and
+    cardiac arrhythmias." Compr Psychiatry 40(3): 238-44.114
+-   Waliszewski, P. and J. Konarski (2001). "Tissue as a self-organizing
+    system with fractal dynamics." Advances in Space Research 28(4):
+    545-548.
+-   Zajicek, G. (2001). "Cancer and metaphysics." Med Hypotheses 57(2):
+    243-8.
+
+## Complexity/chaos theory
+-   Cambel, A. B. (1993). Applied chaos theory : a paradigm for
+    complexity. Boston, Academic Press.107
+-   Williams, G. P. (1997). Chaos theory tamed. Washington, D.C., Joseph
+    Henry Press.
+
+## Cancer
+-   Claffey, K. P. and G. S. Robinson (1996). "Regulation of VEGF/VPF
+    expression in tumor cells: consequences for tumor growth and
+    metastasis." Cancer Metastasis Rev 15(2): 165-76.
+-   Faustina, M., R. Diba, et al. (2004). "Patterns of regional and
+    distant metastasis in patients with eyelid and periocular squamous
+    cell carcinoma." Ophthalmology 111(10): 1930- 2.109.
+-   Gibbs, W. W. (2003). "Untangling the roots of cancer." Scientific
+    American 289(1): 56-65.
+-   Hahn, W. C. and R. A. Weinberg (2002). "Rules for making human tumor
+    cells." N Engl J Med 347(20): 1593-603.110
+-   Hanahan, D. and R. A. Weinberg (2000). "The hallmarks of cancer."
+    Cell 100(1): 57-70.
+-   Lee, Y. T. (1985). "Patterns of metastasis and natural courses of
+    breast carcinoma." Cancer Metastasis Rev 4(2): 153-72.
+-   Tabbara, W. S. and A. R. Mehio (1984). "Metastatic patterns of
+    bladder carcinoma." Prog Clin Biol Res 162A: 145-60.
+-   Vogelstein, B. and K. W. Kinzler (2002). The genetic basis of human
+    cancer. New York, McGraw-Hill, Medical Pub. Division.
+-   Webb, C. P. and G. F. Vande Woude (2000). "Genes that regulate
+    metastasis and angiogenesis." J Neurooncol 50(1-2): 71-87.
+-   Whitfield, M. L., G. Sherlock, et al. (2002). "Identification of
+    genes periodically expressed in the human cell cycle and their
+    expression in tumors." Mol Biol Cell 13(6): 1977-2000.
+
+## Cell/molecular biology
+-   Alberts, B. (1994). Molecular biology of the cell. New York, Garland
+    Pub.
+-   Harold, F. M. (2001). The way of the cell : molecules, organisms,
+    and the order of life. Oxford ; New York, Oxford University Press.
+-   Strachan, T. and A. P. Read (1999). Human molecular genetics. New
+    York, Wiley.
+-   Twyman, R. M. and W. Wisden (1999). Advanced molecular biology : a
+    concise reference. Oxford, UK, Bios Scientific Publishers.
+
+## Gene expression/microarrays
+-   Grewal, A. and A. Conway (2000). "Tools for Analyzing Microarray
+    Expression Data." J Lab Automation 5(5): 62-64.
+-   Knudsen, S. (2002). A biologist's guide to analysis of DNA
+    microarray data. New York, Wiley-Interscience.
+-   Vietor, I. and L. A. Huber (1997). "In search of differentially
+    expressed genes and proteins." Biochim Biophys Acta 1359(3): 187-99.
+
+## Mathematical/statistical modelling
+-   Gershenfeld, N. A. (1999). The nature of mathematical modeling.
+    Cambridge ; New York, Cambridge University Press.
+-   Heath, M. T. (1997). Scientific computing : an introductory survey.
+    New York, McGrawHill.
+-   Venables, W. N. and B. D. Ripley (1999). Modern applied statistics
+    with S-PLUS. New York, Springer.
+    
+## Software engineering/software used
+-   Date, C. J. (1995). An introduction to database systems. Reading,
+    Mass., Addison-Wesley Pub. Co.
+-   Eaton, J. W. (2002). Octave.
+-   Hegger, R., H. Kantz, et al. (1999). "Practical implementation of
+    nonlinear time series methods: The \[small-caps TISEAN\] package."
+    Chaos: An Interdisciplinary Journal of Nonlinear Science 9(2):
+    413-435.
+-   MySQL (2004). MySQL.
+-   Pizzini, K. (1998). sed, a stream editor, Free Software Foundation,
+    Inc.
+-   Robbins, A. and N. Ayalon (2003). GAWK: Effective AWK Programming: A
+    User's Guide for GNU Awk, Free Software Foundation, Inc.
+-   Williams, T. and C. Kelley (2004). Gnuplot.115

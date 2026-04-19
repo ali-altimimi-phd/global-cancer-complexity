@@ -1,0 +1,4 @@
+regime_code,regime_label,n,percent,exemplars,mean_centroid_distance,mean_abs_effrank_delta,mean_pr_delta,mean_effrank_delta
+A,anisotropic expansion,8,61.5,"BLAD/TCC, Brain/MB, PB/B-ALL",29.56,0.399,1.304,-0.399
+B,compression / canalization,2,15.4,"PA/PAAD, KID/RCC",20.59,0.825,-0.313,0.825
+C,uniform expansion,3,23.1,"BR/BRAD, Brain/GBM, COL/COADREAD",29.11,0.18,0.939,0.18

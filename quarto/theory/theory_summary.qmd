@@ -1,0 +1,29 @@
+# Summary of Theoretical Framework
+
+1.  Chaos and Attractors in Carcinogenesis:
+
+    -   Carcinogenesis is conceptualized as a transition between state cycle attractors in a gene regulatory network.
+
+    -   Mutations progressively destabilize the genome until a critical threshold is reached, triggering a system-wide reorganization.
+
+2.  Tumors as Chaotic or Antichaotic:
+
+    -   Solid Cancers (SC): Often exhibit chaotic behavior, especially those in epithelial tissues like breast, prostate, and pancreas.
+
+    -   Hematological Cancers (HC): Tend toward antichaotic patterns, showing high clonality and genetic uniformity, in contrast to the stochastic diversity of normal hematopoiesis and immunity.
+
+3.  Complexity and Disease Progression:
+
+    -   A loss of complexity is observed with cancer progression (and aging), implying reduced system freedom and adaptability.
+
+    -   The transformed cell’s behavior is simplified to core functions: division and survival, contrasting with the more dynamic, multi-functional behavior of healthy cells.
+    
+4.  Cancer as a Complex Adaptive System (CAS):
+
+    -   With cancer complexity trends do not always align with entropy (Cite examples form the study).
+
+    -   Cancer emerges from the interplay of chaos and order, fitting the CAS model, where local interactions lead to emergent global behaviors.
+    
+    - Cancer is not just chaotic or ordered, but dynamically occupies different positions on a chaos–complexity plane—modulated by gene regulation, pathway redundancy, and molecular function.
+
+
