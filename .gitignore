@@ -1,0 +1,15 @@
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+renv/
+data/
+output/
+results/
+writeups/
+projects/
+
+*.log
+.DS_Store
+Thumbs.db
