@@ -92,8 +92,8 @@ This pattern is consistent with a transition toward **structured, task-specific 
 
 ### Full Example Output
 
--   [Example Analysis (BLAD/TCC)](example_blad_tcc.md)\
--   [Full Report (Quarto HTML)](docs/reports/generated_reports/comparison_report_blad_tcc.html)
+-   [Example Analysis (BLAD/TCC)](example_blad_tcc.md)
+-   [Full BLAD/TCC report](https://ali-altimimi-phd.github.io/cancer-complexity-reports/reports/generated_reports/comparison_report_blad_tcc.html)
 
 This example illustrates the complete analytical workflow, from preprocessing through biological interpretation.
 
@@ -370,6 +370,17 @@ These enable detection of:
 
 ------------------------------------------------------------------------
 
+## Reports
+
+Rendered reports and supporting HTML outputs are maintained separately from the source code repository.
+
+- **Reports repository:** https://github.com/ali-altimimi-phd/cancer-complexity-reports
+- **Published site:** https://ali-altimimi-phd.github.io/cancer-complexity-reports/
+
+This repository contains the source code, pipeline logic, and Quarto reporting framework. The reporting pipeline determines which templates and documents are actively used; rendered outputs are published separately for easier browsing.
+
+------------------------------------------------------------------------
+
 ## Project Status
 
 This repository is an **active reconstruction and extension** of prior doctoral research.
@@ -419,7 +430,7 @@ Citation metadata is provided via the `CITATION.cff` file (see “Cite this repo
 
 ## Acknowledgments
 
-This work is a reconstruction and extension of my doctoral dissertation, *“Chaos and Complexity in Cancer”* (George Mason University, 2004), and is informed by foundational influences from that research:
+This work extends my doctoral dissertation, *“Chaos and Complexity in Cancer”* (George Mason University, 2004). I am indebted to:
 
--   **Curtis Jamison** (George Mason University), dissertation director
--   **Harold J. Morowitz** (Robinson Professor of Biology and Natural Philosophy, George Mason University), whose work on complexity in living systems shaped the conceptual framework of this research
+-   **Curtis Jamison**, my dissertation director
+-   **Harold J. Morowitz**, whose work on complexity in living systems shaped the conceptual framework of this research
