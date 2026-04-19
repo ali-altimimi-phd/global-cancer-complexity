@@ -1,0 +1,152 @@
+---
+title: "Complexity and Entropy Summary Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "asis")
+library(dplyr)
+library(stringr)
+library(glue)
+library(knitr)
+library(kableExtra)
+library(readr)
+library(fs)
+```
+
+```{r load-data, echo=FALSE}
+# Load cleaned RDS files (adjust path as needed)
+complexity_df <- readRDS(here::here("output/global_cancer/reports/complexity_cleaned.rds"))
+entropy_df <- readRDS(here::here("output/global_cancer/reports/entropy_cleaned.rds"))
+
+p_thresh <- 0.05
+```
+
+```{css, echo=FALSE}
+<!-- .table-striped tbody tr:nth-of-type(odd) { -->
+<!--   background-color: #e6f9e6;  /* light green */ -->
+<!-- } -->
+```
+
+```{r generate-report, echo=FALSE, warning=FALSE}
+
+for (engine in c("complexity", "entropy")) {
+  df <- if (engine == "complexity")
+    complexity_df
+  else
+    entropy_df
+  cat(glue("## Engine: {engine}\n\n"))
+  
+  for (chip_id in unique(df$chip)) {
+    chip_df <- filter(df, chip == chip_id)
+    cat(glue("### CHIP: {chip_id}\n\n"))
+    
+    for (cmp in unique(chip_df$comparison)) {
+      cmp_df <- filter(chip_df, comparison == cmp)
+      # cat(glue("<hr>\n\n#### Comparison: {cmp}\n\n"))
+      cat(glue('<hr style="border: 2px solid black; margin-top: 2em; margin-bottom: 2em;">\n\n#### Comparison: {cmp}\n\n'))
+
+      # ALL Probes
+      all_row <- filter(cmp_df, gene_set_normalized == "ALL")
+      if (nrow(all_row) == 1) {
+        p_val <- signif(all_row$p_perm, 4)
+        direction <- coalesce(all_row$direction,
+                              all_row$spectral_direction,
+                              all_row$shannon_direction)
+        cat(glue(
+          "**ALL Probes:** p = {p_val} | {str_to_title(direction)}\n\n"
+        ))
+      } else {
+        cat("*ALL Probes:* (missing or malformed)\n\n")
+      }
+      
+      # GO Terms Table
+      go_rows <- cmp_df |> filter(str_starts(gene_set_normalized, "GO:"),
+                                  !is.na(p_perm),
+                                  p_perm <= p_thresh)
+      if (nrow(go_rows) > 0) {
+        desc <- coalesce(go_rows$gene_set_name, go_rows$gene_set_normalized)
+        dirn <- coalesce(go_rows$direction,
+                         go_rows$spectral_direction,
+                         go_rows$shannon_direction)
+        pval <- signif(go_rows$p_perm, 4)
+        df_tbl <- data.frame(
+          Description = desc,
+          `p-value` = pval,
+          Direction = str_to_title(dirn)
+        )
+        print(
+          kableExtra::kable(df_tbl, format = "html", caption = "Significant GO Terms") |>
+            kableExtra::kable_styling(
+              bootstrap_options = c("striped", "hover", "condensed"),
+              full_width = TRUE
+            )
+        )
+      } else {
+        cat("*No significant GO terms.*\n\n")
+      }
+      
+      # KEGG Table
+      kegg_rows <- cmp_df |> filter(
+        str_detect(gene_set_normalized, "^[0-9]{4,5}$") &
+          (p_perm <= p_thresh | kegg_cancer == TRUE)
+      )
+      if (nrow(kegg_rows) > 0) {
+        desc <- coalesce(kegg_rows$gene_set_name,
+                         kegg_rows$gene_set_normalized)
+        dirn <- coalesce(
+          kegg_rows$direction,
+          kegg_rows$spectral_direction,
+          kegg_rows$shannon_direction
+        )
+        pval <- signif(kegg_rows$p_perm, 4)
+        df_tbl <- data.frame(
+          Description = desc,
+          `p-value` = pval,
+          Direction = str_to_title(dirn)
+        )
+        print(
+          kableExtra::kable(df_tbl, format = "html", caption = "Significant KEGG Pathways") |>
+            kableExtra::kable_styling(
+              bootstrap_options = c("striped", "hover", "condensed"),
+              full_width = TRUE
+            )
+        )
+      } else {
+        cat("*No significant KEGG pathways.*\n\n")
+      }
+      
+      # HALLMARK Table
+      hallmark_rows <- cmp_df |> filter(
+        str_detect(gene_set_normalized, "HALLMARK"),
+        !is.na(p_perm),
+        p_perm <= p_thresh
+      )
+      if (nrow(hallmark_rows) > 0) {
+        desc <- coalesce(hallmark_rows$gene_set_name,
+                         hallmark_rows$gene_set_normalized)
+        dirn <- coalesce(
+          hallmark_rows$direction,
+          hallmark_rows$spectral_direction,
+          hallmark_rows$shannon_direction
+        )
+        pval <- signif(hallmark_rows$p_perm, 4)
+        df_tbl <- data.frame(
+          Description = desc,
+          `p-value` = pval,
+          Direction = str_to_title(dirn)
+        )
+        print(
+          kableExtra::kable(df_tbl, format = "html", caption = "Significant HALLMARK Genes") |>
+            kableExtra::kable_styling(
+              bootstrap_options = c("striped", "hover", "condensed"),
+              full_width = TRUE
+            )
+        )
+      } else {
+        cat("*No significant Hallmark genes.*\n\n")
+      }
+    }
+  }
+}
+```
