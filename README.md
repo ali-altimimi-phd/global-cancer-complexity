@@ -395,18 +395,21 @@ The repository is presented in curated form for transparency and professional re
 
 ## Future Directions
 
-This work is being extended using:
+This work is being extended through a latent space reanalysis of cancer gene expression data using modern machine learning approaches, including:
 
--   variational autoencoders (VAE)
--   latent-space geometry
--   modern machine learning approaches
+- variational autoencoders (VAE)  
+- latent-space geometry  
+- representation learning of biological state  
 
 The objective is to connect:
 
-> classical complexity/entropy measures ↔ learned representations of biological state
+> classical complexity and entropy measures ↔ learned representations of biological structure  
+
+An in-progress implementation of this extension is available at:
+
+https://github.com/ali-altimimi-phd/cancer-latent-space
 
 ------------------------------------------------------------------------
-
 ## Notes
 
 -   Raw data are not included due to size constraints
