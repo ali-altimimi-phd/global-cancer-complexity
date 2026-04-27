@@ -1,29 +1,74 @@
-# Summary of Theoretical Framework
+---
+title: "Theory Summary and Transition to Quantitative Framework"
+format:
+  html:
+    math: mathjax
+  pdf:
+    documentclass: article
+---
 
-1.  Chaos and Attractors in Carcinogenesis:
+## Summary of Theoretical Perspective
 
-    -   Carcinogenesis is conceptualized as a transition between state cycle attractors in a gene regulatory network.
+The preceding chapters establish the following:
 
-    -   Mutations progressively destabilize the genome until a critical threshold is reached, triggering a system-wide reorganization.
+- The cell is a high-dimensional system with structured variability  
+- Gene expression provides a measurable representation of this system  
+- Cancer represents a transformation in system organization  
+- Different tumors may exhibit distinct modes of transformation  
 
-2.  Tumors as Chaotic or Antichaotic:
+These ideas motivate a shift from gene-level analysis to system-level analysis.
 
-    -   Solid Cancers (SC): Often exhibit chaotic behavior, especially those in epithelial tissues like breast, prostate, and pancreas.
+---
 
-    -   Hematological Cancers (HC): Tend toward antichaotic patterns, showing high clonality and genetic uniformity, in contrast to the stochastic diversity of normal hematopoiesis and immunity.
+## From Concepts to Quantities
 
-3.  Complexity and Disease Progression:
+To evaluate these ideas empirically, we require quantitative measures of:
 
-    -   A loss of complexity is observed with cancer progression (and aging), implying reduced system freedom and adaptability.
+- dimensionality  
+- dispersion  
+- predictability  
+- structure  
 
-    -   The transformed cell’s behavior is simplified to core functions: division and survival, contrasting with the more dynamic, multi-functional behavior of healthy cells.
-    
-4.  Cancer as a Complex Adaptive System (CAS):
+These are derived from the covariance matrix $\Sigma$ and its eigenvalues $\lambda_i$.
 
-    -   With cancer complexity trends do not always align with entropy (Cite examples form the study).
+---
 
-    -   Cancer emerges from the interplay of chaos and order, fitting the CAS model, where local interactions lead to emergent global behaviors.
-    
-    - Cancer is not just chaotic or ordered, but dynamically occupies different positions on a chaos–complexity plane—modulated by gene regulation, pathway redundancy, and molecular function.
+## Core Quantities
 
+The following quantities are used:
 
+- participation ratio (effective dimensionality)  
+- entropy of eigenvalue distribution  
+- effective rank  
+- anisotropy  
+
+These measures quantify how variance is distributed across dimensions.
+
+---
+
+## Geometric Interpretation
+
+These statistical quantities have geometric interpretations:
+
+- higher dimensionality → broader occupation of state space  
+- lower dimensionality → collapse onto fewer directions  
+- higher entropy → diffuse distributions  
+- lower entropy → concentrated distributions  
+
+Principal component analysis provides a linear geometric representation of these properties, while latent-space methods extend this representation to nonlinear embeddings.
+
+---
+
+## Transition to Methods
+
+The next chapters operationalize these concepts.
+
+First, complexity and entropy are quantified using eigenvalue-based measures derived from expression data. Next, PCA provides a linear geometric projection of these structures. Finally, variational autoencoders construct nonlinear latent representations for deeper geometric analysis.
+
+---
+
+## Transition to Interpretive Framework
+
+The final step is to map these quantitative and geometric observations to biologically meaningful regimes.
+
+This mapping is formalized in the framework chapter, which defines categories such as complexity gain, complexity loss, entropy gain, and entropy loss, and relates them to latent-space transformations.

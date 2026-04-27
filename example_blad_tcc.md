@@ -4,69 +4,69 @@ This document provides a representative example of the analytical output generat
 
 The full Quarto report contains complete tables and statistical outputs; this summary presents a **structured, interpretation-focused synthesis** grounded directly in the computed results.
 
----
+------------------------------------------------------------------------
 
 ## Clinical & Biological Context
+
 Transitional Cell Carcinoma (TCC) arises from the urothelial lining of the bladder and is characterized by a significant loss of specialized cellular differentiation. This transition from a highly regulated, tissue-specific state to a malignant phenotype serves as an ideal benchmark for evaluating regulatory reorganization. By analyzing TCC, we can observe how the collapse of homeostatic control manifests as a measurable reduction in the structural degrees of freedom within the transcriptomic landscape.
 
----
+------------------------------------------------------------------------
 
 ## Dataset Context
 
-* **Comparison:** BLAD/TCC
-* **Platforms:** hu35ksuba, hu6800
-* **Samples:** Normal vs tumor (paired tissue comparison)
-* **Preprocessing:** RMA normalization, metadata harmonization, full-chip annotation
+-   **Comparison:** BLAD/TCC
+-   **Platforms:** hu35ksuba, hu6800
+-   **Samples:** Normal vs tumor (paired tissue comparison)
+-   **Preprocessing:** RMA normalization, metadata harmonization, full-chip annotation
 
----
+------------------------------------------------------------------------
 
 ## Analytical Framework
 
 The comparison evaluates changes in:
 
-* **Complexity (structure)**
+-   **Complexity (structure)**
 
-  * condition number (κ)
-  * effective rank
-  * covariance geometry
+    -   condition number (κ)
+    -   effective rank
+    -   covariance geometry
 
-* **Entropy (disorder)**
+-   **Entropy (disorder)**
 
-  * Shannon entropy
-  * spectral entropy
+    -   Shannon entropy
+    -   spectral entropy
 
 Analysis is performed across multiple **analytical scopes**:
 
-* probe-level (filtered expression space)
-* gene set level (GO, KEGG, MSigDB)
+-   probe-level (filtered expression space)
+-   gene set level (GO, KEGG, MSigDB)
 
----
+------------------------------------------------------------------------
 
 ## Key Results
 
 ### Probe-Level Signal (limma filtering regime)
 
 | Platform  | Probes Retained |
-| --------- | --------------- |
+|-----------|-----------------|
 | hu35ksuba | 441             |
 | hu6800    | 166             |
 
 *These counts are specific to the limma-based filtering strategy (logFC and significance thresholds) and define the effective feature space for downstream analysis. They are not directly comparable to variance-based or latent-space feature selections.*
 
----
+------------------------------------------------------------------------
 
 ### Complexity and Entropy Summary (by Analytical Scope)
 
-| Scope               | Observation                                                                                                         |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| All filtered probes | Neutral entropy with consistent loss of complexity                                                                  |
-| GO terms            | Mixed entropy behavior (coexisting chaotic and anti-chaotic pathways) with predominantly lost regulatory complexity |
-| KEGG pathways       | Pathway-dependent entropy with selective functional complexity gains                                                |
+| Scope | Observation |
+|----|----|
+| All filtered probes | Neutral entropy with consistent loss of complexity |
+| GO terms | Mixed entropy behavior (coexisting chaotic and anti-chaotic pathways) with predominantly lost regulatory complexity |
+| KEGG pathways | Pathway-dependent entropy with selective functional complexity gains |
 
-**Interpretive note:**
-Entropy behavior is **scale-dependent**: probe-level summaries appear neutral, while gene set analyses reveal heterogeneous, pathway-specific dynamics.
+**Interpretive note:** Entropy behavior is **scale-dependent**: probe-level summaries appear neutral, while gene set analyses reveal heterogeneous, pathway-specific dynamics.
 
----
+------------------------------------------------------------------------
 
 ## Detailed Findings
 
@@ -74,116 +74,114 @@ Entropy behavior is **scale-dependent**: probe-level summaries appear neutral, w
 
 Across both platforms, probe-level analysis indicates:
 
-* **consistent loss of complexity**
-* reduction in effective structural degrees of freedom
+-   **consistent loss of complexity**
+-   reduction in effective structural degrees of freedom
 
 At the gene set level, this loss is concentrated in:
 
-* transcriptional regulation (RNA polymerase II–related processes)
-* DNA damage response and repair
-* regulation of cell proliferation
+-   transcriptional regulation (RNA polymerase II–related processes)
+-   DNA damage response and repair
+-   regulation of cell proliferation
 
 These results indicate a **systematic contraction of regulatory state space** in tumor samples.
 
----
+------------------------------------------------------------------------
 
 ### 2. Selective Functional Complexity Gains
 
 Despite global complexity loss, specific functional domains exhibit **increased structural organization**, including:
 
-* endoplasmic reticulum to Golgi transport
-* cytoskeletal organization and cell shape regulation
-* GTPase and ATPase-associated processes
-* vesicle-mediated transport
+-   endoplasmic reticulum to Golgi transport
+-   cytoskeletal organization and cell shape regulation
+-   GTPase and ATPase-associated processes
+-   vesicle-mediated transport
 
 KEGG-level results further support gains in:
 
-* protein processing pathways
-* cell junction and adhesion-related systems
+-   protein processing pathways
+-   cell junction and adhesion-related systems
 
 These gains reflect **functional consolidation into task-specific biological modules**.
 
----
+------------------------------------------------------------------------
 
 ### 3. Entropy Structure and Heterogeneity
 
 #### Probe-Level
 
-* No significant global entropy shift (neutral behavior across both chips)
+-   No significant global entropy shift (neutral behavior across both chips)
 
 #### Gene Set Level
 
 Entropy exhibits **heterogeneous behavior across pathways**, including:
 
-* **Anti-chaotic (constrained) behavior**
+-   **Anti-chaotic (constrained) behavior**
 
-  * extracellular matrix and adhesion-related processes
-  * tight junction and focal adhesion pathways
-  * structural and binding functions
+    -   extracellular matrix and adhesion-related processes
+    -   tight junction and focal adhesion pathways
+    -   structural and binding functions
 
-* **Chaotic (variable) behavior**
+-   **Chaotic (variable) behavior**
 
-  * intracellular transport
-  * migration-associated pathways
-  * signaling and immune-related processes
+    -   intracellular transport
+    -   migration-associated pathways
+    -   signaling and immune-related processes
 
 Thus:
 
 > Global entropy summaries mask **coexisting dynamical regimes** within the tumor state.
 
----
+------------------------------------------------------------------------
 
 ## Integrated Interpretation
 
 The BLAD/TCC comparison supports the following interpretation:
 
-> In the bladder → TCC transition, tumorigenesis induces a **reorganization of biological complexity**, characterized by
-> **loss of regulatory flexibility** alongside
-> **selective consolidation of functional subsystems**.
+> In the bladder → TCC transition, tumorigenesis induces a **reorganization of biological complexity**, characterized by **loss of regulatory flexibility** alongside **selective consolidation of functional subsystems**.
 
 This transition involves:
 
-* reduction of high-dimensional regulatory control
-* emergence of structured, task-oriented functional modules
-* coexistence of constrained and variable dynamical behaviors
+-   reduction of high-dimensional regulatory control
+-   emergence of structured, task-oriented functional modules
+-   coexistence of constrained and variable dynamical behaviors
 
----
+------------------------------------------------------------------------
 
 ## Conceptual Implication
 
 Rather than a monotonic increase in disorder, the BLAD/TCC comparison indicates:
 
-* **global reduction in regulatory complexity**
-* **functional specialization and structural consolidation**
-* **heterogeneous entropy regimes across biological pathways**
+-   **global reduction in regulatory complexity**
+-   **functional specialization and structural consolidation**
+-   **heterogeneous entropy regimes across biological pathways**
 
 This suggests a transition toward:
 
-* reduced regulatory degrees of freedom
-* stabilization of task-specific functional modules
-* coexistence of constrained and variable dynamical behaviors
+-   reduced regulatory degrees of freedom
+-   stabilization of task-specific functional modules
+-   coexistence of constrained and variable dynamical behaviors
 
 Notably, preliminary latent-space results (see below) indicate that this regulatory simplification may coexist with **expanded variability in learned representation space**, highlighting a distinction between regulatory and geometric complexity.
 
----
+------------------------------------------------------------------------
 
 ## Reproducibility
 
 This analysis is fully reproducible via the project pipeline:
 
-* preprocessing → analysis → reporting
-* configuration-driven execution
-* persisted intermediate artifacts enabling auditability
+-   preprocessing → analysis → reporting
+-   configuration-driven execution
+-   persisted intermediate artifacts enabling auditability
 
----
+------------------------------------------------------------------------
 
 ## Notes
 
-* Results are **filtering-regime dependent** (limma vs variance-based approaches)
-* Cross-platform differences reflect probe coverage and annotation structure
-* Full gene set tables and statistical outputs are available in the complete report
+-   Results are **filtering-regime dependent** (limma vs variance-based approaches)
+-   Cross-platform differences reflect probe coverage and annotation structure
+-   Full gene set tables and statistical outputs are available in the complete report
 
----
+------------------------------------------------------------------------
 
 ## Preliminary Latent Space Results
 
@@ -193,61 +191,60 @@ These results are exploratory and are presented to assess consistency between cl
 
 ### Key Observations (BLAD/TCC)
 
-* **Latent dimensionality**
+-   **Latent dimensionality**
 
-  * participation ratio and eigenvalue entropy increase in tumor samples
-  * indicates expansion of variance across latent dimensions
+    -   participation ratio and eigenvalue entropy increase in tumor samples
+    -   indicates expansion of variance across latent dimensions
 
-* **Cluster structure**
+-   **Cluster structure**
 
-  * tumor samples exhibit a slight reduction in radius (increased compactness)
-  * moderate separation from normal samples (centroid distance ≈ 37)
-  * low-to-moderate silhouette scores indicate partial, but not clean, separation
+    -   tumor samples exhibit a slight reduction in radius (increased compactness)
+    -   moderate separation from normal samples (centroid distance ≈ 37)
+    -   low-to-moderate silhouette scores indicate partial, but not clean, separation
 
-* **Regime classification**
+-   **Regime classification**
 
-  * classified as a **mixed regime** with relative (but not strong) separation
+    -   classified as a **mixed regime** with relative (but not strong) separation
 
----
+------------------------------------------------------------------------
 
 ### Cross-Representation Comparison
 
 Comparison with expression-space results reveals a non-trivial pattern:
 
-* **Expression space**
+-   **Expression space**
 
-  * global loss of complexity
-  * reduction in regulatory degrees of freedom
+    -   global loss of complexity
+    -   reduction in regulatory degrees of freedom
 
-* **Latent space**
+-   **Latent space**
 
-  * increased dimensionality and variance
-  * moderate geometric separation between states
+    -   increased dimensionality and variance
+    -   moderate geometric separation between states
 
----
+------------------------------------------------------------------------
 
 ### Preliminary Interpretation
 
 These results suggest that, within the bladder → TCC transition, tumorigenesis may involve:
 
-> a **reduction in regulatory complexity** alongside
-> an **expansion of phenotypic variability in learned representation space**
+> a **reduction in regulatory complexity** alongside an **expansion of phenotypic variability in learned representation space**
 
 This indicates that, in the TCC state:
 
-* regulatory systems become more constrained
-* while sample-level variation becomes more broadly distributed
+-   regulatory systems become more constrained
+-   while sample-level variation becomes more broadly distributed
 
 Whether this pattern generalizes across cancer types remains an open question under active investigation.
 
----
+------------------------------------------------------------------------
 
 ### Status
 
 These findings are preliminary and require:
 
-* validation across additional cancer types
-* sensitivity analysis with respect to feature selection
-* comparison across latent dimensionalities and model configurations
+-   validation across additional cancer types
+-   sensitivity analysis with respect to feature selection
+-   comparison across latent dimensionalities and model configurations
 
 A full integration of latent-space geometry with classical complexity measures is under active development.

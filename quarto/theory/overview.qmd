@@ -1,51 +1,58 @@
 ---
-editor: 
-  markdown: 
-    wrap: 72
+title: "Overview"
+format:
+  html:
+    math: mathjax
+  pdf:
+    documentclass: article
 ---
-
-# Theoretical Framework
-
-This report explores the hypothesis that cancer development involves
-opposing **chaotic** and **antichaotic** transcriptional dynamics:
-
-> "**Mesenchyme-derived hematologic cancers** (e.g., leukemias,
-> lymphomas) arise from a highly dynamic, chaotic baseline (e.g., VDJ
-> recombination, immune diversity). As these cells become malignant,
-> they converge toward **monoclonality** — a reduction in expression
-> entropy and signaling diversity."
->
-> "**Solid tumors** (e.g., breast, prostate, colon) emerge from
-> relatively stable epithelial lineages. Cancerous transformation
-> introduces **chaotic deregulation** in gene expression and signaling.
-> Among these, glandular adenocarcinomas exhibit the most pronounced
-> chaotic shifts."
-
-This theory draws on studies of complexity theory, immune development,
-and cancer biology (Calin et al. 2003; Cucuianu 1998).
 
 ## Introduction
 
-Twentieth-century biology, shaped by a reductionist paradigm, sought to
-understand complex phenomena by decomposing them into fundamental
-components governed by simple, linear relationships. This approach,
-while powerful, encounters limitations when applied to systems with
-nonlinearity, feedback loops, and emergent behavior. The emergence of
-theories such as catastrophe theory, chaos theory, and complexity theory
-has expanded our understanding of dynamic biological systems and offers
-an alternative framework for studying cancer biology.
+Cancer is traditionally described in terms of genetic mutations and pathway disruptions. However, this perspective does not fully capture the system-level transformations that occur during tumorigenesis. An alternative view treats cancer as a transformation in the organization of cellular systems.
 
-This report reappraises a systems-theoretical approach to cancer,
-examining transcriptomic chaos and complexity using contemporary tools
-in computational biology and R-based statistical methods.
+This work adopts a systems-level perspective in which normal and tumor tissues are understood as distinct configurations of a high-dimensional biological state space. The central question is not only which genes change, but how the structure of gene expression changes.
 
-## Paradigms: Reductionism vs. Emergence
+---
 
-While reductionism remains foundational in molecular biology,
-emergentist perspectives have gained traction for understanding systems
-exhibiting nonlinearity, multi-scale organization, and adaptation.
-Emergence describes phenomena where higher-level order arises from the
-interaction of simpler components, such as gene regulatory networks in
-cells. Importantly, the paradigms of reductionism and emergence need not
-be mutually exclusive—they can be integrated to develop more
-comprehensive models.
+## Cancer as a Transformation of Organization
+
+Let $X \in \mathbb{R}^{n \times p}$ denote a gene expression matrix. Each sample corresponds to a point in a high-dimensional space. Normal and tumor tissues can therefore be interpreted as distributions within this space.
+
+Tumorigenesis can be viewed as a transformation:
+
+$$
+X_{\text{normal}} \rightarrow X_{\text{tumor}}
+$$
+
+This transformation may involve:
+
+- changes in dimensionality  
+- changes in dispersion  
+- changes in structure and predictability  
+
+These changes motivate the need for quantitative measures of organization.
+
+---
+
+## From Genes to Structure
+
+Rather than focusing on individual genes, this work focuses on:
+
+- the **distribution of variance** across dimensions  
+- the **structure of covariance**  
+- the **geometry of sample distributions**  
+
+These properties can be quantified using eigenvalue-based measures and geometric representations.
+
+---
+
+## Scope
+
+The following chapters develop:
+
+1. A theoretical basis for viewing the cell as a complex system  
+2. A conceptualization of cancer as a transformation within that system  
+3. A summary linking these ideas to measurable quantities  
+
+Subsequent sections translate these concepts into statistical, geometric, and interpretive frameworks.

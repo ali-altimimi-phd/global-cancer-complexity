@@ -1,3 +1,14 @@
+# ------------------------------------------------------------------------------
+# File: run_all_reports.R
+# Purpose: Generate all comparison-level reports by iterating over biological
+#   contrasts and invoking data preparation, visualization, and report rendering
+# Role: Pipeline coordinator (batch execution wrapper)
+# Pipeline: Reporting
+# Project: Cancer Complexity Analysis
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
 #' Run All Quarto Comparison Reports
 #'
 #' This function prepares RDS data files, regenerates plots, writes
@@ -24,7 +35,6 @@
 #' @param qmd_output_dir Directory to save generated `.qmd` files (default: "quarto/reports/generated_reports")
 #'
 #' @return NULL (invisible), used for side effects
-#' @export
 run_all_reports <- function(summaries_combined_df,
                             complexity_df,
                             entropy_df,
@@ -126,7 +136,7 @@ run_all_reports <- function(summaries_combined_df,
     param_yaml <- glue(
       "---\n",
       "title: \"Comparison Report: {cmp}\"\n",
-      "author: \"XXX\"\n",
+      "author: \"Ali Al-Timimi, PhD\"\n",
       "format: html\n",
       "params:\n",
       "  data_file: \"{normalizePath(rds_path, winslash = '/') }\"\n",

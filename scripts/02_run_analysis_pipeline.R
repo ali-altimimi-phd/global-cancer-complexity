@@ -178,6 +178,103 @@ run_analysis_pipeline <- function() {
     logger$log("✅ Comparison-level summary table saved.")
   }
   
+
+  # ---- Stage 7: Execute latent-space notebooks ----
+  if (isTRUE(run_latent_notebooks)) {
+    logger$log("🐍 Executing latent-space Jupyter notebooks...", section = "NOTEBOOKS")
+
+    run_notebook <- function(notebook_name) {
+      notebook_path <- file.path(latent_notebook_dir, notebook_name)
+
+      if (!file.exists(notebook_path)) {
+        logger$log(sprintf("Notebook not found: %s", notebook_path), section = "ERROR")
+        stop(sprintf("Notebook not found: %s", notebook_path), call. = FALSE)
+      }
+
+      if (isTRUE(execute_notebooks_inplace)) {
+        output_args <- c("--inplace")
+        output_label <- notebook_path
+      } else {
+        output_path <- file.path(notebook_executed_dir, notebook_name)
+        output_args <- c("--output", shQuote(output_path))
+        output_label <- output_path
+      }
+
+      args <- c(
+        "nbconvert",
+        "--to", "notebook",
+        "--execute",
+        sprintf("--ExecutePreprocessor.timeout=%s", notebook_timeout_seconds),
+        output_args,
+        shQuote(notebook_path)
+      )
+
+      logger$timed(sprintf("Notebook %s", notebook_name), {
+        logger$log(sprintf("Launching notebook: %s", notebook_path), section = "NOTEBOOKS")
+
+        old_wd <- getwd()
+        on.exit(setwd(old_wd), add = TRUE)
+        setwd(latent_notebook_dir)
+
+        notebook_output <- tryCatch(
+          system2(command = jupyter_command, args = args, stdout = TRUE, stderr = TRUE),
+          warning = function(w) structure(conditionMessage(w), status = 1L),
+          error = function(e) structure(conditionMessage(e), status = 1L)
+        )
+
+        if (length(notebook_output) > 0) {
+          for (line in notebook_output) logger$log(as.character(line), section = "JUPYTER")
+        }
+
+        exit_status <- attr(notebook_output, "status")
+        if (is.null(exit_status)) exit_status <- 0L
+
+        if (!identical(as.integer(exit_status), 0L)) {
+          logger$log(sprintf("Notebook failed with exit status %s: %s", exit_status, notebook_name), section = "ERROR")
+          stop(sprintf("Notebook failed: %s", notebook_name), call. = FALSE)
+        }
+
+        logger$log(sprintf("Completed notebook successfully: %s", output_label), section = "NOTEBOOKS")
+      })
+
+      invisible(TRUE)
+    }
+
+    for (notebook_name in latent_notebooks) run_notebook(notebook_name)
+
+    logger$log("✅ Latent-space notebooks completed successfully.", section = "NOTEBOOKS")
+  } else {
+    logger$log("⏭️ Latent-space notebook execution skipped.", section = "NOTEBOOKS")
+  }
+
+  # ---- Stage 8: Latent-space postprocessing ----
+  if (isTRUE(run_latent_postprocessing)) {
+    logger$timed("Latent-space postprocessing", {
+      logger$log("🧾 Running latent-space postprocessing...", section = "LATENT_POST")
+      
+      source(here::here("R", "latent-space", "build_latent_postprocessing_outputs.R"), local = TRUE)
+      
+      run_latent_postprocessing(
+        logger = logger,
+        latent_project_dir = latent_project_dir,
+        reports_dir = reports_dir,
+        table_dir = latent_postprocessing_table_dir,
+        plot_dir = latent_postprocessing_plot_dir,
+        chip_id = latent_postprocessing_chip_id,
+        mode = latent_postprocessing_mode,
+        gene_set_name = latent_postprocessing_gene_set_name
+      )
+      
+      logger$log("✅ Latent-space postprocessing completed successfully.", section = "LATENT_POST")
+    })
+  } else {
+    logger$log("⏭️ Latent-space postprocessing skipped.", section = "LATENT_POST")
+  }
+
   # ---- Final message ----
-  logger$log("🎉 Analysis pipeline completed successfully.")
+  logger$log("🎉 Analysis pipeline completed successfully.", section = "PIPELINE")
+}
+
+if (sys.nframe() == 0) {
+  run_analysis_pipeline()
 }

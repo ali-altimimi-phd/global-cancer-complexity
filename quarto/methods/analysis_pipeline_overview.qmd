@@ -1,113 +1,561 @@
-## Analysis Pipeline Overview
+# Analysis Workflow for Global Cancer Expression Structure
 
-This pipeline processes and analyzes microarray CEL files from public repositories to generate cleaned `ExpressionSet` objects, identify differentially expressed probe sets, annotate them, and run pairwise gene set comparisons. Each stage can be independently toggled via the config file.
+This document describes the analysis pipeline used after preprocessing of the
+Ramaswamy global cancer dataset. The pipeline consumes normalized,
+metadata-enriched `ExpressionSet` objects and full-chip annotation outputs from
+the preprocessing workflow, constructs tissue-specific comparison matrices,
+filters probe sets, runs pairwise complexity and entropy analyses, aggregates
+results, summarizes comparison-level patterns, and optionally executes and
+postprocesses the latent-space notebooks.
 
----
+The purpose of this document is to baseline the current analysis workflow. It is
+therefore primarily descriptive. In particular, the final sections identify the
+current reporting interface and open questions about which outputs are stable,
+which are intermediate, and which may need further inspection before changing the
+reporting layer.
 
-## Stage-by-Stage Breakdown
+------------------------------------------------------------------------
 
----
+## Overview {.unnumbered}
 
-### 🧪 Stage 1: Limma Filtering
+**Driver script:** `scripts/analysis/02_run_analysis_pipeline.R`  
+**Configuration file:** `R/config/global_cancer/analysis_config.R`
 
-**Purpose:** Identify differentially expressed probe sets per chip.
+**Primary upstream inputs:**
 
-- Controlled by: `force_rebuild_limma_filter`
-- Wrapper: `run_chip_limma_filter.R`
-- Labels: assigned using `assign_labels_to_all.R`
-- Parameters:
-  - `logFC > 0.33`
-  - `p-value < 0.05`
-- Comparison basis: `<<e.g., cancer vs normal, batch comparisons>>`
+- `output/global_cancer/RData/global_cancer_eset_list.RData`
+- `output/global_cancer/RData/annotations/full_chip_annotations.rds`
 
----
+**Primary analysis outputs:**
 
-### 🧾 Stage 2: Annotation of Probes
+- `output/global_cancer/RData/expression_matrices/global_cancer_matrix_maps.RData`
+- `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds`
+- `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds`
+- `output/global_cancer/RData/aggregated/complexity_aggregated_results.csv`
+- `output/global_cancer/RData/aggregated/complexity_aggregated_results.rds`
+- `output/global_cancer/RData/aggregated/entropy_aggregated_results.csv`
+- `output/global_cancer/RData/aggregated/entropy_aggregated_results.rds`
+- `output/global_cancer/RData/summaries/summaries_combined_df.csv`
+- `output/global_cancer/RData/summaries/summaries_combined_df.rds`
 
-**Purpose:** Annotate filtered probe sets with gene-level metadata.
+**Primary latent-space postprocessing outputs:**
 
-- Controlled by: `force_run_annotation`
-- Script: `run_annotate_all_filtered_probes.R`
-- Output:
-  - `.RData` with annotation object
-  - Excel summary for human inspection
-- Annotation sources: `<<e.g., hgu133plus2.db, Ensembl>>`
+- `output/global_cancer/tables/latent/`
+- `output/global_cancer/plots/latent/`
+- `output/global_cancer/reports/`
 
----
+**Primary log file:**
 
-### 📈 Stage 3: Visualization
+- `output/global_cancer/logs/analysis/analysis_pipeline_log.txt`
 
-**Purpose:** Generate summary plots and diagnostic visuals.
+The analysis pipeline is the main bridge between the preprocessed expression
+objects and the downstream reporting layer. It also serves as the integration
+point between the older R-side complexity/entropy workflow and the newer
+Python/Jupyter latent-space workflow.
 
-- Controlled by: `run_visualization`
-- Output: HTML report in `output/reports/`
-- Report: `filtered_probes_report.Rmd`
-- Includes: `<<e.g., volcano plots, PCA, heatmaps>>`
+------------------------------------------------------------------------
 
----
+## Historical and Methodological Context {.unnumbered}
 
-### 🧱 Stage 4: Matrix + Comparison Map Construction
+The analysis workflow preserves the original dissertation-level aim of comparing
+normal and malignant expression structure within tissue-specific contrasts. In
+the current implementation, that aim is operationalized through chip-specific
+`ExpressionSet` objects, predefined tissue/tumor comparison maps, group-aware
+probe filtering, pairwise complexity and entropy engines, and gene-set-level
+annotation.
 
-**Purpose:** Create chip- and tissue-specific expression matrices and predefined comparisons.
+The pipeline has also been extended to coordinate latent-space analysis. The
+latent notebooks are executed from the analysis driver only when explicitly
+enabled, and their outputs can then be postprocessed into tables, plots, and
+report-facing summary files.
 
-- Controlled by: `force_rebuild_matrix_maps`
-- Config script: `global_cancer_matrix_config_v2.R`
-- Functions:
-  - `build_matrix_lists_by_tissue()`
-  - `define_predefined_comparisons()`
-- Output: `globalCancer_matrix_config.RData`
-- Notes: `<<add logic used in defining comparisons>>`
+Because the reporting pipeline was developed as a separate abstraction layer, the
+analysis workflow should be treated as the place where reporting inputs originate
+or are consolidated. Before changing either pipeline, the practical task is to
+identify which report-facing objects are produced here, what formats they use,
+and whether their formats are safe to change.
 
----
+------------------------------------------------------------------------
 
-### 🔄 Stage 5: Pairwise Comparisons
+## Pipeline Controls {.unnumbered}
 
-**Purpose:** Apply gene set metrics across all comparison pairs.
+The pipeline is controlled through `analysis_config.R`. The principal toggles are:
+
+| Toggle | Purpose |
+|---|---|
+| `build_matrix_maps` | Build chip-specific tissue matrices and predefined comparison maps |
+| `run_filtering` | Run group-aware probe filtering for each chip |
+| `run_pairwise` | Run pairwise complexity and entropy comparisons |
+| `run_aggregator` | Aggregate pairwise engine results and attach gene-set names |
+| `run_comparison_summary` | Summarize comparison-level complexity and entropy patterns |
+| `run_latent_notebooks` | Execute the latent-space Jupyter notebooks through `nbconvert` |
+| `run_latent_postprocessing` | Build latent-space postprocessing tables, plots, and report-facing outputs |
+
+The current analysis configuration includes:
+
+```r
+filter_method <- "limma"  # "limma" or "variance"
+logfc_cutoff  <- 0.33
+pval_cutoff   <- 0.05
+var_threshold <- 0.75
+top_n         <- 3000
+
+chips   <- c("hu35ksuba", "hu6800")
+engines <- c("complexity", "entropy")
+
+gene_set_mode   <- "ALL"
+quantile_cutoff <- 0.75
+min_probes      <- 5
+```
+
+The latent-space postprocessing configuration currently uses:
+
+```r
+latent_postprocessing_chip_id       <- "hu35ksuba"
+latent_postprocessing_mode          <- "ALL"
+latent_postprocessing_gene_set_name <- "ALL"
+```
+
+This means that the R-side complexity/entropy workflow is configured for both
+supported chips, while the current latent postprocessing layer is explicitly
+focused on `hu35ksuba`.
+
+------------------------------------------------------------------------
+
+## Workflow Steps {.unnumbered}
+
+### 1. Load Configuration and Start Logging {.unnumbered}
+
+**Purpose:** Initialize the analysis run, load paths and toggles, and create the
+analysis pipeline log.
+
+- Configuration: `R/config/global_cancer/analysis_config.R`
+- Logger: `R/helpers/pipeline_logger.R`
+- Log file: `output/global_cancer/logs/analysis/analysis_pipeline_log.txt`
+
+The driver script begins by sourcing the configuration file into the global
+analysis run context. It then starts a pipeline logger and records the beginning
+of the run.
+
+------------------------------------------------------------------------
+
+### 2. Build Expression Matrix and Comparison Maps {.unnumbered}
+
+**Purpose:** Convert preprocessed `ExpressionSet` objects into tissue-specific
+expression matrices and predefined normal/tumor comparison maps.
+
+- Controlled by: `build_matrix_maps`
+- Input: `output/global_cancer/RData/global_cancer_eset_list.RData`
+- Helper: `R/helpers/matrix_builders.R`
+- Output: `output/global_cancer/RData/expression_matrices/global_cancer_matrix_maps.RData`
+
+**Behavior:**
+
+- Load `eset_list` from memory if available
+- Otherwise load `eset_list` from the preprocessing checkpoint
+- Build chip-specific matrix lists by tissue
+- Define predefined comparison maps for each chip
+- Save the matrix lists and comparison maps as a reusable checkpoint
+
+**Objects saved:**
+
+| Object | Description |
+|---|---|
+| `matrices_hu35ksuba` | Tissue-specific expression matrices for the `hu35ksuba` chip |
+| `matrices_hu6800` | Tissue-specific expression matrices for the `hu6800` chip |
+| `comparison_map_hu35ksuba` | Predefined normal/tumor comparison map for `hu35ksuba` |
+| `comparison_map_hu6800` | Predefined normal/tumor comparison map for `hu6800` |
+
+This stage defines the empirical state spaces used by the later pairwise
+comparisons.
+
+------------------------------------------------------------------------
+
+### 3. Run Group-Aware Probe Filtering {.unnumbered}
+
+**Purpose:** Select probe sets for each predefined comparison using the configured
+filtering method.
+
+- Controlled by: `run_filtering`
+- Loader: `R/helpers/load_results_into_global.R`
+- Wrapper: `R/wrappers/run_grouped_probe_filtering.R`
+- Variance helper: `R/filters/select_high_variance_probes.R`
+- Outputs:
+  - `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds`
+  - `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds`
+
+**Current filtering options:**
+
+| Method | Parameters | Intended role |
+|---|---|---|
+| `limma` | `logfc_cutoff`, `pval_cutoff` | Differential-expression-oriented filtering |
+| `variance` | `var_threshold`, `top_n` | Structure/dispersion-oriented filtering |
+
+The filtering stage is group-aware: it uses the comparison maps rather than
+applying one global probe subset indiscriminately across all contrasts. The
+selected probes then become the input feature sets for downstream pairwise
+complexity and entropy engines.
+
+------------------------------------------------------------------------
+
+### 4. Run Pairwise Complexity and Entropy Comparisons {.unnumbered}
+
+**Purpose:** Apply the configured analysis engines to each supported
+chip-specific normal/tumor comparison.
 
 - Controlled by: `run_pairwise`
-- Script: `run_all_pairwise_comparisons_v3.R`
-- Parameters:
-  - Chips: `hu35ksuba`, `hu6800`
-  - Engines: `complexity`, `entropy`
-  - Gene sets: `KEGG_Q75`
-  - Minimum probes: 5
-- Interpretation: `<<how pairwise scores are used>>`
+- Loader: `R/helpers/load_results_into_global.R`
+- Annotation helper: `R/helpers/load_annotations.R`
+- Wrapper: `R/wrappers/run_all_pairwise_comparisons.R`
+- Engines: `complexity`, `entropy`
+- Gene-set modes: `ALL`, `GO_BP`, `GO_MF`, `KEGG`, `MSIGDB`
 
----
+**Inputs:**
 
-### 🧠 Stage 6: Aggregation + Gene Set Annotation
+- Matrix/comparison-map checkpoint from Stage 2
+- Filtered-probe objects from Stage 3
+- Full-chip annotations from preprocessing
 
-**Purpose:** Aggregate engine results and annotate gene sets.
+**Behavior:**
+
+- Load expression matrices and comparison maps
+- Load filtered probe results
+- Load full-chip annotation layer if needed
+- Run all pairwise comparisons for configured chips, engines, and gene-set modes
+
+This stage is where the R-side biological complexity and entropy analyses are
+computed. The exact output layout is produced by the pairwise-comparison wrapper
+and downstream engine functions; these files are later collected by the
+aggregation stage.
+
+------------------------------------------------------------------------
+
+### 5. Aggregate Engine Results and Attach Gene-Set Names {.unnumbered}
+
+**Purpose:** Consolidate pairwise engine outputs into cleaned aggregate tables for
+complexity and entropy.
 
 - Controlled by: `run_aggregator`
-- Scripts:
-  - `aggregate_engine_results_by_engine.R`
-  - `helpers/gene_set_tools.R`
-- Output:
-  - `.csv` and `.rds` files for each engine
-- Annotation: `attach_gene_set_names()`
-- Notes: `<<GO terms? KEGG? How annotation improves interpretability?>>`
+- Loader: `R/helpers/load_results_into_global.R`
+- Aggregator: `R/aggregate/aggregate_engine_results_by_engine.R`
+- Gene-set helper: `R/helpers/gene_set_tools.R`
+- Cleaning helper: `R/helpers/clean_aggregated_results.R`
+- Outputs:
+  - `output/global_cancer/RData/aggregated/complexity_aggregated_results.csv`
+  - `output/global_cancer/RData/aggregated/complexity_aggregated_results.rds`
+  - `output/global_cancer/RData/aggregated/entropy_aggregated_results.csv`
+  - `output/global_cancer/RData/aggregated/entropy_aggregated_results.rds`
 
----
+**Behavior:**
 
-### 📄 Stage 7: Summary Reports
+- Load pairwise comparison results from the analysis data directory
+- Ensure the annotation layer is available
+- Aggregate results separately for the complexity and entropy engines
+- Attach gene-set names from the annotation layer
+- Clean the aggregate tables
+- Save both CSV and RDS forms of each aggregate table
 
-**Purpose:** Generate text and CSV summaries for downstream reporting.
+This stage is a major candidate source for downstream reporting tables because it
+produces explicit tabular complexity and entropy result files.
 
-- Controlled by: `run_reporter`
-- Scripts:
-  - `summarize_pairwise_results_v2.R`
-  - `clean_aggregated_results.R`
-- Output:
-  - Cleaned results: `output/cleaned_results/`
-  - Text summaries: `output/reports/`
-- Example contents: `<<Top pathways? Most variable gene sets?>>`
+------------------------------------------------------------------------
 
----
+### 6. Summarize Comparison-Level Patterns {.unnumbered}
 
-## Summary
+**Purpose:** Collapse aggregated complexity and entropy outputs into
+comparison-level summaries.
 
-The pipeline is modular, fault-tolerant, and well-structured for use in clinical bioinformatics projects. The logic accommodates reruns, conditional computation, and clear separation of data stages. Each module can be adapted or extended independently.
+- Controlled by: `run_comparison_summary`
+- Loader: `R/helpers/load_results_into_global.R`
+- Complexity summary: `R/summarize/summarize_complexity.R`
+- Entropy summary: `R/summarize/summarize_entropy.R`
+- Summary combiner: `R/summarize/combine_entropy_complexity_summaries.R`
+- Outputs:
+  - `output/global_cancer/RData/summaries/summaries_combined_df.csv`
+  - `output/global_cancer/RData/summaries/summaries_combined_df.rds`
 
----
+**Behavior:**
 
+- Load cleaned aggregate complexity and entropy results
+- Recalculate the complexity summary table
+- Recalculate the entropy summary table
+- Combine both summaries into a unified comparison-level table
+- Save both CSV and RDS forms of the combined summary table
+
+This summary file appears to represent one of the most compact R-side outputs for
+comparison-level interpretation.
+
+------------------------------------------------------------------------
+
+### 7. Execute Latent-Space Notebooks Optional {.unnumbered}
+
+**Purpose:** Optionally execute the Python/Jupyter latent-space workflow from the
+R analysis driver.
+
+- Controlled by: `run_latent_notebooks`
+- Notebook command: `jupyter nbconvert --to notebook --execute`
+- Notebook directory: `projects/cancer-latent-space/notebooks`
+- Optional executed-copy directory: `output/global_cancer/notebooks/executed`
+
+**Configured notebooks:**
+
+| Notebook | Role |
+|---|---|
+| `00_latent_space_config.ipynb` | Shared latent-space paths, configuration, and abbreviations |
+| `01_load_and_inspect_data.ipynb` | Load and inspect exported ML inputs |
+| `02_prepare_data_for_vae.ipynb` | Prepare expression data for VAE modeling |
+| `03_train_first_vae.ipynb` | Train the initial VAE |
+| `04_latent_space_analysis.ipynb` | Join latent coordinates to metadata and inspect latent structure |
+| `05_latent_complexity_analysis.ipynb` | Compute within-comparison latent complexity measures |
+| `06_between_cancer_geometry_in_latent_space_enhanced.ipynb` | Compute between-cancer latent geometry measures |
+
+When `execute_notebooks_inplace` is `TRUE`, notebook outputs are written back
+into the notebooks themselves. When `FALSE`, executed copies are written to the
+configured output directory.
+
+This stage does not itself define the latent-space methodology; it orchestrates
+notebook execution from within the R analysis pipeline.
+
+------------------------------------------------------------------------
+
+### 8. Run Latent-Space Postprocessing {.unnumbered}
+
+**Purpose:** Build R-side latent-space postprocessing outputs from the latent
+notebook results.
+
+- Controlled by: `run_latent_postprocessing`
+- Script: `R/latent-space/build_latent_postprocessing_outputs.R`
+- Table output directory: `output/global_cancer/tables/latent/`
+- Plot output directory: `output/global_cancer/plots/latent/`
+- Report output directory: `output/global_cancer/reports/`
+
+**Current settings:**
+
+```r
+latent_postprocessing_chip_id       <- "hu35ksuba"
+latent_postprocessing_mode          <- "ALL"
+latent_postprocessing_gene_set_name <- "ALL"
+```
+
+This stage is especially relevant to the reporting pipeline because it appears to
+produce table, plot, and report-facing outputs after the Jupyter notebooks have
+completed. It should be inspected together with the reporting pipeline before any
+assumption is made about whether the current report layer consumes structured
+files, rendered fragments, generated QMD content, or a mixture of these.
+
+------------------------------------------------------------------------
+
+## Output Contract Current Baseline {.unnumbered}
+
+The current analysis pipeline exposes several downstream interfaces. Some are
+clear structured checkpoints; others require further inspection before changing.
+
+### R-side analysis checkpoints {.unnumbered}
+
+| File | Description |
+|---|---|
+| `output/global_cancer/RData/expression_matrices/global_cancer_matrix_maps.RData` | Saved matrix lists and comparison maps |
+| `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds` | Filtered probes for `hu35ksuba` comparisons |
+| `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds` | Filtered probes for `hu6800` comparisons |
+| `output/global_cancer/RData/aggregated/complexity_aggregated_results.rds` | Aggregated complexity results as an R object |
+| `output/global_cancer/RData/aggregated/entropy_aggregated_results.rds` | Aggregated entropy results as an R object |
+| `output/global_cancer/RData/summaries/summaries_combined_df.rds` | Combined comparison-level summary table as an R object |
+
+### CSV analysis exports {.unnumbered}
+
+| File | Description |
+|---|---|
+| `output/global_cancer/RData/aggregated/complexity_aggregated_results.csv` | Aggregated complexity results in tabular text form |
+| `output/global_cancer/RData/aggregated/entropy_aggregated_results.csv` | Aggregated entropy results in tabular text form |
+| `output/global_cancer/RData/summaries/summaries_combined_df.csv` | Combined comparison-level summary table in tabular text form |
+
+### Latent-space postprocessing outputs {.unnumbered}
+
+| Location | Description |
+|---|---|
+| `output/global_cancer/tables/latent/` | Latent-space postprocessing tables |
+| `output/global_cancer/plots/latent/` | Latent-space postprocessing plots |
+| `output/global_cancer/reports/` | Report-facing latent-space outputs |
+
+The exact contents and formats of the latent table/report directories should be
+reviewed before they are treated as stable reporting contracts.
+
+------------------------------------------------------------------------
+
+## Reporting Interface and Open Questions {.unnumbered}
+
+The current PDF/HTML rendering issue should be investigated by tracing report
+inputs back to the analysis outputs. At this stage, the appropriate goal is not
+to prescribe a replacement format, but to document the existing interface.
+
+Key questions for review:
+
+| Question | Why it matters |
+|---|---|
+| Which reporting tables are generated directly from `complexity_aggregated_results.*` and `entropy_aggregated_results.*`? | These are structured outputs and may be easier to render consistently across HTML and PDF |
+| Which reporting tables are generated from `summaries_combined_df.*`? | This file may be the cleanest comparison-level summary source |
+| Which reporting tables are produced by latent-space postprocessing? | The latent postprocessing stage appears to create report-facing artifacts after notebook execution |
+| Are any GO/KEGG/MSigDB tables persisted as rendered HTML rather than data? | This may explain HTML/PDF rendering divergence, but should be confirmed before changing code |
+| Are generated QMD files reading data frames, CSV/RDS files, HTML fragments, or preassembled text blocks? | This determines whether the issue belongs in analysis, latent postprocessing, or reporting |
+| Which outputs are relied on by the reporting pipeline exactly as written? | Some apparent intermediate files may be necessary for the existing abstraction layer |
+| Which output formats can be changed without breaking generated reports? | This defines the safe scope for future refactoring |
+
+Recommended audit path:
+
+1. Inspect `R/latent-space/build_latent_postprocessing_outputs.R`.
+2. Inspect the reporting pipeline for references to `output/global_cancer/RData/aggregated/`.
+3. Inspect the reporting pipeline for references to `output/global_cancer/RData/summaries/`.
+4. Inspect the reporting pipeline for references to `output/global_cancer/tables/latent/` and `output/global_cancer/reports/`.
+5. Identify whether failing GO/KEGG tables originate from aggregate CSV/RDS data, generated QMD code, or pre-rendered HTML.
+6. Only then decide whether changes belong in analysis, latent postprocessing, reporting, or the QMD template layer.
+
+------------------------------------------------------------------------
+
+## Testing and Validation {.unnumbered}
+
+Recommended staged validation is:
+
+### Phase A: Check existing analysis checkpoints {.unnumbered}
+
+```r
+build_matrix_maps       <- FALSE
+run_filtering           <- FALSE
+run_pairwise            <- FALSE
+run_aggregator          <- FALSE
+run_comparison_summary  <- FALSE
+run_latent_notebooks    <- FALSE
+run_latent_postprocessing <- FALSE
+```
+
+This mode verifies that the pipeline initializes, reads configuration, starts
+logging, and exits without rebuilding analysis products.
+
+### Phase B: Rebuild matrix and comparison maps {.unnumbered}
+
+```r
+build_matrix_maps       <- TRUE
+run_filtering           <- FALSE
+run_pairwise            <- FALSE
+run_aggregator          <- FALSE
+run_comparison_summary  <- FALSE
+run_latent_notebooks    <- FALSE
+run_latent_postprocessing <- FALSE
+```
+
+This tests whether the preprocessed `ExpressionSet` checkpoint can still support
+matrix-list and comparison-map construction.
+
+### Phase C: Re-run filtering only {.unnumbered}
+
+```r
+build_matrix_maps       <- FALSE
+run_filtering           <- TRUE
+run_pairwise            <- FALSE
+run_aggregator          <- FALSE
+run_comparison_summary  <- FALSE
+run_latent_notebooks    <- FALSE
+run_latent_postprocessing <- FALSE
+```
+
+This tests whether the current filtering configuration is compatible with the
+saved matrix/comparison-map checkpoint.
+
+### Phase D: Rebuild aggregation and summaries {.unnumbered}
+
+```r
+build_matrix_maps       <- FALSE
+run_filtering           <- FALSE
+run_pairwise            <- FALSE
+run_aggregator          <- TRUE
+run_comparison_summary  <- TRUE
+run_latent_notebooks    <- FALSE
+run_latent_postprocessing <- FALSE
+```
+
+This tests whether existing pairwise comparison outputs can still be consolidated
+into aggregate and summary files.
+
+### Phase E: Rebuild latent postprocessing outputs only {.unnumbered}
+
+```r
+build_matrix_maps       <- FALSE
+run_filtering           <- FALSE
+run_pairwise            <- FALSE
+run_aggregator          <- FALSE
+run_comparison_summary  <- FALSE
+run_latent_notebooks    <- FALSE
+run_latent_postprocessing <- TRUE
+```
+
+This tests the latent-space reporting interface without rerunning the notebooks.
+It is a useful mode for investigating whether rendering issues are introduced at
+the postprocessing/report-facing output layer.
+
+------------------------------------------------------------------------
+
+## Directory Layout {.unnumbered}
+
+```text
+global-cancer-complexity/
+  R/
+    config/global_cancer/analysis_config.R
+    aggregate/
+      aggregate_engine_results_by_engine.R
+    filters/
+      select_high_variance_probes.R
+    helpers/
+      clean_aggregated_results.R
+      gene_set_tools.R
+      load_annotations.R
+      load_results_into_global.R
+      matrix_builders.R
+      pipeline_logger.R
+    latent-space/
+      build_latent_postprocessing_outputs.R
+    summarize/
+      summarize_complexity.R
+      summarize_entropy.R
+      combine_entropy_complexity_summaries.R
+    wrappers/
+      run_all_pairwise_comparisons.R
+      run_grouped_probe_filtering.R
+  scripts/
+    analysis/
+      02_run_analysis_pipeline.R
+  projects/
+    cancer-latent-space/
+      notebooks/
+  output/
+    global_cancer/
+      RData/
+        expression_matrices/
+        filtered_probes/
+        aggregated/
+        summaries/
+      logs/analysis/
+      notebooks/executed/
+      plots/latent/
+      reports/
+      tables/latent/
+```
+
+------------------------------------------------------------------------
+
+## Notes for Future Refactoring {.unnumbered}
+
+This baseline does not assume that any particular output format should be
+changed. The near-term goal is to trace the data path from analysis output to
+report rendering.
+
+Potential later refactoring targets, subject to inspection, include:
+
+- clarifying the distinction between analysis checkpoints and report-facing
+  products;
+- documenting which aggregate files are canonical for GO, KEGG, and MSigDB
+  reporting;
+- separating latent notebook execution from latent postprocessing if needed;
+- standardizing logging sections across analysis and latent postprocessing;
+- adding explicit validation checks for expected aggregate and summary columns;
+- documenting which outputs are safe to regenerate independently; and
+- identifying whether PDF table failures arise from source data shape, generated
+  QMD code, pre-rendered HTML, or LaTeX table-width constraints.

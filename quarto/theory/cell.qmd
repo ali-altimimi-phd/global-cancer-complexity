@@ -1,32 +1,62 @@
-# The Cell as a Complex System
+---
+title: "The Cell as a Complex System"
+format:
+  html:
+    math: mathjax
+  pdf:
+    documentclass: article
+---
 
-Cells exhibit multiple properties indicative of complex systems:
+## The Cell as a High-Dimensional System
 
--   **Non-bijectivity** and **nonlinearity** in genotype–phenotype mapping (e.g., pleiotropy, polygenicity).
--   **Connectivity** and **sensitivity to initial conditions** via gene regulatory networks.
--   **Multiple equilibria**, **self-organization**, **quasi-determinism**, and **thermodynamic openness**.
+A cell is a dynamical system composed of interacting molecular components. Gene expression profiles provide a measurable projection of this system, capturing coordinated activity across thousands of genes.
 
-These features create a cellular landscape where small perturbations can trigger large-scale transitions, especially in disease states like cancer.
+Each cell state can be represented as a vector:
 
-All life is cellular in nature and additionally the cell is a unitary whole, a unit of life so to say (Morowitz 1992; Harold 2001). For these reasons, the cell provides a useful and clear designation of a system. Within the cell, we observe a number of system properties (Harold 2001; Waliszewski and Konarski 2001). We begin with the relationship between the cell’s genotype to its phenotype. We characterize this correspondence as non-bijective in that one gene will typically contribute to more than one phenotypic trait (pleiotropy), and furthermore major phenotypic traits are the products of several genes (polygenic inheritance). For example, it is estimated that the formation of the compound eye in Drosophila involves approximately 20% of the genome, or close to two-thousand-five-hundred genes (Adams, Celniker et al. 2000). The non-bijective relationship between the genome, on the one hand, and function and structure, on the other, implies mathematically nonlinearity in that there is unproportional response between gene and trait. This non-bijective relationship is actualized via a hierarchical network of multiple cross-interacting elements (genes and their products) sensitive to initial conditions (as presented by the genome and the cellular environment) and possessing multiple equilibria. The connectivity governing the network of genes and their products shows complex dynamic relationships that enable the emergence of the system’s (i.e., the cell’s) global features. For this reason, we say the cell possesses complexity, as its whole is greater than the sum of the parts. Additionally, this genetic network is quasi-deterministic, as only some events are deterministically driven, while other events are stochastic. Other important system properties of the cell are its self-organization, self-regulation, and self-replication. The cell likewise is catalytic, dynamic, thermodynamic (isothermal and open), and operates on the principle of complementarity.
+$$
+x \in \mathbb{R}^p
+$$
 
-In the Table below, we list these system properties of the cell.
+where $p$ is the number of measured transcripts.
 
-| Property                            |
-|-------------------------------------|
-| Non-bijectivity                     |
-| Nonlinearity                        |
-| Connectivity                        |
-| Sensitivity to initial conditions   |
-| Multiple equilibria                 |
-| Complexity                          |
-| Quasi-deterministic                 |
-| Self-organization                   |
-| Self-regulation                     |
-| Self-replication                    |
-| Catalytic                           |
-| Dynamic                             |
-| Thermodynamic (isothermal and open) |
-| Complementarity                     |
+---
 
-: : System properties of cells. {.striped .hover}
+## Degrees of Freedom
+
+The effective number of independent degrees of freedom in this system is typically much lower than $p$, due to regulatory coupling. This reduction is reflected in the covariance structure of the expression matrix.
+
+Let $\Sigma$ denote the covariance matrix. Its eigenvalues $\lambda_i$ describe how variance is distributed across orthogonal directions.
+
+The distribution of these eigenvalues encodes:
+
+- dimensionality  
+- redundancy  
+- coordination  
+
+---
+
+## Complexity and Constraint
+
+Biological systems balance:
+
+- **complexity** — multiple active regulatory pathways  
+- **constraint** — coordination and control  
+
+This balance is reflected in the spectrum of $\Sigma$:
+
+- distributed eigenvalues → higher complexity  
+- concentrated eigenvalues → stronger constraint  
+
+These concepts form the basis for the quantitative measures introduced later.
+
+---
+
+## Implications for Measurement
+
+Because the system is high-dimensional and structured, meaningful analysis requires:
+
+- dimensionality-sensitive measures  
+- entropy-based measures  
+- geometric representations  
+
+These tools allow us to quantify how cellular organization changes between normal and tumor states.

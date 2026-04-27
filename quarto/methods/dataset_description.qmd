@@ -1,69 +1,73 @@
-# Ramaswamy dataset
+# Dataset Description
 
-The Ramaswamy dataset is a benchmark gene expression dataset introduced in 2001 for studying multi-class cancer classification. It was developed by S. Ramaswamy and colleagues at the Broad Institute, providing an early demonstration that molecular profiles could differentiate among diverse tumor types.
+## Overview
 
-The dataset originated from the paper *Multiclass cancer diagnosis using tumor gene expression signatures* (Ramaswamy et al., 2001). The study aimed to show that a single molecular classifier could distinguish multiple tumor origins. Each sample’s RNA expression was profiled using microarray technology, making it one of the earliest large-scale, multi-tissue cancer expression resources.
+This study utilizes the gene expression dataset introduced by Ramaswamy et al. (2001), one of the earliest large-scale efforts to construct a unified molecular classification framework across multiple human malignancies. The dataset was designed to evaluate whether tumors could be classified based solely on gene expression profiles, independent of traditional clinical and histopathological features.
 
-### Key facts
+The dataset comprises oligonucleotide microarray measurements of **16,063 probe sets**, representing approximately 14,000 genes and expressed sequence tags. Samples were collected from multiple institutional tumor banks and subjected to centralized pathological review to confirm tissue of origin and histological classification.
 
--   **Introduced:** 2001 (published in *Proceedings of the National Academy of Sciences*)
+Following quality control procedures, the final dataset consists of:
 
--   **Samples:** 190 tumor and normal tissue samples
+- **218 tumor samples** spanning 14 distinct cancer classes  
+- **90 normal tissue samples**  
+- Approximately **5 million gene expression measurements**
 
--   **Classes:** 14 distinct cancer and normal tissue types
+Samples failing quality control were excluded based on criteria including RNA degradation, abnormal chip intensity, low detection rates ("present" calls), and visible microarray artifacts. These procedures ensured that downstream analyses were performed on technically reliable expression profiles.
 
--   **Platform:** Affymetrix oligonucleotide microarrays
+## Data Acquisition and Microarray Platforms
 
--   **Feature count:** \~16,000 genes after preprocessing
+Gene expression profiling was performed using two Affymetrix microarray platforms:
 
-### Data composition
+- **Hu6800 GeneChip**
+- **Hu35KsubA GeneChip**
 
-Samples span multiple cancer types—such as lung, breast, kidney, ovary, and leukemia—plus normal tissues. The dataset provides preprocessed log-transformed expression intensities, often filtered for variance and normalized across arrays. It serves as a model for testing algorithms in supervised learning, feature selection, and dimensionality reduction for biological data.
+Each probe set was treated as an independent feature, and expression values were computed using Affymetrix GeneChip analysis software. The use of two platforms introduces heterogeneity in probe representation and coverage, which has implications for downstream preprocessing, filtering, and integration steps.
 
-### Research impact
+All tumor samples were derived from primary sites (except where explicitly noted), obtained prior to treatment, and enriched for malignant cells (>50%). Normal tissue RNA was obtained from snap-frozen autopsy specimens. Tissue acquisition followed institutional review protocols and was conducted using anonymized discarded tissue.
 
-The Ramaswamy dataset became widely used in bioinformatics for benchmarking multi-class classifiers, including support vector machines and neural networks. It highlights challenges in high-dimensional, low-sample-size genomics and continues to appear in comparative studies evaluating classification robustness.
+## Original Analytical Framework
 
-### Access and usage
+In the original study, gene expression data were subjected to a variation-based filtering procedure designed to retain genes exhibiting substantial dynamic range across samples. Specifically, genes were retained if they demonstrated at least a 5-fold and 500-unit variation after thresholding and ceiling constraints were applied. This resulted in a filtered set of **11,322 genes** used for clustering and classification.
 
-The dataset is publicly available through repositories like the Broad Institute and the Gene Expression Omnibus (accession GSE2109 and related entries). Researchers typically download it in processed matrix form for cross-study machine learning evaluation.
+The dataset was then standardized by mean-centering and variance scaling each gene. Both unsupervised and supervised learning approaches were applied:
 
-### Comparison Mappings
+- **Unsupervised methods** (hierarchical clustering and self-organizing maps) revealed partial structure but failed to cleanly separate all tumor classes.
+- **Supervised learning**, using a support vector machine (SVM) with a one-versus-all (OVA) classification scheme, achieved approximately **78% classification accuracy** across tumor types.
 
-A normal tissue vs tumor comparison map was drawn up from the available samples in the data set. The fifteen tissue comparisons where then grouped into four tumor categories: (1.) carcinomas, (2.) blastomas, (3.) lymphomas, and (4.) leukemias, as described in the tables below:
+Importantly, the study demonstrated that:
 
-| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
-|---------------|---------------|---------------|---------------|---------------|
-| Bladder | Bladder transitional cell carcinoma | BLAD/TCC |  |  |
-| Breast | Breast adenocarcinoma | BR/BRAD |  |  |
-| Colon | Colorectal adenocarcinoma | COL/COADREAD |  |  |
-| Kidney | Renal cell carcinoma | KID/RCC |  |  |
-| Lung | Lung adenocarcinoma | LU/LUAD |  |  |
-| Ovary | Ovarian adenocarcinoma | OV/OVAD |  |  |
-| Pancreas | Pancreatic adenocarcinoma | PA/PAAD |  |  |
-| Prostate | Prostate adenocarcinoma | PR/PRAD |  |  |
-| Uterus | Uterine adenocarcinoma | UT/EAC |  |  |
+- Tumor classification relies on **distributed, high-dimensional gene expression patterns**, rather than a small number of markers  
+- Many tumors retain strong **tissue-of-origin signals** at the molecular level  
+- Poorly differentiated tumors exhibit **distinct and less classifiable expression profiles**, suggesting fundamentally altered regulatory programs  
 
-: Carcinoma mappings. {.striped .hover}
+These findings established the dataset as a foundational reference for molecular cancer classification.
 
-| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
-|---------------|---------------|---------------|---------------|---------------|
-| Brain | Glioblastoma | Brain/GBM |  |  |
-| Brain | Medulloblastoma | Brain/MB |  |  |
+## Adaptation in the Present Study
 
-: Blastoma mappings. {.striped .hover}
+In the present work, the Ramaswamy dataset serves as the input to a modular computational pipeline consisting of preprocessing, analysis, and reporting stages. While the original dataset and its structure are preserved, several methodological extensions are introduced:
 
-| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
-|---------------|---------------|---------------|---------------|---------------|
-| Lymphoid | Follicular lymphoma | GC/FL |  |  |
-| Lymphoid | Large B-cell lymphoma | GC/LBCL |  |  |
+- Robust normalization using **RMA (Robust Multi-array Average)**  
+- Flexible gene filtering strategies, including:
+  - variance-based filtering  
+  - differential expression filtering (limma)  
+- Integration of biological annotation layers:
+  - Gene Ontology (GO)  
+  - KEGG pathways  
+  - MSigDB gene sets  
+- Extension to **latent-space modeling using variational autoencoders (VAEs)**  
 
-: Lymphoma mappings. {.striped .hover}
+These adaptations allow the dataset to be analyzed beyond classification accuracy, enabling investigation of:
 
-| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
-|---------------|---------------|---------------|---------------|---------------|
-| Peripheral Blood | Acute myeloid leukemia | PB/AML |  |  |
-| Peripheral Blood | (Bone marrow) B-cell ALL | PB/B-ALL |  |  |
-| Peripheral Blood | (Bone marrow) T-cell ALL | PB/T-ALL |  |  |
+- **Complexity and entropy of gene expression structure**  
+- **Latent geometric organization of samples**  
+- **Biologically interpretable regulatory patterns associated with tumorigenesis**
 
-: Leukemia mappings. {.striped .hover}
+In particular, the transition from normal to tumor states is examined not only in terms of differential expression, but also in terms of **structural reorganization in high-dimensional and latent spaces**, providing a complementary perspective on cancer as a dynamical system.
+
+## Dataset Selection Rationale
+
+Although more recent gene expression datasets are available—particularly those generated using next-generation sequencing technologies such as RNA sequencing (RNA-seq), which provide higher resolution and broader dynamic range—a deliberate decision was made to retain the Ramaswamy dataset for the present study.
+
+This choice reflects both practical and methodological considerations. The computational pipelines developed in earlier work are tightly coupled to the structure and characteristics of this dataset, and extending these pipelines to incorporate latent-space modeling (e.g., variational autoencoders) was more tractable than undertaking a complete refactoring for a modern dataset at this stage.
+
+Importantly, the pipeline architecture is highly modular. This design allows for future substitution of the underlying dataset with minimal disruption to downstream analytical components. Accordingly, incorporation of contemporary RNA-seq–based datasets is anticipated in future work, enabling validation and extension of the present findings within a more modern experimental framework.

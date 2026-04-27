@@ -67,7 +67,6 @@ build_matrix_lists_by_tissue <- function(eset) {
 #' }
 #'
 #' @importFrom purrr map keep
-#' @export
 define_predefined_comparisons <- function(matrix_labels) {
   predefined <- list(
     carcinomas = list(

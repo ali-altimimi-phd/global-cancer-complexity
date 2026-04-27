@@ -1,6 +1,6 @@
 ---
 title: "Comparison Report: PB/B-ALL"
-author: "XXX"
+author: "Ali Al-Timimi, PhD"
 format: html
 params:
   data_file: "C:/Users/drziy/OneDrive/Desktop/Ali/scientific_research_current/global-cancer-complexity/output/global_cancer/RData/comparison_data/comparison_data_pb_b_all.rds"
@@ -22,6 +22,24 @@ if (is.null(params$data_file) || !file.exists(params$data_file)) {
 }
 
 comp_data <- readRDS(params$data_file)
+
+# load latent space data
+latent_path <- here::here("latent-space", "tables", "latent_comparison_metrics.csv")
+
+if (!file.exists(latent_path)) {
+
+  warning("Latent metrics file not found; latent geometry section will be skipped.")
+
+  latent_tbl <- NULL
+
+} else {
+
+  latent_tbl <- read_csv(
+    latent_path,
+    show_col_types = FALSE
+  )
+
+}
 
 comparison     <- comp_data$comparison
 summaries_df   <- comp_data$summaries_df
@@ -102,17 +120,20 @@ safe_include_image(probes_path)
 **Overall Complexity & Entropy Assessment**
 
 | Measure | All Filtered Probes | GO MF Terms | KEGG Pathways | HALLMARK Genes |
-|---------|---------------------|-----------------------------|---------------|----------------|
+|:---|:---|:---|:---|:---|
 | **Complexity** | `r summary_all$complexity_strength_label` (`r summary_all$complexity_confidence_label`) | `r summary_go$complexity_strength_label` (`r summary_go$complexity_confidence_label`) | `r summary_kegg$complexity_strength_label` (`r summary_kegg$complexity_confidence_label`) | `r summary_msig$complexity_strength_label` (`r summary_msig$complexity_confidence_label`) |
 | **Shannon Entropy** | `r summary_all$strength_label_shannon` (`r summary_all$confidence_label_shannon`) | `r summary_go$strength_label_shannon` (`r summary_go$confidence_label_shannon`) | `r summary_kegg$strength_label_shannon` (`r summary_kegg$confidence_label_shannon`) | `r summary_msig$strength_label_shannon` (`r summary_msig$confidence_label_shannon`) |
 | **Spectral Entropy** | `r summary_all$strength_label_spectral` (`r summary_all$confidence_label_spectral`) | `r summary_go$strength_label_spectral` (`r summary_go$confidence_label_spectral`) | `r summary_kegg$strength_label_spectral` (`r summary_kegg$confidence_label_spectral`) | `r summary_msig$strength_label_spectral` (`r summary_msig$confidence_label_spectral`) |
 
-**Notes**
--   **Gain** = increased complexity from normal to tumor\
--   **Loss** = complexity reduction from normal to tumor\
--   **Chaotic** = increased entropy from normal to tumor\
--   **Anti-Chaotic** = entropy reduction from normal to tumor\
--   All p-values unadjusted unless noted
+::: {.callout-note}
+**Interpretation Guide**
+
+- **Gain** = Increased complexity from normal to tumor
+- **Loss** = Complexity reduction from normal to tumor
+- **Chaotic** = Increased entropy from normal to tumor
+- **Anti-Chaotic** = Entropy reduction from normal to tumor
+- **P-values** = All p-values unadjusted unless noted
+:::
 
 :::
 
@@ -215,5 +236,68 @@ safe_include_html(msig_entropy_table_path)
 ```
 
 :::
+
+### Latent Geometry
+
+**Latent-space normal-versus-tumor summary**
+
+Latent-space metrics are computed from the VAE representation using samples derived from the **hu35ksuba** platform only. These quantities summarize within-class geometric structure and separation between normal and tumor states in the learned latent space.
+
+```{r latent_geometry, echo = FALSE}
+# Assume `latent_tbl` is already available in the environment
+# and contains one row per comparison
+
+current_comparison <- comp_data$comparison[[1]]
+
+if (is.null(latent_tbl)) {
+
+  cat("⚠️ Latent-space metrics are not available.\n")
+
+} else {
+
+  latent_row <- latent_tbl %>%
+    dplyr::filter(comparison == current_comparison)
+
+  if (nrow(latent_row) == 0) {
+
+    cat("⚠️ Latent-space results are not available for this comparison on the hu35ksuba platform.\n")
+
+  } else {
+
+    latent_display <- tibble::tibble(
+      Measure = c(
+        "Participation ratio",
+        "Eigenvalue entropy",
+        "Anisotropy",
+        "Radius",
+        "Centroid distance"
+      ),
+      Normal = c(
+        latent_row$pr_normal[[1]],
+        latent_row$eig_entropy_normal[[1]],
+        latent_row$anisotropy_normal[[1]],
+        latent_row$radius_normal[[1]],
+        latent_row$centroid_distance[[1]]
+      ),
+      Tumor = c(
+        latent_row$pr_tumor[[1]],
+        latent_row$eig_entropy_tumor[[1]],
+        latent_row$anisotropy_tumor[[1]],
+        latent_row$radius_tumor[[1]],
+        NA
+      ),
+      Delta = c(
+        latent_row$pr_delta[[1]],
+        latent_row$eig_entropy_delta[[1]],
+        latent_row$anisotropy_delta[[1]],
+        latent_row$radius_delta[[1]],
+        NA
+      )
+    )
+
+    knitr::kable(latent_display, digits = 3)
+  }
+}
+```
 
 :::

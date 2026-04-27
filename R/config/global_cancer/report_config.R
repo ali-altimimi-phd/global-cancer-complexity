@@ -1,10 +1,18 @@
-# R/config/global_cancer/report_config.R
+# ------------------------------------------------------------------------------
+# File: report_config.R
+# Purpose:  
+# Role: Report configuration file
+# Pipeline: Report
+# Project: Cancer Complexity Analysis
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
 
 # ---- Study Identifier ----
 # Used to define directory structure for multiple data sources
 study_name <- "global_cancer"  # used to define directory structure
 
-# ---- Analysis Pipeline Toggles ----
+# ---- Report Pipeline Toggles ----
 run_summary_reports <- TRUE # Toggle to enable or disable
 run_reports <- TRUE
 run_go_clustering <- FALSE

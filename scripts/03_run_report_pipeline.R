@@ -1,3 +1,14 @@
+# ------------------------------------------------------------------------------
+# File: 03_run_report_pipeline.R
+# Purpose: Execute the reporting pipeline by orchestrating the generation of
+#   per-comparison reports, figures, and summary tables from aggregated results
+# Role: Pipeline driver (entry point)
+# Pipeline: Reporting
+# Project: Cancer Complexity Analysis
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
 #' Run Global Cancer Expression Report Pipeline
 #'
 #' Report generation
@@ -5,7 +16,6 @@
 #' @note Requires datasets created via `run_analysis_pipeline()`.
 #' @seealso \code{R/config/analysis_pipeline_config.R}
 #' @return No return value; writes all outputs to disk.
-#' @export
 run_report_pipeline <- function() {
   # ---- Config ----
   source(here::here("R/config/global_cancer/report_config.R"),
@@ -58,8 +68,8 @@ run_report_pipeline <- function() {
   
   # ---- Stage 3: Create reports from .qmd template ----
   
-  # This might be a misnomer as we are not running reports but we are creating
-  # comparison qmds from a template qmd
+  # `run_reports` might be a misnomer as we are not running reports
+  # but we are creating comparison qmds from a template qmd
   if (run_reports) {
     source(here::here("R/wrappers/run_all_reports.R"))
     run_all_reports(
@@ -94,7 +104,11 @@ run_report_pipeline <- function() {
   
   # ---- Stage 6: Render comparison reports from .qmd template ----
   if (run_quarto) {
-    quarto::quarto_render("quarto")
+    old <- getwd()
+    setwd(here::here("quarto"))
+    unlink("_freeze", recursive = TRUE, force = TRUE)
+    quarto::quarto_render(".")
+    setwd(old)
   }
 
   # ---- Final message ----

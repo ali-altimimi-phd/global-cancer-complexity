@@ -34,7 +34,6 @@ load_matrix_maps <- function(matrices_path, overwrite = FALSE) {
 #'
 #' @param filtered_dir Path to the directory containing filtered `.rds` files.
 #' @param overwrite Logical. If `TRUE`, overwrite existing variables.
-#' @export
 load_filtered_results <- function(filtered_dir, overwrite = FALSE) {
   stopifnot(dir.exists(filtered_dir))
   

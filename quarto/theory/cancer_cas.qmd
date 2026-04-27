@@ -1,49 +1,54 @@
-# Cancer as a Complex Adaptive System
+---
+title: "Cancer as a Complex Adaptive System"
+format:
+  html:
+    math: mathjax
+  pdf:
+    documentclass: article
+---
 
-Genomic View
+## Cancer as System Transformation
 
-Cancer involves accumulation of mutations disrupting genomic stability. Viewed through catastrophe and chaos theory, these mutations may drive the system across critical thresholds—so-called attractor transitions—leading to new dynamic regimes (e.g., uncontrolled proliferation).
+Cancer can be viewed as a transformation of the cellular system rather than a collection of isolated mutations. This transformation affects the structure of gene expression and the relationships among genes.
 
-Some cancers may arise from chaotic dynamics (e.g., breast, pancreatic adenocarcinomas), others from antichaotic constraints (e.g., leukemias). This framework supports the view of cancer as a complex adaptive system navigating between order and disorder.
+---
 
-Morphological View
+## Adaptive and Nonlinear Behavior
 
-Fractal structures and self-similarity are often disrupted in tumors. The angiogenesis in tumor microenvironments, often visualized as percolation networks, exemplifies chaotic morphogenesis. Future sections will include fractal dimension analysis from image-derived or simulated tumor data.
+Tumor systems exhibit features consistent with complex adaptive systems:
 
-Behavioral and Therapeutic View
+- nonlinear interactions  
+- feedback regulation  
+- adaptation to environmental pressures  
 
-Metastatic patterns may follow deterministic paths, suggesting hidden order in dissemination mechanisms. Therapeutically, the chaotic or antichaotic behavior of tumors may explain resistance, relapse, and unpredictable treatment responses.
+These properties can produce diverse outcomes, including both increased disorder and increased constraint.
 
-It is now widely accepted that cancer is essentially a genetic disease (Vogelstein and Kinzler 2002) likely caused by, or associated with, aberrant gene expression (Friedmann 1989). Unlike simple genetic diseases where an inherited mutation in a single gene is sufficient to determine the pathological phenotype, cancer among pathogenetic diseases has the most intricate mechanism where numerous mutations are typically present (Calin, Vasilescu et al. 2003). It is further acknowledged that cancer is not a single disease but rather a group of heterogeneous diseases that share common biological properties (Vogelstein and Kinzler 2002). At the molecular level, there are presently two theories regarding how tumors arise within an organism. The standard dogma proposes that carcinogens alter the genetic makeup of the cell. Initially the cell attempts to respond by its DNA repair mechanisms, and failing that it will seek to auto-destruct via apoptosis. If self-repair and self-sacrifice are unsuccessful, and further the mutation affects either a tumor suppressor gene or oncogene, an uncontrolled division of the mutated cell will result. After many rounds of cell division and the accumulation of additional mutations, some of these mutated cells may become metastatic (Hahn and Weinberg 2002). The alternative theory argues that mistakes in cell division lead to a state of aneuploidy where thousands of genes are affected. While most aneuploidic cells die, some survive to reproduce and will eventually become metastatic (Duesberg, Fabarius et al. 2004). It should be noted that there are also two intermediate theories that seek to reconcile both the standard dogma and the alternative view with one another (Gibbs 2003). Whatever the mechanism of origin, a transformed cancerous cell gains the following six properties that distinguish it from normal cells. Cancer cells will continue to grow even in the absence of normal cellular “go” signals, and they will also continue to grow even in the presence of cellular “stop” signals. They are able to evade the cell’s autodestruct mechanisms and they seem to possess effective immortality. They have the ability to stimulate blood vessel construction (angiogenesis) and further invade other tissues by spreading to other organs (metastasis) (Hanahan and Weinberg 2000). For all these activities to occur, there must be a fundamental transformation of cell. This transformation is seen in the cell’s genetic makeup and the products produced by the cell’s altered genome (Vogelstein and Kinzler 2002).
+---
 
-A Systems Approach to Cancer
+## Variability Across Tumors
 
-The explosion of genomic sequence and molecular profiling data over the past decade has only strengthened built-in reductionist tendencies in cancer biology. These molecular biology techniques have identified approximately two-hundred genes that play an oncogenic or tumor-suppressor role. Yet, at the same time, there exists no comprehensive theoretical model to serve as a framework for understanding, organizing, and applying these data (Gatenby and Maini 2003). Given this it is not surprising then that in recent years, papers and comments have appeared (Coffey 1998; Rew 1999; Sedivy 1999; Calin, Vasilescu et al. 2003) reflecting the latest ideas of systems biology (specifically, chaos theory) in cancer. In this section, we integrate the main ideas presented in these papers to provide a unified theoretical framework for our investigations. We begin with two simple observations. First unlike normal tissue, which displays order and regularity, cancerous tissues show extreme heterogeneity manifested on multi-levels (Calin, Vasilescu et al. 2003). Second, coupled with this heterogeneity, tumorigenesis is a dynamic multistage process (Sedivy 1999). These two features of cancer have led some to suggest the use of nonlinear approaches, like chaos theory, in conceptualizing cancer. We will utilize ideas rooted in catastrophe, chaos, and complexity theories to create a systems approach to cancer. Via a systems view we may look at cancer at four levels: (1.) genomic, (2.) morphological, (3.) behavioral, and (4.) therapeutic (Rew 1999). Each level has its unique focus. It goes without saying that each level and its particular focus are part of a single biological reality. We present each level’s focus in Table 1.2.
+Not all tumors exhibit the same structural changes. Some may show:
 
-Table 1.2 Manifestations of nonlinearity in cancers. Level Focus Genetic Mutations and transcript populations
+- increased heterogeneity  
+- expansion into new expression states  
 
-Table 1.2 (cont.) Manifestations of nonlinearity in cancers. Level Focus Morphological Tissue differentiation and geometry of tumor vascularization Behavioral Patterns of metastases Therapeutic Response
+Others may show:
 
-Genomic view
+- reduced variability  
+- convergence toward constrained states  
 
-Normal cells have a defined genotype and consequently are highly stable. Cancer cells, on the other hand, due to the accumulation of many varied mutations have a wide variety of genotypes accompanied with greater instability. In the light of the standard dogma of cancer, it is proposed each mutation leads to increasing genomic instability, and that depending on the nature of the affected gene, mutations would be disruptive on different levels of the cell. Some mutations are transformative, while other mutations simply facilitate change (Sedivy 1999). If we, for example, were to describe the cellular network mentioned earlier using the construct of a catalytic hypercycle (Eigen and Schuster 1979; Kauffman 1993), we may argue that each part of the hypercycle is coded by certain essential genes responsible for cell cycle control. A mutation of a gene belonging to the ras family, for example, would stimulate growth (Pruitt and Der 2001). In order to maintain stability, the cell will cause a compensatory reflection of the mutated ‘partner’ gene(s). The cell’s self-organized response will result in a quasi- or semi-stable state, until an additional perturbation (i.e., another mutation) further increases the cell’s instability (Sedivy 1999). Using notions from catastrophe and chaos theory, we may view these numerous mutations in either oncogenes or tumor suppressor genes as effecting change in the genomic stability over and over again, until a critical point is reached forcing the system to leave one state cycle attractor and flow into another (Rew 1999; Sedivy 1999). Once the genetic network enters the attractor basin of a different state cycle attractor, it undergoes profound reorganization in order to reattain system stability (Szallasi and Liang 1998). This perspective has led some to generalize that tumors arise from a deterministic chaotic process (Coffey 1998; Sedivy 1999). One line of evidence cited for the existence of deterministic chaotic patterns in carcinogenesis is that when measuring the gene expression of tumors there is an apparent variation in gene expression, yet clearly defined subtypes exist. This would imply that there is a hidden order disguised as disorder, a hallmark of deterministic chaos. (Calin, Vasilescu et al. 2003) However, upon further consideration, this seems to be an oversimplification. As illustrated in Figure 1.1, it appears that only some cancers are driven by chaos; other cancers are propelled by antichaos (Cucuianu 1998; Calin, Vasilescu et al. 2003).
+This variability motivates a framework capable of distinguishing multiple modes of transformation.
 
-Leukemias Lymphomas Sarcomas Carcinomas
+---
 
-Anti-Chaos Chaos Figure 1.1 Degree of chaocity in cancer.
+## From Dynamics to Observables
 
-Specifically, the mesenchyme-derived hematological cancers (leukemias and lymphomas) are thought to result from antichaotic mechanisms. Solid cancers, on the other hand, arise from varying degrees of chaotic mechanisms. Compared to sarcomas (tumors of the connective tissues), adenocarcinomas (tumors of the glandular epithelial tissues) display greater chaos. But even within adenocarcinomas, it is thought that breast, prostate, pancreatic, and endometric cancers are more chaotic than colorectal and ovarian cancers. It is theorized that these differences in chaotic and antichaotic patterns arise from varying alterations in the cell’s signaling complexity (Calin, Vasilescu et al. 2003). The antichaotic dynamics of tumorigenesis in hematological cancers is argued for in that the normal process of hematopoiesis and immunity is best described as chaotic whereby to allow for immunological versatility myriad clones evolve by a stochastic process. This is seen for example in the variable regions of the immunoglobulin and T-cell receptor genes. In contrast, leukemia, lymphoma, myeloma cells are monoclonal sharing relative morphological, immunophenotypic, and genetic uniformity. Despite such uniformity, there still remains a certain degree of chaos (Cucuianu 1998). We should note that cancer is not unique in its exhibition of chaos, as chaos has been detected in human physiology and also reported for other diseases. Similarly antichaos is not only associated with cancer but as well with other pathologies like congestive heart disease, Parkinson’s disease, epilepsy, and maniac depression (Kaplan, Smith et al. 1988; Cross and Cotton 1994; Finkel 1995; Toro, Ruiz et al. 1999; Sarbadhikari and Chakrabarty 2001). The existence of both chaotic and antichaotic patterns in cancer leads us to conclude that the central feature of the pathology of cancer is that of a complex adaptive system wherein there exists an interplay between order and chaos (Coffey 1998). Besides the display of chaotic patterns, there is another systems aspect of carcinogenesis: the loss of complexity with disease progression. The loss of complexity represents a reduction in the degrees of freedom of the cell. This is exemplified by a tumor’s decreased ability to induce self-organized response, which is reflective of the cell system’s reduction to what are understood to be elementary stem functions. It seems that what is important for the transformed cell is to merely divide and survive. Such loss of complexity is also seen with ageing (Sedivy 1999).
+While the underlying system is dynamic, gene expression data provide cross-sectional observations. Therefore, we do not directly observe trajectories, but rather distributions of states.
 
-Morphological view
+The analysis must therefore focus on:
 
-Cancerous cells are readily identifiable from surrounding tissue because of their highly aberrant morphology. With solid tumors, for example, there is a loss of adhesion that causes normal squamous cells to assume a more round shape common to rapidly dividing cells. This alteration in morphology is in large part due to changes in gene regulation where genes responsible for differentiated structures are lost or suppressed (Jouanneau, Tucker et al. 1991). Additionally, many of the morphological changes associated with tumorigenesis also induce changes in the surrounding but otherwise normal cells. Thus a tissue sample taken from a tumor will contain normal cells exhibiting altered gene expression but possessing a normal genomic complement (Hanahan and Weinberg 2000). Normal tissues display, a fractal dimension, or self-similarity (Waliszewski and Konarski 2001). These fractal properties influence gene expression and self-organization of cells at the level of the tissue. Some tumors exhibit a loss of self-similarity that negatively influences self-organization as well as dampens gene expression (Sedivy 1999). One example of tissue-level morphological change is the infiltration of new blood vessels into the developing tumor. In general, tumor vasculature behaves like a percolator network. As a result there is a deviation from the regular patterns of a normal capillary bed, as new capillaries are induced to supply blood to the new tumor tissues. This results in local, as well as overall, impairment of the cellular transport network (Baish and Jain 1998).
+- structure of distributions  
+- geometry of sample clouds  
+- variance across dimensions  
 
-Behavioral view
-
-It is unclear if metastasis in individual tumors is driven by stochastic or deterministic mechanisms. Some classes of tumors seem to have a set metastatic pattern (Tabbara and Mehio 1984; Lee 1985; Cohn-Cedermark, Mansson-Brahme et al. 1999; Esmaeli, Wang et al. 2001; Faustina, Diba et al. 2004). Colorectal adenocarcinoma, for example, will spread first to the lymph nodes, then to liver, and finally to terminally distant sites (Rew 1999). Based on this it is suggested that such patterns are driven by the expression of specific metastasis-promoting genes (Claffey and Robinson 1996; Webb and Vande Woude 2000). If this holds true, then these patterns in turn might be indicative of a nonlinear deterministic process. It is quite apparent that the existence of such deterministic processes would be of considerable importance for cancer therapeutics. If, on the other hand, metastasis is a wholly stochastic process, then there would be no targets for specific therapy.
-
-Therapeutic view
-
-A lack of therapeutic response, an aggressive or resistant progression, or recurrence of disease is often seen with cancer patients. This would suggest the existence of a complex chaotic system as the application of a displacing force (in this case, radio- or chemotherapy) to the system has unpredictable effects. Thus typically there is an equal likelihood in disrupting intrinsic tumor suppressing mechanism, as there is in disrupting tumor-promoting mechanisms (Rew 1999). Illustrative of such chaotic behavior in cancer therapy is the leukemic clone, which although thought to arise from an anti-chaotic mechanism, still retains a degree of chaos that provides it adaptability to the new conditions created by chemotherapy. Hence we see with leukemia later resistance to treatment (Cros, Jordheim et al. 2004). The system transformations witnessed in the evolution of normal tissue to cancer are numerous. In this section, we discussed major changes from four views: genomic, morphological, behavioral, and therapeutic. We list the major transformations that we have discussed in Table 1.3. Further study of cancer from a systems perspective will lead to greater knowledge of these systems transformations.
-
-Table 1.3 System transformations in tumors. Transformation System instability Chaotic/anti-chaotic dynamics Decrease in overall complexity (local gains possible) Loss of connectivity Loss of collectivity Loss of self-similarity
+These observable properties provide indirect insight into system organization.

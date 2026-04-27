@@ -1,10 +1,13 @@
 ---
-editor: 
-  markdown: 
+title: "Filtering Strategy for the Global Cancer Analysis Pipeline"
+editor:
+  markdown:
     wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
 probes_table_base <- file.path("quarto", "resources", "tables", "probes")
 
 carcinomas_probe_counts_path <- file.path(probes_table_base, "carcinomas_probe_counts.html")
@@ -16,174 +19,301 @@ safe_include_html <- function(path) {
   if (file.exists(path)) {
     cat(readLines(path, warn = FALSE), sep = "\n")
   } else {
-    cat(glue::glue("⚠️ Table not available.\n\n"))
+    cat("⚠️ Table not available.\n\n")
   }
 }
 ```
 
-# Filtering of Microarrays
+# Filtering of Microarray Expression Data
 
-Gene expression studies often involve measuring tens of thousands of probes (e.g., microarray features or RNA-seq transcripts) across a relatively small number of biological samples.
-This high-dimensional, low-sample-size setting poses significant statistical and biological challenges.
+This document describes the role of probe filtering in the global cancer analysis workflow.
+It should be read together with the preprocessing and analysis pipeline overviews, because filtering is the first stage at which the high-dimensional expression matrix is converted into comparison-specific feature sets for downstream complexity, entropy, latent-space, and biological interpretation tasks
 
-Firstly, the large number of probes compared to the number of samples increases the risk of false positives due to multiple hypothesis testing.
-Without filtering, many probes that show random fluctuations due to noise rather than true biological differences may appear significant, leading to misleading results.
+The current analysis configuration supports two filtering modes:
 
-Secondly, gene expression is inherently stochastic.
-Expression levels can vary due to technical variability, cell-to-cell differences, and transient transcriptional activity.
-Many probes may exhibit low or inconsistent expression across samples, making them unreliable for downstream analysis.
+| Method | Main parameters | Primary emphasis |
+|---|---:|---|
+| `limma` | `logfc_cutoff = 0.33`, `pval_cutoff = 0.05` | Differential-expression-oriented filtering |
+| `variance` | `var_threshold = 0.75`, `top_n = 3000` | Structure/dispersion-oriented filtering |
 
-Filtering helps mitigate these issues by removing probes with low overall expression, low variability, or poor detection across samples.
-This reduces noise and focuses the analysis on more robust, biologically relevant signals, improving statistical power and the interpretability of results.
-Overall, filtering is a crucial step for enhancing data quality and ensuring meaningful biological insights.
+The analysis pipeline applies filtering in Stage 3, immediately after expression matrices and normal/tumor comparison maps have been built.
+The resulting filtered-probe objects are saved as chip-specific RDS files:
 
-## Background to limma filtering
+| Output | Description |
+|---|---|
+| `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds` | Filtered probes for `hu35ksuba` comparisons |
+| `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds` | Filtered probes for `hu6800` comparisons |
 
-Limma filtering refers to the use of the limma (Linear Models for Microarray Data) package in R, which provides a comprehensive framework for filtering and analyzing gene expression data.
-Limma filtering typically involves removing probes that are not reliably expressed before statistical modeling.
-This is often done using functions like filterByExpr() (for RNA-seq) or applying thresholds on expression intensity, variability, or detection p-values (for microarrays).
+These files then provide the feature subsets used by the pairwise complexity and entropy engines.
 
-### **Key aspects of limma filtering:**
+------------------------------------------------------------------------
 
--   It is data-driven and informed by the design matrix, ensuring that retained probes have sufficient expression in at least one group or condition of interest.
+## Why Filtering Is Required
 
--   It works well with both microarray and RNA-seq data.
+Gene-expression microarray datasets are high-dimensional but sample-limited.
+The Ramaswamy dataset contains many thousands of probes, while each tissue-specific normal/tumor comparison contains far fewer samples.
+Without filtering, downstream calculations would be dominated by probes that contribute little stable information: low signal, low reproducibility, low contrast, inconsistent annotation, or noise-dominated variation.
 
--   It integrates seamlessly with downstream linear modeling and differential expression analysis.
+Filtering is therefore not only a statistical preprocessing step.
+In this project it has three distinct roles:
 
-### **Comparison with other filtering approaches:**
+1. it defines the probe space used by traditional complexity and entropy measures;
+2. it defines, or at least strongly influences, the feature space used for latent-space modeling and postprocessing;
+3. it shapes the biological interpretation of complexity, entropy, and latent geometry by determining which genes and gene sets are eligible to contribute to the analysis.
 
--   Simple expression cutoffs: Some methods filter probes based on arbitrary thresholds (e.g., removing probes with mean expression below a fixed value).
-    While straightforward, these cutoffs may not account for experimental design or variability across conditions.
+These three roles are related but not identical.
+A filter that is appropriate for differential-expression interpretation is not necessarily identical to a filter that is optimal for latent-space geometry, and a filter that stabilizes geometry may not capture all biologically meaningful low-amplitude regulatory changes.
+For that reason, filtering should be documented as an analytic choice rather than treated as a purely mechanical cleanup step.
 
--   Variance-based filtering: Filters based on variability across samples (e.g., retaining top X% most variable genes).
-    This improves focus on dynamic genes but can miss low-variance but biologically significant ones.
+------------------------------------------------------------------------
 
--   Detection p-values or Present/Absent calls (microarrays): Filters out probes not reliably detected, but these methods may be overly conservative and platform-dependent.
+## Filtering and Traditional Complexity/Entropy Measures
 
-### **Advantages of limma filtering:**
+The legacy R-side analysis computes complexity and entropy measures on normal/tumor expression matrices after comparison-specific probe selection.
+In this setting, filtering defines the empirical state space over which covariance structure, dimensionality, dispersion, and entropy-like quantities are estimated.
 
--   More principled and reproducible than arbitrary thresholds.
+This matters because measures such as effective rank, participation ratio, eigenvalue entropy, anisotropy, and related covariance-derived statistics are sensitive to the number and identity of retained probes.
+Including many uninformative or noise-dominated probes can inflate apparent dimensionality or obscure coherent structure.
+Conversely, retaining only highly differential probes can make the analysis more focused but may bias the measured state space toward large normal/tumor contrasts.
 
--   Balances sensitivity and specificity by considering both expression and design context.
+For this reason, the current pipeline supports two conceptually different filters:
 
--   Enhances downstream statistical modeling by removing uninformative probes early.
+| Filtering mode | Interpretation for complexity/entropy analysis |
+|---|---|
+| `limma` | Emphasizes probes that show normal/tumor differential expression under the configured fold-change and statistical thresholds. Complexity and entropy are then assessed within a contrast-enriched probe space. |
+| `variance` | Emphasizes probes with high variation across samples. Complexity and entropy are then assessed within a dispersion-enriched probe space, which may be more aligned with geometric structure but less explicitly tied to normal/tumor differential expression. |
 
-In summary, limma filtering offers a statistically sound and flexible approach that improves the reliability and power of gene expression analyses compared to more naive or rigid filtering methods.
+The distinction is important when comparing results across versions of the pipeline.
+A limma-filtered complexity result and a variance-filtered complexity result should not be interpreted as interchangeable unless the effect of the filtering choice has been examined.
 
-## Dynamic Filtering of GO Molecular Function Terms and KEGG Pathways
+------------------------------------------------------------------------
 
-The next level of comparisons involved GO Molecular Function Terms and KEGG Pathways for each comparison per chip.
+## Filtering and Latent Space
 
-#### **KEGG Pathways**
+The latent-space workflow reduces high-dimensional gene-expression data to a lower-dimensional representation.
+Filtering affects this workflow because the VAE or related latent model can only learn from the feature set it receives.
+Thus, filtering helps define what kinds of biological and geometric variation are available to be represented in latent space.
 
-| Statistic        | hu35ksuba | hu6800 |
-|------------------|-----------|--------|
-| **Median**       | 18        | 41.5   |
-| **3rd Quartile** | 36        | 77.5   |
-| **Mean**         | 28.4      | 55.9   |
-| **Max**          | 427       | 676    |
+A variance-oriented feature set may be useful for latent modeling because it emphasizes probes that contribute to sample-to-sample structure.
+This can help the model capture broad tissue, tumor, and subgroup differences.
+However, high variance alone does not guarantee biological specificity: variation may reflect tissue composition, technical effects, batch-like structure, or strong but nonspecific expression differences.
 
-> ✅ **Interpretation**: Most KEGG terms have **20–80** probes.
-> Very sparse ones exist but are uncommon.
-> You could consider:
+A differential-expression-oriented feature set may be useful when the latent representation is intended to emphasize normal/tumor divergence.
+However, it may also exclude features that help organize the global sample manifold but do not meet a strict normal/tumor threshold within a particular comparison.
 
-#### **GO Molecular Function**
+In the current project, this distinction is especially important because the R-side complexity/entropy analysis and the latent-space workflow may not always use identical feature universes.
+When comparing legacy complexity/entropy measures to latent geometry, the filtering basis should therefore be stated explicitly.
+A correlation or qualitative agreement between the two systems is more interpretable when the underlying feature spaces are comparable; disagreement may reflect biological differences, geometric differences, or simply different filtering choices.
 
-| Stat             | hu35ksuba | hu6800 |
-|------------------|-----------|--------|
-| **Median**       | 2         | 2      |
-| **3rd Quartile** | 6         | 6      |
-| **Mean**         | \~12      | \~12   |
-| **Max**          | \~6400    | \~5300 |
+In practice, this means that latent-space representations should be interpreted as embeddings of a filtered transcriptomic subspace rather than of the full gene-expression space.
 
-> ⚠️ **Interpretation**: Most GO terms are **tiny**.
-> The median is just 2 probes!
-> A hard threshold is absolutely required to avoid noise.
+------------------------------------------------------------------------
 
-## Filtered Probe Summary
+## Filtering and Biological Meaning
 
-Across two Affymetrix platforms (hu35ksuba and hu6800), dynamic filtering thresholds were applied using quantile metrics on GO and KEGG pathway memberships.
-Probe retention varied significantly by cancer type and chip:
+Filtering also determines the biological vocabulary available for interpretation.
+GO terms, KEGG pathways, and other gene-set summaries depend on which probes remain after filtering and on how those probes map to annotation resources.
 
-## Application of limma filtering to data set
+A large retained-probe count in a normal/tumor comparison may indicate broad transcriptional reorganization, but it can also reflect sample size, platform coverage, variance structure, or threshold choice.
+A small retained-probe count may indicate a more subtle tumor-normal contrast, but it can also reflect low power, heterogeneous samples, conservative thresholds, or platform limitations.
 
-Limma filtering was applied to the fifteen normal/tumor comparisons using thresholds of logFC = 1 and *p*-value \<= 0.05.
-The number of probes returned per normal/tumor comparison after limma filtering are listed in the table below:
+Biological interpretation should therefore be phrased cautiously.
+Filtered probe sets support statements such as:
 
-## Filtered Probes
+- the comparison shows a larger or smaller number of probes meeting the configured filter;
+- the retained probes are enriched for, or annotated to, particular biological functions or pathways;
+- the complexity/entropy or latent-space patterns are being estimated within the retained feature space.
+
+They do not by themselves prove that a tissue has globally gained or lost biological complexity.
+Rather, they help define the measured transcriptomic subspace in which complexity, entropy, and latent geometry are evaluated.
+
+------------------------------------------------------------------------
+
+## Limma-Oriented Filtering
+
+The `limma` option is differential-expression-oriented.
+In the current configuration, it uses:
+
+```r
+filter_method <- "limma"
+logfc_cutoff  <- 0.33
+pval_cutoff   <- 0.05
+```
+
+In this mode, the retained probes are those that pass the configured normal/tumor contrast criteria.
+This makes the downstream analysis strongly tied to normal/tumor transcriptional divergence.
+It is a defensible choice when the primary question is how the structure of expression changes among probes that differ between normal and malignant tissue.
+
+The corresponding interpretive caution is that the measured complexity and entropy are conditional on a differential-expression filter.
+The results describe the structure of the selected contrast-associated probe set, not the full transcriptome.
+
+------------------------------------------------------------------------
+
+## Variance-Oriented Filtering
+
+The `variance` option is structure-oriented.
+In the current configuration, it is parameterized as:
+
+```r
+filter_method  <- "variance"
+var_threshold  <- 0.75
+top_n          <- 3000
+```
+
+In this mode, retained probes are selected by variability rather than explicit differential-expression significance.
+This can be useful for latent-space modeling and geometry because highly variable probes often define the dominant directions of sample separation.
+
+The corresponding interpretive caution is that variance is not synonymous with biological relevance.
+Highly variable probes may reflect tumor biology, tissue identity, cellular mixture, technical effects, or other sources of heterogeneity.
+For that reason, variance-filtered results should be interpreted together with metadata, annotation, and comparison-specific biological context.
+
+------------------------------------------------------------------------
+
+## Dynamic Filtering of Gene Sets
+
+In addition to probe-level filtering, the analysis workflow also uses gene-set-level filtering for GO, KEGG, MSigDB, or combined gene-set modes.
+The current configuration includes:
+
+```r
+gene_set_mode   <- "ALL"
+quantile_cutoff <- 0.75
+min_probes      <- 5
+```
+
+Gene-set filtering is necessary because gene-set sizes are highly uneven.
+Some pathways contain many probes, while many GO terms contain very few mapped probes.
+Very small gene sets can produce unstable estimates of complexity, entropy, or enrichment-like summaries.
+Very large gene sets can dominate interpretation because they represent broad biological categories rather than specific mechanisms.
+
+The goal of dynamic filtering is therefore to retain gene sets that are large enough to support stable calculation while avoiding indiscriminate inclusion of sparse or poorly supported terms.
+
+### KEGG pathways
+
+| Statistic | hu35ksuba | hu6800 |
+|---|---:|---:|
+| Median | 18 | 41.5 |
+| 3rd quartile | 36 | 77.5 |
+| Mean | 28.4 | 55.9 |
+| Max | 427 | 676 |
+
+Most KEGG pathways contain enough probes to support pathway-level summaries, although very small or very large pathway mappings still require caution.
+
+### GO Molecular Function terms
+
+| Statistic | hu35ksuba | hu6800 |
+|---|---:|---:|
+| Median | 2 | 2 |
+| 3rd quartile | 6 | 6 |
+| Mean | ~12 | ~12 |
+| Max | ~6400 | ~5300 |
+
+Most GO Molecular Function terms are very small in probe-count terms.
+This makes minimum-probe thresholds especially important for GO-level calculations.
+Without such thresholds, many GO summaries would be based on too few probes to support stable interpretation.
+
+------------------------------------------------------------------------
+
+## Application in the Current Analysis Pipeline
+
+Filtering is implemented as Stage 3 of the analysis workflow.
+The driver script sources the grouped filtering wrapper and high-variance helper, then runs filtering separately for each supported chip.
+The current chips are:
+
+| Chip | GEO platform | Role |
+|---|---|---|
+| `hu35ksuba` | `GPL98` | One Affymetrix platform used in the Ramaswamy dataset |
+| `hu6800` | `GPL80` | Second Affymetrix platform used in the Ramaswamy dataset |
+
+The filtering stage is group-aware because it operates against predefined normal/tumor comparison maps rather than applying one universal probe list to all comparisons.
+This is appropriate for the R-side pairwise framework, where each comparison represents a distinct empirical contrast.
+
+The practical output of this stage is not a final biological claim.
+It is a set of comparison-specific feature lists that define the input space for subsequent complexity, entropy, aggregation, summary, and reporting stages.
+
+------------------------------------------------------------------------
+
+## Filtered Probe Counts
+
+The following tables summarize filtered probe counts by tumor category.
+These tables are currently included from pre-rendered HTML resources.
+That is acceptable for documenting the existing report structure, but their role in PDF rendering should be reviewed separately when the reporting interface is audited.
 
 ### Carcinomas
 
-```{r carcinomas_table, echo=FALSE, results='asis'}
+```{r carcinomas_table, results='asis'}
 safe_include_html(here::here(carcinomas_probe_counts_path))
 ```
 
 ### Blastomas
 
-```{r blastomas_table, echo=FALSE, results='asis'}
+```{r blastomas_table, results='asis'}
 safe_include_html(here::here(blastomas_probe_counts_path))
 ```
 
 ### Leukemias
 
-```{r leukemias_table, echo=FALSE, results='asis'}
-safe_include_html(here::here(lymphomas_probe_counts_path))
+```{r leukemias_table, results='asis'}
+safe_include_html(here::here(leukemias_probe_counts_path))
 ```
 
 ### Lymphomas
 
-```{r lymphomas_table, echo=FALSE, results='asis'}
+```{r lymphomas_table, results='asis'}
 safe_include_html(here::here(lymphomas_probe_counts_path))
 ```
 
+------------------------------------------------------------------------
 
-#### Interpretation of Filtered Probe Counts Across Comparisons
+## Interpreting Filtered Probe Counts
 
-A high number of filtered probes retained after limma preprocessing in a normal vs. tumor comparison suggests a substantial degree of **differential gene expression**, implying that many genes meet both the fold-change and statistical significance criteria. This typically indicates a **pronounced molecular divergence** between normal and tumor tissues—potentially due to disrupted regulatory programs, altered signaling pathways, or extensive reprogramming of the transcriptome in tumor cells.
+Filtered probe counts should be interpreted as properties of a configured analysis run.
+They depend on the selected filtering mode, thresholds, platform, comparison map, and available annotation.
 
-In contrast, comparisons yielding fewer filtered probes may reflect one or more of the following:
+A comparison with many retained probes may reflect broad normal/tumor transcriptional divergence.
+It may also reflect larger sample size, stronger statistical power, or platform-specific probe coverage.
+A comparison with few retained probes may reflect a subtler tumor-normal contrast, heterogeneous samples, conservative thresholds, or technical constraints.
 
-- **Biological similarity** between normal and tumor tissues (e.g., early-stage tumors or tissues with inherently low transcriptional diversity),
+For hematologic malignancies, high retained-probe counts may be consistent with strong transcriptional programs related to lineage, proliferation, immune signaling, or differentiation state.
+For epithelial tumors, lower overlap across carcinoma comparisons may reflect tissue-specific oncogenic programs and differences in cell of origin.
+These interpretations are plausible but should remain conditional on the filtering method and platform.
 
-- **Increased inter-sample variability**, which can dilute statistical power,
+------------------------------------------------------------------------
 
-- **Platform sensitivity differences** (as seen in some GPL80 results missing certain comparisons),
+## Shared Probes Within Tumor Categories
 
-Or more complex expression patterns not well captured by standard differential expression filters (e.g., widespread but modest shifts rather than sharp, localized changes).
+Shared-probe counts summarize how many filtered probes recur across comparisons within a broad tumor category.
+They can be useful for identifying repeated transcriptional signals within a category, but they should not be treated as direct measures of biological similarity without considering tissue composition, platform coverage, and comparison design.
 
-It is also notable that certain comparisons—such as **PB/B-ALL** and **PB/T-ALL**—retain an exceptionally high number of probes across both platforms. This may reflect the distinct nature of hematologic malignancies, where malignant transformation often results in global transcriptional shifts tied to lineage commitment, proliferation, or immune regulation.
-
-Conversely, comparisons like **LU/LUAD** or **PR/PRAD** retain very few probes, potentially due to **transcriptomic similarity** between normal and tumor tissues in those contexts, or perhaps due to **lower-quality input data, technical limitations**, or **biological heterogeneity**.
-
-Lastly, missing values (e.g., in lymphomas on the hu6800 platform) should not be interpreted as an absence of differential expression, but rather as **platform coverage limitations**—emphasizing the importance of integrating platform metadata (e.g., probe content and annotation depth) in interpretation.
-
-## Shared probes within a tumor category
-
-To determine how closely the tumors within a cancer category resembled each other, a determination was made as to the number of filtered probes shared across a tumor category. The results are presented in the tables below:
-
-| Tumor Category | Number of Shared Probes (hu35ksuba) | Number of Shared Probes (hu6800) |
-|----|----|----|
+| Tumor category | Number of shared probes (`hu35ksuba`) | Number of shared probes (`hu6800`) |
+|---|---:|---:|
 | Carcinomas | 0 | 0 |
 | Blastomas | 51 | 47 |
 | Leukemias | 354 | 328 |
 | Lymphomas | 181 | NA |
 
-: Number of Filtered Probes Shared Across a Tumor Category
+: Number of filtered probes shared across a tumor category
 
-### Interpretation of Shared Probe Counts
-The number of **shared probes across comparisons within a tumor category** reflects the **consistency and overlap of differentially expressed genes** detected across normal–tumor comparisons of related tissue types. High shared probe counts suggest that **similar molecular changes recur across comparisons**, possibly due to shared oncogenic mechanisms, common cell-of-origin features, or conserved dysregulation of specific pathways.
+High shared-probe counts suggest that related comparisons may share recurrent transcriptional features.
+Low shared-probe counts suggest either greater biological divergence, stronger tissue specificity, reduced statistical overlap, or platform-dependent limitations.
+Missing values should not be interpreted as absence of signal; they may reflect absent comparisons or incomplete platform coverage.
 
-In this analysis, **leukemias and lymphomas exhibit substantial numbers of shared probes** (e.g., 354 and 328 for leukemias; 181 for lymphomas on GPL98). This pattern may reflect the **homogeneity of hematologic malignancies**, where transformation processes frequently affect conserved transcriptional programs related to hematopoiesis, immune signaling, and proliferation.
+------------------------------------------------------------------------
 
-By contrast, **carcinomas exhibit no shared probes across comparisons**, suggesting either:
+## Relationship to the Analysis Pipeline Overview
 
-- Distinct molecular landscapes between carcinoma subtypes (e.g., breast vs. colon),
+This filtering document corresponds to the current analysis overview in the following way:
 
-- Greater biological heterogeneity among epithelial tumors,
+| Analysis overview section | Filtering document connection |
+|---|---|
+| Stage 2: Build expression matrix and comparison maps | Defines the normal/tumor comparison maps used by group-aware filtering |
+| Stage 3: Run group-aware probe filtering | Main implementation point for this document |
+| Stage 4: Run pairwise complexity and entropy comparisons | Consumes the filtered probe sets as feature spaces |
+| Stage 5: Aggregate engine results | Aggregates outputs whose values depend on the selected probe and gene-set filters |
+| Stage 6: Summarize comparison-level patterns | Summarizes complexity and entropy patterns conditional on filtering choices |
+| Stage 7–8: Latent notebooks and postprocessing | Should be interpreted with attention to whether the latent feature space matches or differs from the R-side filtered feature space |
 
-- Or divergence in sample origin, histology, or progression stage—limiting the overlap of detected differentially expressed genes.
+This alignment is important because the same word, “filtering,” can refer to several related but distinct decisions: selecting probes for pairwise analysis, selecting highly variable features for latent modeling, and selecting gene sets with enough mapped probes for stable biological interpretation.
 
-**Blastomas show modest but consistent probe sharing**, suggesting some convergence in dysregulated developmental pathways typical of embryonal tumors, though less striking than in leukemias.
+------------------------------------------------------------------------
 
-Notably, **missing values (e.g., “NA” for lymphomas on the GPL80/hu6800 platform)** do not indicate an absence of shared signal but rather reflect **incomplete platform coverage or the absence of corresponding comparisons**, underlining the importance of interpreting probe overlap in light of both **biological context and technical design constraints** (such as probe composition and annotation depth across microarray platforms).
+The empirical structure of filtered probe sets across comparisons is examined in the Results section, where intersection patterns and shared-feature distributions are analyzed using UpSet visualizations.

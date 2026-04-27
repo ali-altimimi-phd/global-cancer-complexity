@@ -1,17 +1,20 @@
 ---
 title: "Chaos and Complexity in Cancer"
 subtitle: "Cancer as a dynamical system: complexity, entropy, and transcriptomic reorganization"
-author: "Ali M. Al-Timimi"
+author: "Ali M. Al-Timimi, PhD"
 format:
   html:
+    toc: false
+    number-sections: false
+
+  pdf:
     toc: false
     number-sections: false
 ---
 
 ## Overview
 
-Cancer is often described as a disease of increasing disorder.  
-This project tests whether that intuition is actually correct.
+Cancer is often described as a disease of increasing disorder. This project tests whether that intuition is actually correct.
 
 This site presents a reconstruction and extension of my doctoral dissertation, *Chaos and Complexity in Cancer* (George Mason University, 2004), using a computational framework that treats cancer as a **dynamical system**.
 
@@ -112,9 +115,8 @@ This framework is being extended using:
 
 ## Acknowledgments
 
-This work reconstructs and extends my doctoral dissertation, *Chaos and Complexity in Cancer* (George Mason University, 2004).
+This work extends my doctoral dissertation, *“Chaos and Complexity in Cancer”* (George Mason University, 2004). I am indebted to:
 
-I also acknowledge the intellectual influence of:
+-   **Curtis Jamison**, my dissertation director
+-   **Harold J. Morowitz**, whose work on complexity in living systems shaped the conceptual framework of this research
 
-- **Curtis Jamison**, dissertation director  
-- **Harold J. Morowitz**, whose work on complexity in living systems shaped the conceptual foundation of this research  
