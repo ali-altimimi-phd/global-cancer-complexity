@@ -1,0 +1,269 @@
+---
+title: "Latent-Space Representation and Geometric Analysis"
+format:
+  html:
+    toc: true
+    number-sections: true
+    html-math-method: mathjax
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# Purpose
+
+This chapter defines the construction of latent-space representations and the geometric measures used to quantify cancer state structure.
+
+It serves as the methodological foundation for the latent-space results presented in the subsequent chapter (Notebook 5–derived analyses). No biological interpretation is performed here; all quantities defined below are used later for comparison and interpretation.
+
+---
+
+# Relationship to Prior Framework
+
+The classical analysis pipeline operates in gene-expression space and evaluates complexity using entropy- and rank-based measures.
+
+The latent-space framework introduces a learned representation $Z \in \mathbb{R}^k$, derived via a variational autoencoder (VAE), in which geometric properties of sample distributions can be analyzed.
+
+This chapter defines:
+
+- how $Z$ is constructed  
+- how samples are grouped (normal vs tumor)  
+- how geometric properties of each group are quantified  
+
+These definitions are used directly in the latent complexity results.
+
+---
+
+# Latent Representation Pipeline
+
+## Data flow
+
+The latent representation is produced through the following stages:
+
+1. **Preprocessing and normalization** (R pipeline; Affymetrix RMA)
+2. **Feature selection** (high-variance probe filtering)
+3. **Model training** (VAE; Python / PyTorch)
+4. **Embedding extraction** → `latent.npy`
+5. **Metadata alignment** → `metadata_aligned.csv`
+
+## Latent data structure
+
+After alignment:
+
+- Each sample $i$ is represented as a vector $z_i \in \mathbb{R}^k$
+- Samples are labeled by:
+  - condition (normal vs tumor)
+  - tissue / cancer type
+
+The working dataset is:
+
+$$
+\mathcal{D} = \{ (z_i, y_i, c_i) \}
+$$
+
+where:
+- $y_i \in \{\text{normal}, \text{tumor}\}$
+- $c_i$ denotes cancer type
+
+---
+
+# Diagnostic Procedures
+
+These steps validate the learned representation before geometric analysis.
+
+## PCA sanity check
+
+Principal component analysis is applied to the latent vectors to assess:
+
+- variance concentration
+- potential degeneracy
+- global structure
+
+This is a diagnostic step only and does not enter downstream metrics.
+
+## VAE training diagnostics
+
+Model performance is evaluated via:
+
+- total loss
+- reconstruction loss
+- KL divergence
+
+These ensure stable convergence and a usable latent embedding.
+
+## Latent visualization with centroids
+
+For each class $c$, the centroid is defined as:
+
+$$
+\mu_c = \frac{1}{n_c} \sum_{i \in c} z_i
+$$
+
+Centroid plots provide qualitative visualization of class separation but are not used directly as quantitative measures.
+
+---
+
+# Latent Geometry Measures
+
+Let $X_c \subset \mathbb{R}^k$ denote the set of latent vectors for class $c$.
+
+## Covariance structure
+
+$$
+\Sigma_c = \text{Cov}(X_c)
+$$
+
+Let eigenvalues be:
+
+$$
+\lambda_1, \lambda_2, \ldots, \lambda_k
+$$
+
+---
+
+## Participation Ratio (Effective Dimensionality)
+
+$$
+\text{PR}_c = \frac{\left(\sum_i \lambda_i\right)^2}{\sum_i \lambda_i^2}
+$$
+
+Interpretation:
+- higher PR → variance distributed across more dimensions
+- lower PR → variance concentrated in fewer directions
+
+---
+
+## Eigenvalue Entropy
+
+Define normalized eigenvalues:
+
+$$
+p_i = \frac{\lambda_i}{\sum_j \lambda_j}
+$$
+
+Then:
+
+$$
+H_c = -\sum_i p_i \log p_i
+$$
+
+Interpretation:
+- higher entropy → more uniform variance distribution
+- lower entropy → dominance of a few axes
+
+---
+
+## Anisotropy
+
+$$
+A_c = \frac{\lambda_{\max}}{\sum_i \lambda_i}
+$$
+
+Interpretation:
+- high anisotropy → strong directional dominance
+- low anisotropy → isotropic dispersion
+
+---
+
+## Class Radius (Dispersion)
+
+$$
+R_c = \frac{1}{n_c} \sum_{i \in c} \| z_i - \mu_c \|
+$$
+
+Interpretation:
+- measures spread around centroid
+- sensitive to global dispersion
+
+---
+
+## Centroid Distance
+
+For two classes $c_1, c_2$:
+
+$$
+D(c_1, c_2) = \| \mu_{c_1} - \mu_{c_2} \|
+$$
+
+Interpretation:
+- global separation between classes
+
+---
+
+## Local Neighborhood Structure
+
+Using k-nearest neighbors:
+
+- same-class neighbor fraction
+- neighborhood mixing
+
+These capture local structure not visible in covariance measures.
+
+---
+
+# Normal vs Tumor Comparisons
+
+For each cancer type $t$, two groups are defined:
+
+- $X_{t}^{(N)}$: normal samples  
+- $X_{t}^{(T)}$: tumor samples  
+
+For each metric $M$, we compute:
+
+$$
+\Delta M_t = M_t^{(T)} - M_t^{(N)}
+$$
+
+These deltas form the primary inputs to the results chapter.
+
+---
+
+# Output Objects for Results Layer
+
+The following quantities are exported for downstream analysis:
+
+- $\Delta \text{PR}$
+- $\Delta H$ (entropy)
+- $\Delta A$ (anisotropy)
+- $\Delta R$ (radius)
+- centroid distances
+- neighborhood statistics
+
+These outputs are consumed directly by the latent complexity results.
+
+---
+
+# Link to Results Chapter
+
+The next chapter applies these definitions to each cancer type and evaluates:
+
+- within-class geometric changes (Notebook 5)
+- between-class structure (Notebook 6)
+- correspondence with classical complexity measures
+
+All interpretation, biological reasoning, and regime classification are deferred to that chapter.
+
+---
+
+# Critical Limitations
+
+## Representation dependence
+
+All measures depend on the learned embedding and are not direct observables.
+
+## Feature-selection mismatch
+
+Latent-space analysis may use a different subset of genes than classical analysis.
+
+## Scale separation
+
+Latent geometry, probe-level expression, and pathway-level results capture different aspects of system structure.
+
+---
+
+# Summary
+
+This chapter defines the latent-space representation and the geometric measures used to quantify cancer state structure.
+
+These definitions provide the formal basis for the results presented in the following chapter.

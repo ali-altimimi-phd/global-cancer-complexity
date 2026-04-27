@@ -1,0 +1,69 @@
+# Ramaswamy dataset
+
+The Ramaswamy dataset is a benchmark gene expression dataset introduced in 2001 for studying multi-class cancer classification. It was developed by S. Ramaswamy and colleagues at the Broad Institute, providing an early demonstration that molecular profiles could differentiate among diverse tumor types.
+
+The dataset originated from the paper *Multiclass cancer diagnosis using tumor gene expression signatures* (Ramaswamy et al., 2001). The study aimed to show that a single molecular classifier could distinguish multiple tumor origins. Each sample’s RNA expression was profiled using microarray technology, making it one of the earliest large-scale, multi-tissue cancer expression resources.
+
+### Key facts
+
+-   **Introduced:** 2001 (published in *Proceedings of the National Academy of Sciences*)
+
+-   **Samples:** 190 tumor and normal tissue samples
+
+-   **Classes:** 14 distinct cancer and normal tissue types
+
+-   **Platform:** Affymetrix oligonucleotide microarrays
+
+-   **Feature count:** \~16,000 genes after preprocessing
+
+### Data composition
+
+Samples span multiple cancer types—such as lung, breast, kidney, ovary, and leukemia—plus normal tissues. The dataset provides preprocessed log-transformed expression intensities, often filtered for variance and normalized across arrays. It serves as a model for testing algorithms in supervised learning, feature selection, and dimensionality reduction for biological data.
+
+### Research impact
+
+The Ramaswamy dataset became widely used in bioinformatics for benchmarking multi-class classifiers, including support vector machines and neural networks. It highlights challenges in high-dimensional, low-sample-size genomics and continues to appear in comparative studies evaluating classification robustness.
+
+### Access and usage
+
+The dataset is publicly available through repositories like the Broad Institute and the Gene Expression Omnibus (accession GSE2109 and related entries). Researchers typically download it in processed matrix form for cross-study machine learning evaluation.
+
+### Comparison Mappings
+
+A normal tissue vs tumor comparison map was drawn up from the available samples in the data set. The fifteen tissue comparisons where then grouped into four tumor categories: (1.) carcinomas, (2.) blastomas, (3.) lymphomas, and (4.) leukemias, as described in the tables below:
+
+| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
+|---------------|---------------|---------------|---------------|---------------|
+| Bladder | Bladder transitional cell carcinoma | BLAD/TCC |  |  |
+| Breast | Breast adenocarcinoma | BR/BRAD |  |  |
+| Colon | Colorectal adenocarcinoma | COL/COADREAD |  |  |
+| Kidney | Renal cell carcinoma | KID/RCC |  |  |
+| Lung | Lung adenocarcinoma | LU/LUAD |  |  |
+| Ovary | Ovarian adenocarcinoma | OV/OVAD |  |  |
+| Pancreas | Pancreatic adenocarcinoma | PA/PAAD |  |  |
+| Prostate | Prostate adenocarcinoma | PR/PRAD |  |  |
+| Uterus | Uterine adenocarcinoma | UT/EAC |  |  |
+
+: Carcinoma mappings. {.striped .hover}
+
+| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
+|---------------|---------------|---------------|---------------|---------------|
+| Brain | Glioblastoma | Brain/GBM |  |  |
+| Brain | Medulloblastoma | Brain/MB |  |  |
+
+: Blastoma mappings. {.striped .hover}
+
+| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
+|---------------|---------------|---------------|---------------|---------------|
+| Lymphoid | Follicular lymphoma | GC/FL |  |  |
+| Lymphoid | Large B-cell lymphoma | GC/LBCL |  |  |
+
+: Lymphoma mappings. {.striped .hover}
+
+| Normal Tissue | Tumor | Comparison Abbreviation | No. of Normal Samples | No. of Tumor Samples |
+|---------------|---------------|---------------|---------------|---------------|
+| Peripheral Blood | Acute myeloid leukemia | PB/AML |  |  |
+| Peripheral Blood | (Bone marrow) B-cell ALL | PB/B-ALL |  |  |
+| Peripheral Blood | (Bone marrow) T-cell ALL | PB/T-ALL |  |  |
+
+: Leukemia mappings. {.striped .hover}

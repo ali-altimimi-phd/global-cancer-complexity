@@ -1,0 +1,237 @@
+# Preprocessing Workflow for Global Cancer Expression Data
+
+This document describes the standalone preprocessing pipeline used to  
+construct cleaned, chip-specific `ExpressionSet` objects from raw  
+Affymetrix CEL files for the global cancer dataset  
+[GSE68928](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68928).
+
+------------------------------------------------------------------------
+
+## Overview {.unnumbered}
+
+**Driver script:** `R/run_preprocessing_pipeline.R`  
+**Estimated runtime:**
+- ~15 minutes when CEL files and GEO metadata are already available locally  
+- ~75 minutes if FTP download is enabled or remote resources must be retrieved
+
+**Primary outputs:**
+- `output/global_cancer/RData/global_cancer_eset_list.RData`
+- `output/global_cancer/RData/annotations/full_chip_annotations.rds`
+
+**Primary log file:**
+- `output/global_cancer/logs/preprocess/preprocess_pipeline_log.txt`
+
+The goal of this preprocessing pipeline is to transform raw public  
+microarray data into normalized, metadata-enriched `ExpressionSet`  
+objects suitable for downstream analysis of cancer expression structure  
+and complexity.
+
+------------------------------------------------------------------------
+
+## Historical and Methodological Context {.unnumbered}
+
+The original version of this research (2004) was implemented using a 
+text-based data pipeline. Microarray data were processed as flat files, 
+stored in a MySQL database, and queried using Perl scripts to generate 
+analysis-ready subsets.
+
+In the current reconstruction, this workflow has been translated into a 
+Bioconductor-based framework centered on `ExpressionSet` objects. This 
+introduces a separation between:
+
+- raw expression data (derived directly from CEL files via RMA), and  
+- phenotype metadata (retrieved from GEO and attached post hoc)
+
+Because publicly available GEO metadata is not perfectly aligned with the 
+CEL-derived sample structure—and contains occasional spelling and labeling inconsistencies—a dedicated metadata cleaning step is required.
+
+This preprocessing pipeline therefore serves as a bridge between the 
+original data-engineering architecture and a modern object-oriented 
+bioinformatics workflow.
+
+------------------------------------------------------------------------
+
+## Workflow Steps {.unnumbered}
+
+### 1. Download `.CEL` Files (Optional) {.unnumbered}
+
+**Purpose:** Retrieve raw Affymetrix CEL files if not already available locally.
+
+- Controlled by: `download_enabled`
+- Script: `R/preprocessing/download_cel_files.R`
+- Source: EBI FTP (E-GEOD-68928)
+- Destination: `data/global_cancer/CEL/`
+
+**Notes:**  
+In the current workflow, downloads are typically disabled because CEL  
+files are already present locally. GEO-derived phenotype metadata is  
+attached in a later step.
+
+------------------------------------------------------------------------
+
+### 2. Build ExpressionSet Objects {.unnumbered}
+
+**Purpose:** Detect chip type, validate CEL files, group by chip, and  
+normalize using RMA.
+
+- Controlled by: `build_esets`
+- Script: `R/preprocessing/build_expression_sets.R`
+
+**Chip types:**
+- `GPL98` → `hu35ksuba`
+- `GPL80` → `hu6800`
+
+**Behavior:**
+- Detect chip type via `read.affybatch()`
+- Skip unreadable or invalid CEL files (logged)
+- Group valid CELs by chip
+- Normalize each chip-specific group using RMA
+- Produce one `ExpressionSet` per chip
+
+**Output:**  
+- Named list of chip-specific `ExpressionSet` objects
+
+------------------------------------------------------------------------
+
+### 3. Attach GEO Metadata {.unnumbered}
+
+**Purpose:** Attach phenotype metadata from GEO to each `ExpressionSet`.
+
+- Controlled by: `process_metadata`
+- Script: `R/preprocessing/attach_geo_metadata.R`
+- GEO accession:  
+  [GSE68928](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68928)
+
+**Behavior:**
+- Load GEO platform objects
+- Map GEO platforms to internal chip names
+- Match samples using GSM identifiers derived from CEL filenames
+- Write matched phenotype data into `pData(eset)`
+
+------------------------------------------------------------------------
+
+### 4. Clean Metadata and Standardize Labels {.unnumbered}
+
+**Purpose:** Correct inconsistencies in GEO metadata and create  
+analysis-ready labels.
+
+- Script: `R/helpers/clean_and_label_metadata.R`
+
+**Metadata fields used:**
+- `characteristics_ch1` → disease state
+- `characteristics_ch1.1` → tissue source
+
+**Derived variables:**
+- `condition`: `"normal"` or `"cancer"`
+- `tissue_label`: combined tissue + disease label  
+  (e.g., `lung_adenocarcinoma`, `prostate_normal`)
+
+**Behavior:**
+- Apply known corrections to spelling and formatting
+- Normalize free-text metadata into structured categories
+- Add derived fields to `pData(eset)`
+
+**Notes:**  
+This step encodes domain-specific knowledge about the dataset and is  
+critical for downstream analysis.
+
+------------------------------------------------------------------------
+
+### 5. Annotate Full-Chip Probe Sets {.unnumbered}
+
+**Purpose:** Attach biological annotations to all probes on each chip.
+
+- Controlled by: `run_annotation`
+- Scripts:
+  - `R/wrappers/run_annotate_chip_probes.R`
+  - `R/annotate/annotate_chip_probes.R`
+
+**Annotation dimensions:**
+- Gene symbols (`SYMBOL`)
+- Gene Ontology terms (MF and BP)
+- KEGG pathways
+- MSigDB Hallmark gene sets
+
+**Output:**
+- `output/global_cancer/RData/annotations/full_chip_annotations.rds`
+
+**Notes:**  
+Annotation is performed on the full chip once during preprocessing.  
+Downstream analysis subsets from this complete annotation layer rather  
+than recomputing annotations.
+
+------------------------------------------------------------------------
+
+### 6. Save ExpressionSets and Annotations {.unnumbered}
+
+**Purpose:** Persist preprocessed objects for downstream analysis.
+
+**Outputs:**
+- `global_cancer_eset_list.RData`  
+  (named list of chip-specific `ExpressionSet` objects)
+- `full_chip_annotations.rds`  
+  (full annotation results for each chip)
+
+These outputs serve as a stable preprocessing checkpoint and are reused  
+by the analysis pipeline.
+
+------------------------------------------------------------------------
+
+## Outputs {.unnumbered}
+
+| File | Description |
+|------|------------|
+| `global_cancer_eset_list.RData` | List of normalized `ExpressionSet` objects |
+| `full_chip_annotations.rds` | Full-chip annotation results |
+| `preprocess_pipeline_log.txt` | Main preprocessing log |
+| `skipped_chiptype.txt` | CEL files with no detectable chip type |
+| `skipped_hu35ksuba_cel.txt` | Invalid CEL files for `hu35ksuba` |
+| `skipped_hu6800_cel.txt` | Invalid CEL files for `hu6800` |
+
+------------------------------------------------------------------------
+
+## Customizing for Other Datasets {.unnumbered}
+
+This pipeline can be adapted to other Affymetrix or GEO datasets by:
+
+- Updating GEO accession and FTP source
+- Adjusting chip-to-platform mappings
+- Modifying metadata parsing logic in  
+  `clean_and_label_metadata.R`
+
+------------------------------------------------------------------------
+
+## Testing and Validation {.unnumbered}
+
+- CEL file counts and chip distributions are logged
+- Metadata matching success is reported
+- Skipped files are recorded for inspection
+- Phenotype data can be inspected via:
+  ```r
+  Biobase::pData(eset)
+  ```
+------------------------------------------------------------------------
+
+## Directory Layout {.unnumbered}
+
+/R/preprocessing/download_cel_files.R
+/R/preprocessing/build_expression_sets.R
+/R/preprocessing/attach_geo_metadata.R
+/R/helpers/clean_and_label_metadata.R
+/R/wrappers/run_annotate_chip_probes.R
+/R/annotate/annotate_chip_probes.R
+
+/output/global_cancer/logs/preprocess/
+/output/global_cancer/RData/
+/output/global_cancer/RData/annotations/
+
+------------------------------------------------------------------------
+
+## References
+
+- Source paper: Ramaswamy S, Tamayo P, Rifkin R, et al.  
+  Multiclass Cancer Diagnosis Using Tumor Gene Expression Signatures.  
+  *Proc Natl Acad Sci USA* 2001;98(26):15149–15154  
+  [DOI:10.1073/pnas.211566398](https://doi.org/10.1073/pnas.211566398)
+- GEO accession:  
+  [GSE68928](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68928)

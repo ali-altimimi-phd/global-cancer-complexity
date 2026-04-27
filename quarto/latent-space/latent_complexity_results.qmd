@@ -1,0 +1,110 @@
+---
+title: "Latent-Space Complexity: Within-Class Geometric Analysis"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# Purpose
+
+This section applies the latent-space geometric framework defined in the Methods section to quantify within-class structure across cancer types.
+
+Specifically, we evaluate how the geometric properties of latent representations differ between normal and tumor samples for each tissue.
+
+All metrics used in this section—participation ratio, eigenvalue entropy, anisotropy, class radius, centroid distance, and neighborhood structure—are defined formally in the preceding Methods section.
+
+The present analysis does not introduce new measures; it applies those definitions to compute per-cancer geometric differences.
+
+---
+
+# Analytical Scope
+
+This section focuses on **within-class structure**, evaluating how the internal geometry of each class changes from normal to tumor.
+
+Between-class relationships (e.g., global geometry across cancer types) are addressed separately.
+
+---
+
+# Data Inputs
+
+The analysis operates on the aligned latent dataset:
+
+- latent coordinates (`latent.npy`)
+- metadata (`metadata_aligned.csv`)
+
+Each sample is represented as a latent vector $z_i \in \mathbb{R}^k$, with associated labels for condition (normal vs tumor) and cancer type.
+
+---
+
+# Computational Strategy
+
+For each cancer type $t$:
+
+1. Partition samples into:
+   - normal: $X_t^{(N)}$
+   - tumor: $X_t^{(T)}$
+
+2. Compute geometric measures for each group:
+   - participation ratio (PR)
+   - eigenvalue entropy (H)
+   - anisotropy (A)
+   - class radius (R)
+
+3. Compute differences:
+
+$$
+\Delta M_t = M_t^{(T)} - M_t^{(N)}
+$$
+
+These deltas constitute the primary outputs of this section.
+
+# Interpretation Framework
+
+The quantities computed in this section describe **geometric properties of the latent representation**, not direct biological observables.
+
+Interpretation follows these rules:
+
+- Higher participation ratio or entropy indicates variance distributed across more latent dimensions.
+- Higher radius indicates greater dispersion of samples within a class.
+- Higher anisotropy indicates stronger directional structure.
+- These measures do **not** directly imply biological complexity gain or loss.
+
+Comparison with classical expression-space complexity measures is deferred to the integrated results section.
+
+# Within-Class Latent Geometry
+
+## Overview
+
+## Overview
+
+This section evaluates how the internal geometric structure of each cancer class changes between normal and tumor states using the metrics defined in the Methods chapter.
+
+For each cancer type, samples are partitioned into normal and tumor groups, and geometric measures are computed separately for each group. Differences between these groups quantify how the geometric structure of the latent representation changes under tumorigenesis.
+
+The results are presented in aggregated form, combining multiple geometric measures into summary tables, structural visualizations, and ranked comparisons.
+
+The metrics summarized in this section quantify complementary aspects of latent geometry:
+
+- Participation ratio and eigenvalue entropy reflect effective dimensionality.
+- Anisotropy captures directional concentration of variance.
+- Radius measures overall dispersion of samples within a class.
+- Centroid distance reflects global separation between normal and tumor states.
+
+The results shown below summarize geometric properties for normal and tumor groups, together with the corresponding tumor-minus-normal differences for each cancer type.
+
+```{r}
+library(readr)
+library(dplyr)
+library(knitr)
+library(gt)
+library(here)
+
+latent_tbl <- read_csv(
+  here("latent-space", "tables", "latent_comparison_metrics.csv"),
+  show_col_types = FALSE
+)

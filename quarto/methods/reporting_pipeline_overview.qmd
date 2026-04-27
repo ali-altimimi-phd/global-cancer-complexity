@@ -1,0 +1,506 @@
+# Reporting Workflow for Global Cancer Complexity Analysis
+
+This document describes the reporting pipeline used to transform aggregated
+complexity, entropy, and pairwise-comparison results into human-readable summary
+files, generated comparison-specific Quarto source files, optional GO-clustering
+tables, and final rendered report outputs.
+
+The reporting pipeline is intentionally downstream of the preprocessing and
+analysis pipelines. It does not rebuild `ExpressionSet` objects, recompute probe
+annotations, or rerun the core entropy/complexity calculations. Instead, it
+loads previously generated analysis products and converts them into report-ready
+artifacts.
+
+------------------------------------------------------------------------
+
+## Overview {.unnumbered}
+
+**Driver script:** `scripts/reporting/03_run_report_pipeline.R`  
+**Configuration file:** `R/config/global_cancer/report_config.R`
+
+**Primary input directories:**
+
+- `output/global_cancer/RData/summaries/`
+- `output/global_cancer/RData/aggregated/`
+- `output/global_cancer/RData/filtered_probes/`
+
+**Primary report-output directory:**
+
+- `output/global_cancer/reports/`
+
+**Primary Quarto/reporting resources:**
+
+- `quarto/reports/generated_reports/`
+- `quarto/resources/tables/clusters/`
+
+**Primary log file:**
+
+- `output/global_cancer/logs/reports/reports_pipeline_log.txt`
+
+The goal of this reporting pipeline is to create a stable reporting layer on top
+of the analysis outputs. Its main responsibilities are to load previously saved
+summary and pairwise-comparison objects, generate cleaned summary artifacts,
+create comparison-specific Quarto files from templates, optionally generate
+GO-clustering tables, and optionally render the Quarto book/site.
+
+------------------------------------------------------------------------
+
+## Methodological Context {.unnumbered}
+
+The reporting layer exists because the analysis pipeline produces several kinds
+of intermediate objects that are useful computationally but not yet suitable for
+interpretation or documentation. These include aggregated entropy results,
+aggregated complexity results, combined comparison summaries, and filtered-probe
+objects from both Affymetrix platforms.
+
+The reporting pipeline therefore performs a translation step:
+
+- from serialized R objects to cleaned report tables;
+- from comparison-level results to generated `.qmd` report files;
+- from GO/KEGG-associated analysis outputs to report-ready biological tables;
+- and, when enabled, from Quarto source files to rendered HTML/PDF outputs.
+
+This design separates computational analysis from document generation. That
+separation is important because rendering a full Quarto book can be fragile and
+slow, whereas summary-table generation and `.qmd` generation can be tested
+independently.
+
+------------------------------------------------------------------------
+
+## Pipeline Controls {.unnumbered}
+
+The reporting pipeline is controlled through `report_config.R`. The principal
+toggles are:
+
+| Toggle | Purpose |
+|---|---|
+| `run_summary_reports` | Generate text summaries and cleaned entropy/complexity files |
+| `run_reports` | Generate comparison-specific `.qmd` files from the reporting template |
+| `run_go_clustering` | Run GO-clustering analysis and write cluster tables |
+| `run_quarto` | Render the Quarto project after report sources are generated |
+| `run_visualization` | Placeholder toggle; visualization code is currently removed from the active pipeline |
+
+The current GO-clustering configuration uses:
+
+```r
+go_mode <- "GO_BP"
+```
+
+Other intended GO modes include `GO_MF` and `GO_UNSPECIFIED`, although the
+validity of a given mode depends on the downstream clustering script and the
+available annotation fields.
+
+------------------------------------------------------------------------
+
+## Workflow Steps {.unnumbered}
+
+### 1. Load Reporting Configuration and Start Logging {.unnumbered}
+
+**Purpose:** Initialize paths, toggles, and the reporting log.
+
+- Configuration file: `R/config/global_cancer/report_config.R`
+- Logger helper: `R/helpers/pipeline_logger.R`
+- Log file: `output/global_cancer/logs/reports/reports_pipeline_log.txt`
+
+The configuration file defines the study identifier, local output paths, input
+RDS paths, and reporting toggles. The driver script then starts a dedicated
+reporting log before loading downstream results.
+
+------------------------------------------------------------------------
+
+### 2. Load Analysis Outputs into the Reporting Environment {.unnumbered}
+
+**Purpose:** Load the serialized outputs created by the analysis pipeline.
+
+- Helper script: `R/helpers/load_results_into_global.R`
+
+The driver calls the following helper functions:
+
+```r
+load_summaries_df(summaries_dir, overwrite = TRUE)
+load_cleaned_results(aggregate_dir, overwrite = TRUE)
+load_filtered_results(filtered_probes_dir, overwrite = TRUE)
+```
+
+These calls populate the reporting environment with the objects required by
+later stages, including:
+
+| Object | Description |
+|---|---|
+| `summaries_combined_df` | Combined pairwise-comparison summary table |
+| `entropy_df` | Cleaned/aggregated entropy results |
+| `complexity_df` | Cleaned/aggregated complexity results |
+| `res_hu35ksuba` | Filtered-probe results for the `hu35ksuba` platform |
+| `res_hu6800` | Filtered-probe results for the `hu6800` platform |
+
+This stage assumes that the analysis pipeline has already written the required
+RDS files to `output/global_cancer/RData/`.
+
+------------------------------------------------------------------------
+
+### 3. Generate Summary Reports {.unnumbered}
+
+**Purpose:** Create text summaries and cleaned report-level copies of the entropy
+and complexity result tables.
+
+- Controlled by: `run_summary_reports`
+- Script: `R/reports/summarize_pairwise_results.R`
+
+The pipeline summarizes entropy and complexity results separately:
+
+```r
+entropy_report    <- summarize_pairwise_results(entropy_df, engine = "entropy")
+complexity_report <- summarize_pairwise_results(complexity_df, engine = "complexity")
+```
+
+**Outputs:**
+
+| File | Description |
+|---|---|
+| `output/global_cancer/reports/entropy_summary.txt` | Plain-text entropy summary |
+| `output/global_cancer/reports/complexity_summary.txt` | Plain-text complexity summary |
+| `output/global_cancer/reports/entropy_cleaned.csv` | CSV copy of cleaned entropy results |
+| `output/global_cancer/reports/complexity_cleaned.csv` | CSV copy of cleaned complexity results |
+| `output/global_cancer/reports/entropy_cleaned.rds` | RDS copy of cleaned entropy results |
+| `output/global_cancer/reports/complexity_cleaned.rds` | RDS copy of cleaned complexity results |
+
+The current driver also renders:
+
+```r
+R/reports/pairwise_summary_report.Rmd
+```
+
+This appears to be a legacy or parallel R Markdown summary report. It should be
+retained unless and until the Quarto reporting layer fully replaces it.
+
+------------------------------------------------------------------------
+
+### 4. Generate Comparison-Specific Quarto Files {.unnumbered}
+
+**Purpose:** Create one `.qmd` file per pairwise comparison from a report
+template.
+
+- Controlled by: `run_reports`
+- Wrapper: `R/wrappers/run_all_reports.R`
+
+The driver passes the major reporting objects into `run_all_reports()`:
+
+```r
+run_all_reports(
+  summaries_combined_df = summaries_combined_df,
+  complexity_df = complexity_df,
+  entropy_df = entropy_df,
+  res_hu35ksuba = res_hu35ksuba,
+  res_hu6800 = res_hu6800
+)
+```
+
+This stage is responsible for generating comparison-level Quarto source files,
+not for rendering the final book. The source files are expected to be consumed
+later by the Quarto project under `quarto/`.
+
+**Conceptual output:**
+
+- comparison-specific `.qmd` files, typically under
+  `quarto/reports/generated_reports/`
+
+**Important distinction:**  
+Despite the name `run_reports`, this stage primarily creates report source files.
+The actual Quarto rendering step is controlled separately by `run_quarto`.
+
+------------------------------------------------------------------------
+
+### 5. Run GO-Clustering Analysis {.unnumbered}
+
+**Purpose:** Generate clustered GO-term tables for report integration.
+
+- Controlled by: `run_go_clustering`
+- Wrapper: `R/wrappers/run_go_clustering.R`
+- Current output base: `quarto/resources/tables/clusters/`
+- Current GO mode: `GO_BP`
+
+The driver calls:
+
+```r
+run_go_clustering_main(
+  summaries_combined_df = summaries_combined_df,
+  complexity_df = complexity_df,
+  entropy_df = entropy_df,
+  output_dir_base = here::here("quarto", "resources", "tables", "clusters"),
+  go_mode = go_mode
+)
+```
+
+This stage is currently disabled by default in `report_config.R`:
+
+```r
+run_go_clustering <- FALSE
+```
+
+When enabled, it should be treated as a biological-interpretation support layer,
+not as a replacement for the primary entropy and complexity summaries.
+
+------------------------------------------------------------------------
+
+### 6. Generate GO Visualizations {.unnumbered}
+
+**Purpose:** Placeholder for GO visualization code.
+
+This section is currently inactive. The driver contains commented code for a GO
+DAG plotting function:
+
+```r
+# source("R/visualizations/plot_entropy_go_dag.R")
+# plot_entropy_go_dag("PB/B-ALL")
+```
+
+The configuration file also contains:
+
+```r
+run_visualization <- FALSE
+```
+
+At present, visualization code should be considered outside the active reporting
+pipeline. It can be reintroduced later after the table-generation and Quarto
+rendering layers are stable.
+
+------------------------------------------------------------------------
+
+### 7. Render the Quarto Project {.unnumbered}
+
+**Purpose:** Render the Quarto book/site from the generated source files.
+
+- Controlled by: `run_quarto`
+- Working directory during render: `quarto/`
+
+When enabled, the driver temporarily changes into the Quarto directory, removes
+Quarto's `_freeze` directory, and renders the project:
+
+```r
+old <- getwd()
+setwd(here::here("quarto"))
+unlink("_freeze", recursive = TRUE, force = TRUE)
+quarto::quarto_render(".")
+setwd(old)
+```
+
+The current configuration disables this step by default:
+
+```r
+run_quarto <- FALSE
+```
+
+This is a conservative default. It allows the pipeline to regenerate source
+files and summary tables without forcing a full Quarto render on every reporting
+run.
+
+------------------------------------------------------------------------
+
+## Output Contract {.unnumbered}
+
+The reporting pipeline exposes three downstream interfaces.
+
+### Report-summary outputs {.unnumbered}
+
+| File | Description |
+|---|---|
+| `output/global_cancer/reports/entropy_summary.txt` | Text summary of entropy results |
+| `output/global_cancer/reports/complexity_summary.txt` | Text summary of complexity results |
+| `output/global_cancer/reports/entropy_cleaned.csv` | Report-level entropy table |
+| `output/global_cancer/reports/complexity_cleaned.csv` | Report-level complexity table |
+| `output/global_cancer/reports/entropy_cleaned.rds` | Serialized entropy table |
+| `output/global_cancer/reports/complexity_cleaned.rds` | Serialized complexity table |
+
+### Generated Quarto-source outputs {.unnumbered}
+
+| Location | Description |
+|---|---|
+| `quarto/reports/generated_reports/` | Comparison-specific `.qmd` files generated from templates |
+| `quarto/resources/tables/clusters/` | Optional GO-clustering tables for Quarto inclusion |
+
+### Rendered documentation outputs {.unnumbered}
+
+| Location | Description |
+|---|---|
+| `docs/` or configured Quarto output directory | Rendered HTML/PDF/book outputs, depending on `_quarto.yml` |
+
+The rendered output directory is controlled by the Quarto project configuration,
+not directly by `report_config.R`.
+
+------------------------------------------------------------------------
+
+## Required Upstream Inputs {.unnumbered}
+
+The reporting pipeline assumes that the analysis pipeline has already created
+the following files:
+
+| File | Description |
+|---|---|
+| `output/global_cancer/RData/summaries/summaries_combined_df.rds` | Combined pairwise summary table |
+| `output/global_cancer/RData/aggregated/entropy_aggregated_results.rds` | Aggregated entropy results |
+| `output/global_cancer/RData/aggregated/complexity_aggregated_results.rds` | Aggregated complexity results |
+| `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds` | Filtered-probe results for `hu35ksuba` |
+| `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds` | Filtered-probe results for `hu6800` |
+
+If any of these files are missing, the reporting pipeline should be treated as
+not ready to run. In that case, rerun or validate the analysis pipeline before
+attempting report generation.
+
+------------------------------------------------------------------------
+
+## Testing and Validation {.unnumbered}
+
+Recommended staged validation is:
+
+### Phase A: Load-only validation {.unnumbered}
+
+```r
+run_summary_reports <- FALSE
+run_reports         <- FALSE
+run_go_clustering   <- FALSE
+run_quarto          <- FALSE
+```
+
+This tests whether the reporting configuration, logger, and upstream result
+loading functions can run without generating downstream files.
+
+### Phase B: Summary-output validation {.unnumbered}
+
+```r
+run_summary_reports <- TRUE
+run_reports         <- FALSE
+run_go_clustering   <- FALSE
+run_quarto          <- FALSE
+```
+
+This tests whether the entropy and complexity summaries can be generated and
+written to `output/global_cancer/reports/`.
+
+### Phase C: Quarto-source generation validation {.unnumbered}
+
+```r
+run_summary_reports <- TRUE
+run_reports         <- TRUE
+run_go_clustering   <- FALSE
+run_quarto          <- FALSE
+```
+
+This tests whether comparison-specific `.qmd` files can be generated without
+triggering a full Quarto render.
+
+### Phase D: GO-clustering validation {.unnumbered}
+
+```r
+run_summary_reports <- TRUE
+run_reports         <- TRUE
+run_go_clustering   <- TRUE
+run_quarto          <- FALSE
+```
+
+This tests whether GO-clustering tables can be generated and made available to
+the Quarto reporting layer.
+
+### Phase E: Full reporting render {.unnumbered}
+
+```r
+run_summary_reports <- TRUE
+run_reports         <- TRUE
+run_go_clustering   <- TRUE
+run_quarto          <- TRUE
+```
+
+This should be reserved for final validation because Quarto rendering is the
+most operationally fragile stage, especially when both HTML and PDF outputs are
+being generated.
+
+Key validation checks include:
+
+```r
+stopifnot(file.exists(here::here("output", "global_cancer", "reports", "entropy_cleaned.csv")))
+stopifnot(file.exists(here::here("output", "global_cancer", "reports", "complexity_cleaned.csv")))
+```
+
+For generated Quarto files, a simple file-count check can be useful:
+
+```r
+generated <- list.files(
+  here::here("quarto", "reports", "generated_reports"),
+  pattern = "\\.qmd$",
+  full.names = TRUE
+)
+length(generated)
+```
+
+------------------------------------------------------------------------
+
+## Directory Layout {.unnumbered}
+
+```text
+global-cancer-complexity/
+  R/
+    config/global_cancer/report_config.R
+    helpers/
+      load_results_into_global.R
+      pipeline_logger.R
+    reports/
+      summarize_pairwise_results.R
+      pairwise_summary_report.Rmd
+    wrappers/
+      run_all_reports.R
+      run_go_clustering.R
+    visualizations/
+      plot_entropy_go_dag.R
+  scripts/
+    reporting/
+      03_run_report_pipeline.R
+  output/
+    global_cancer/
+      RData/
+        aggregated/
+        filtered_probes/
+        summaries/
+      reports/
+      logs/reports/
+      plots/
+  quarto/
+    _quarto.yml
+    reports/generated_reports/
+    resources/tables/clusters/
+```
+
+------------------------------------------------------------------------
+
+## Notes on HTML and PDF Rendering {.unnumbered}
+
+The reporting pipeline generates Quarto source files, but HTML/PDF rendering is
+handled by Quarto itself. This distinction matters because some outputs that
+render correctly in HTML may fail or degrade in PDF, especially if they depend on
+prebuilt HTML fragments or wide tables.
+
+For PDF-stable reporting, generated `.qmd` files should prefer data-frame-based
+Quarto tables over inserted HTML. Long GO terms and pathway descriptions should
+be rendered with explicit table-width, wrapping, or column-selection rules rather
+than relying on browser-style HTML layout.
+
+A conservative debugging sequence is:
+
+1. regenerate the `.qmd` files with `run_quarto <- FALSE`;
+2. inspect the generated `.qmd` source for HTML fragments or wide tables;
+3. render a single problematic `.qmd` or section;
+4. then render the full Quarto project only after the source-level issue is
+   corrected.
+
+------------------------------------------------------------------------
+
+## Customizing for Other Datasets {.unnumbered}
+
+This reporting pipeline can be adapted to other studies by:
+
+- changing `study_name` in `report_config.R`;
+- updating the expected input directories under `output/<study_name>/RData/`;
+- modifying `geo_chip_map` if additional platforms are used;
+- adjusting `run_all_reports()` to accept the appropriate filtered-probe objects;
+- changing the GO mode or clustering output path; and
+- updating the Quarto book structure so that generated report files are included
+  in the desired order.
+

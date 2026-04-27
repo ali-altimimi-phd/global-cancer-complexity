@@ -1,0 +1,17 @@
+---
+title: "Variational Autoencoder"
+format: html
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Variational Autoencoder
+
+![VAE Training Curve](images/vae_training_curve.png)
+
+![VAE Loss Components](images/vae_loss_components.png)
+
+![Latent Variables Histogram](images/latent_value_histogram.png)
+
+

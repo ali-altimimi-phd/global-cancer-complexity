@@ -1,0 +1,106 @@
+## Analysis Pipeline Overview
+
+This pipeline processes and analyzes microarray CEL files from public repositories to generate cleaned `ExpressionSet` objects, identify differentially expressed probe sets, annotate them, and run pairwise gene set comparisons. Each stage can be independently toggled via the config file.
+
+---
+
+## Stage-by-Stage Breakdown
+
+---
+
+### Stage 1: Limma Filtering
+
+**Purpose:** Identify differentially expressed probe sets per chip.
+
+- Controlled by: `force_rebuild_limma_filter`
+- Wrapper: `run_chip_limma_filter.R`
+- Labels: assigned using `assign_labels_to_all.R`
+- Parameters:
+  - `logFC > 0.33`
+  - `p-value < 0.05`
+- Comparison basis: `<<e.g., cancer vs normal, batch comparisons>>`
+
+---
+
+### Stage 2: Annotation of Probes
+
+**Purpose:** Annotate filtered probe sets with gene-level metadata.
+
+- Controlled by: `force_run_annotation`
+- Script: `run_annotate_all_filtered_probes.R`
+- Output:
+  - `.RData` with annotation object
+  - Excel summary for human inspection
+- Annotation sources: `<<e.g., hgu133plus2.db, Ensembl>>`
+
+---
+
+### Stage 3: Visualization
+
+**Purpose:** Generate summary plots and diagnostic visuals.
+
+- Controlled by: `run_visualization`
+- Output: HTML report in `output/reports/`
+- Report: `filtered_probes_report.Rmd`
+- Includes: `<<e.g., volcano plots, PCA, heatmaps>>`
+
+---
+
+### Stage 4: Matrix + Comparison Map Construction
+
+**Purpose:** Create chip- and tissue-specific expression matrices and predefined comparisons.
+
+- Controlled by: `force_rebuild_matrix_maps`
+- Config script: `global_cancer_matrix_config_v2.R`
+- Functions:
+  - `build_matrix_lists_by_tissue()`
+  - `define_predefined_comparisons()`
+- Output: `globalCancer_matrix_config.RData`
+- Notes: `<<add logic used in defining comparisons>>`
+
+---
+
+### Stage 5: Pairwise Comparisons
+
+**Purpose:** Apply gene set metrics across all comparison pairs.
+
+- Controlled by: `run_pairwise`
+- Script: `run_all_pairwise_comparisons_v3.R`
+- Parameters:
+  - Chips: `hu35ksuba`, `hu6800`
+  - Engines: `complexity`, `entropy`
+  - Gene sets: `KEGG_Q75`
+  - Minimum probes: 5
+- Interpretation: `<<how pairwise scores are used>>`
+
+---
+
+### Stage 6: Aggregation + Gene Set Annotation
+
+**Purpose:** Aggregate engine results and annotate gene sets.
+
+- Controlled by: `run_aggregator`
+- Scripts:
+  - `aggregate_engine_results_by_engine.R`
+  - `helpers/gene_set_tools.R`
+- Output:
+  - `.csv` and `.rds` files for each engine
+- Annotation: `attach_gene_set_names()`
+- Notes: `<<GO terms? KEGG? How annotation improves interpretability?>>`
+
+---
+
+### Stage 7: Summary Reports
+
+**Purpose:** Generate text and CSV summaries for downstream reporting.
+
+- Controlled by: `run_reporter`
+- Scripts:
+  - `summarize_pairwise_results_v2.R`
+  - `clean_aggregated_results.R`
+- Output:
+  - Cleaned results: `output/cleaned_results/`
+  - Text summaries: `output/reports/`
+- Example contents: `<<Top pathways? Most variable gene sets?>>`
+
+

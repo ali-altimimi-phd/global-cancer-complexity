@@ -1,0 +1,18 @@
+---
+title: "PCA of Cancer samples"
+format: html
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## PCA of Cancer Samples
+
+![PCA Plot](images/pca_cancer_only.png)
+
+
+![Scree Plot](images/pca_scree.png)
+
+
+
+

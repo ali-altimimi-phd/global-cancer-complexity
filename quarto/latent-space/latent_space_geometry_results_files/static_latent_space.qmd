@@ -1,0 +1,5 @@
+---
+title: "static_latent_space"
+format: html
+---
+

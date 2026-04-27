@@ -1,0 +1,153 @@
+---
+title: "Complexity and Entropy Measures"
+format: html
+---
+
+This project seeks to characterize malignant transformation not only through differential expression, but through changes in the **structure of the transcriptomic system**.
+
+Two complementary classes of measures are used:
+
+- **Complexity measures**, which quantify structural properties of the expression matrix  
+- **Entropy measures**, which quantify disorder and distributional uncertainty  
+
+Together, these provide a multi-perspective view of how biological organization changes as tissue transitions from normal to tumor.
+
+Importantly, no single scalar definition of “complexity” is assumed. Instead, complexity is treated as a **family of structural observables**, each capturing a different aspect of transcriptomic organization.
+
+---
+
+## Complexity Measures
+
+### Conceptual Definition
+
+In this pipeline, complexity is defined in terms of the **geometry and conditioning of the expression matrix**.
+
+Rather than focusing on mean expression changes, complexity is interpreted as:
+
+- how uneven or anisotropic the system is  
+- how many effective dimensions are active  
+- how stable or ill-conditioned the system is  
+
+---
+
+### Implemented Metrics
+
+The following metrics quantify different structural aspects of the expression matrix. No single metric is definitive; together they provide a composite view of transcriptomic organization.
+
+### Complexity Metrics
+
+| Metric | What It Measures | Interpretation in This Framework |
+|--------|------------------|---------------------------------|
+| **Covariance condition number (κ₁)** | Conditioning of the covariance matrix | Reflects sensitivity and anisotropy of variance structure; high values indicate uneven variance distribution across directions. |
+| **2-norm condition number (κ₂)** | Matrix conditioning under the 2-norm | Provides an alternative measure of numerical conditioning; interpreted as a supporting diagnostic rather than a primary metric. |
+| **SVD condition number (κ₃)** | Ratio of largest to smallest singular values | Primary complexity metric; captures the degree to which expression space is dominated by a small number of directions (anisotropy). |
+| **Effective rank** | Entropy-based dimensionality of eigenvalue spectrum | Estimates how many dimensions effectively contribute to variance; higher values indicate more distributed structure. |
+| **Matrix sparsity** | Proportion of near-zero entries | Describes distribution of expression magnitudes; included as a structural descriptor with limited direct biological interpretation. |
+| **Composite κ** | Average of multiple condition metrics | Provides a robustness check across related formulations; used as a secondary summary rather than a primary measure. |
+
+---
+
+### Inference for Complexity
+
+Complexity differences between normal and tumor are evaluated using both resampling-based inference and distributional comparisons.
+
+### Complexity Analysis Functions
+
+| Function | Purpose | Interpretation Notes |
+|----------|----------|----------------------|
+| **bootstrap_kappa_ci** | Computes bootstrap confidence intervals for complexity metrics | Assesses stability of complexity estimates; wide intervals may reflect heterogeneity or limited sample size. |
+| **kappa_per_sample** | Computes complexity metric per sample | Included as an exploratory diagnostic; interpretation is limited due to dimensional constraints of single-sample vectors. |
+| **compare_kappa_distributions** | Compares distributions between groups | Evaluates differences in central tendency or distribution; used as a descriptive complement to permutation testing. |
+| **permutation_test_complexity** | Permutation-based test of group differences | Primary inferential method; assesses whether observed complexity differences exceed random label assignment. |
+
+The statistical procedures below are used for both complexity and entropy analyses unless otherwise noted.
+
+### Statistical Tests
+
+| Statistic | Method | What It Evaluates | Role in This Pipeline |
+|-----------|--------|------------------|------------------------|
+| **p_perm** | Permutation test | Whether observed differences arise under random label assignment | Primary inferential statistic; does not rely on distributional assumptions. |
+| **p_wilcox** | Wilcoxon rank-sum test | Differences in rank distributions between groups | Secondary, descriptive comparison; useful for non-normal data but not primary inference. |
+| **p_ks** | Kolmogorov–Smirnov test | Differences in full distributions (shape, location, spread) | Exploratory; sensitive to multiple aspects of distributional change. |
+
+---
+
+### Important Cautions
+
+- There is no unique definition of complexity; different metrics capture different structural aspects.  
+- Per-sample complexity estimates are included for exploratory purposes and should be interpreted cautiously.  
+- High condition numbers reflect anisotropy or dominance in expression space and should not be interpreted as biological “instability” without context.  
+
+---
+
+## Entropy Measures
+
+### Conceptual Definition
+
+Entropy measures quantify **uncertainty and disorder** in the transcriptomic system.
+
+They provide a complementary perspective to complexity by focusing on dispersion rather than structure.
+
+---
+
+### Implemented Metrics
+
+The following entropy measures capture different aspects of transcriptomic variability and organization.
+
+### Entropy Metrics
+
+| Metric | What It Measures | Interpretation in This Framework |
+|--------|------------------|---------------------------------|
+| **Shannon entropy** | Distributional uncertainty in expression values | Reflects overall dispersion of expression magnitudes; higher values indicate greater uncertainty or variability. |
+| **Spectral entropy** | Entropy of covariance eigenvalue distribution | Captures how variance is distributed across dimensions; higher values indicate more evenly distributed variance. |
+| **Entropy direction** | Categorization of entropy change | Provides qualitative labels (e.g., chaotic vs. anti-chaotic) based on magnitude and direction of entropy differences; interpretive rather than strictly statistical. |
+| **Permutation test** | Significance of entropy differences | Evaluates whether entropy changes exceed random expectation; typically applied using Shannon entropy. |
+
+---
+
+### Inference for Entropy
+
+Entropy results are summarized using both quantitative differences and derived interpretive labels.
+
+### Entropy Summary Measures (Derived)
+
+| Measure | Description | Interpretation Notes |
+|--------|-------------|----------------------|
+| **Directional entropy label** | Categorical classification (e.g., strongly chaotic, neutral) | Based on thresholded differences; heuristic and intended for interpretive support. |
+| **Permutation-weighted entropy score** | Combines magnitude and statistical support | Provides a confidence-adjusted summary; derived quantity rather than a direct metric. |
+
+---
+
+### Important Cautions
+
+- Shannon and spectral entropy measure different properties and may not agree.  
+- Permutation testing is primarily tied to Shannon entropy in the current implementation.  
+- Directional labels such as “chaotic” or “anti-chaotic” are interpretive constructs and should not be treated as strict biological classifications.  
+
+---
+
+## Relationship Between Complexity and Entropy
+
+Complexity and entropy are complementary but distinct.
+
+Possible patterns include:
+
+- increased complexity with decreased entropy  
+- decreased complexity with increased entropy  
+- concurrent increases or decreases  
+
+These combinations reflect different modes of transcriptomic organization and should be interpreted jointly rather than independently.
+
+---
+
+## Summary
+
+This framework treats cancer as a transformation of transcriptomic structure rather than solely changes in expression levels.
+
+By combining:
+
+- structural complexity measures  
+- entropy-based disorder measures  
+- and statistical inference  
+
+it provides a multi-dimensional view of malignant transformation across tissues.

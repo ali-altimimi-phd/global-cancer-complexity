@@ -1,0 +1,15 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# R / RStudio
+.Rhistory
+.RData
+.Rproj.user/
+
+# Python
+__pycache__/
+*.pyc
+
+# Quarto / misc temp
+*.log

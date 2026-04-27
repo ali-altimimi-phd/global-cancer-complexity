@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>10&nbsp; Reporting Workflow for Global Cancer Complexity Analysis – Chaos and Complexity in Cancer</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../framework/complexity_and_entropy_measures.html" rel="next">
+<link href="../methods/analysis_pipeline_overview.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/dataset_description.html">Data and Computational Pipeline</a></li><li class="breadcrumb-item"><a href="../methods/reporting_pipeline_overview.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Reporting Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Chaos and Complexity in Cancer</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Chaos and Complexity in Cancer</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Theory</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../theory/overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Overview</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../theory/cell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Cell as a Complex System</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../theory/cancer_cas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Cancer as a Complex Adaptive System</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../theory/theory_summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Theory Summary and Transition to Quantitative Framework</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data and Computational Pipeline</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methods/dataset_description.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dataset Description</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methods/preprocessing_pipeline_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Expression Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methods/filtering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtering Strategy for the Global Cancer Analysis Pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methods/analysis_pipeline_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Expression Structure</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../methods/reporting_pipeline_overview.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Reporting Workflow for Global Cancer Complexity Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Quantitative Framework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../framework/complexity_and_entropy_measures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Complexity and Entropy Measures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../framework/latent_space.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Latent-Space Representation and Geometric Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../framework/biological_complexity_dimensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Biological Complexity Dimensions and Interpretive Framework</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Results and Discussion: Carcinomas</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_blad_tcc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Comparison Report: BLAD/TCC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_br_brad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Comparison Report: BR/BRAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_col_coadread.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Comparison Report: COL/COADREAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_kid_rcc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparison Report: KID/RCC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_lu_luad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Comparison Report: LU/LUAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_ov_ovad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparison Report: OV/OVAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_pa_paad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Comparison Report: PA/PAAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_ut_eac.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Comparison Report: UT/EAC</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Results and Discussion: Blastomas</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_brain_gbm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Comparison Report: Brain/GBM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_brain_mb.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Comparison Report: Brain/MB</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Results and Discussion: Lymphomas</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_gc_fl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Comparison Report: GC/FL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_gc_lbcl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Comparison Report: GC/LBCL</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Results and Discussion: Leukemias</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_pb_b_all.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Comparison Report: PB/B-ALL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_pb_t_all.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Comparison Report: PB/T-ALL</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#methodological-context" id="toc-methodological-context" class="nav-link" data-scroll-target="#methodological-context">Methodological Context</a></li>
+  <li><a href="#pipeline-controls" id="toc-pipeline-controls" class="nav-link" data-scroll-target="#pipeline-controls">Pipeline Controls</a></li>
+  <li><a href="#workflow-steps" id="toc-workflow-steps" class="nav-link" data-scroll-target="#workflow-steps">Workflow Steps</a>
+  <ul class="collapse">
+  <li><a href="#load-reporting-configuration-and-start-logging" id="toc-load-reporting-configuration-and-start-logging" class="nav-link" data-scroll-target="#load-reporting-configuration-and-start-logging">1. Load Reporting Configuration and Start Logging</a></li>
+  <li><a href="#load-analysis-outputs-into-the-reporting-environment" id="toc-load-analysis-outputs-into-the-reporting-environment" class="nav-link" data-scroll-target="#load-analysis-outputs-into-the-reporting-environment">2. Load Analysis Outputs into the Reporting Environment</a></li>
+  <li><a href="#generate-summary-reports" id="toc-generate-summary-reports" class="nav-link" data-scroll-target="#generate-summary-reports">3. Generate Summary Reports</a></li>
+  <li><a href="#generate-comparison-specific-quarto-files" id="toc-generate-comparison-specific-quarto-files" class="nav-link" data-scroll-target="#generate-comparison-specific-quarto-files">4. Generate Comparison-Specific Quarto Files</a></li>
+  <li><a href="#run-go-clustering-analysis" id="toc-run-go-clustering-analysis" class="nav-link" data-scroll-target="#run-go-clustering-analysis">5. Run GO-Clustering Analysis</a></li>
+  <li><a href="#generate-go-visualizations" id="toc-generate-go-visualizations" class="nav-link" data-scroll-target="#generate-go-visualizations">6. Generate GO Visualizations</a></li>
+  <li><a href="#render-the-quarto-project" id="toc-render-the-quarto-project" class="nav-link" data-scroll-target="#render-the-quarto-project">7. Render the Quarto Project</a></li>
+  </ul></li>
+  <li><a href="#output-contract" id="toc-output-contract" class="nav-link" data-scroll-target="#output-contract">Output Contract</a>
+  <ul class="collapse">
+  <li><a href="#report-summary-outputs" id="toc-report-summary-outputs" class="nav-link" data-scroll-target="#report-summary-outputs">Report-summary outputs</a></li>
+  <li><a href="#generated-quarto-source-outputs" id="toc-generated-quarto-source-outputs" class="nav-link" data-scroll-target="#generated-quarto-source-outputs">Generated Quarto-source outputs</a></li>
+  <li><a href="#rendered-documentation-outputs" id="toc-rendered-documentation-outputs" class="nav-link" data-scroll-target="#rendered-documentation-outputs">Rendered documentation outputs</a></li>
+  </ul></li>
+  <li><a href="#required-upstream-inputs" id="toc-required-upstream-inputs" class="nav-link" data-scroll-target="#required-upstream-inputs">Required Upstream Inputs</a></li>
+  <li><a href="#testing-and-validation" id="toc-testing-and-validation" class="nav-link" data-scroll-target="#testing-and-validation">Testing and Validation</a>
+  <ul class="collapse">
+  <li><a href="#phase-a-load-only-validation" id="toc-phase-a-load-only-validation" class="nav-link" data-scroll-target="#phase-a-load-only-validation">Phase A: Load-only validation</a></li>
+  <li><a href="#phase-b-summary-output-validation" id="toc-phase-b-summary-output-validation" class="nav-link" data-scroll-target="#phase-b-summary-output-validation">Phase B: Summary-output validation</a></li>
+  <li><a href="#phase-c-quarto-source-generation-validation" id="toc-phase-c-quarto-source-generation-validation" class="nav-link" data-scroll-target="#phase-c-quarto-source-generation-validation">Phase C: Quarto-source generation validation</a></li>
+  <li><a href="#phase-d-go-clustering-validation" id="toc-phase-d-go-clustering-validation" class="nav-link" data-scroll-target="#phase-d-go-clustering-validation">Phase D: GO-clustering validation</a></li>
+  <li><a href="#phase-e-full-reporting-render" id="toc-phase-e-full-reporting-render" class="nav-link" data-scroll-target="#phase-e-full-reporting-render">Phase E: Full reporting render</a></li>
+  </ul></li>
+  <li><a href="#directory-layout" id="toc-directory-layout" class="nav-link" data-scroll-target="#directory-layout">Directory Layout</a></li>
+  <li><a href="#notes-on-html-and-pdf-rendering" id="toc-notes-on-html-and-pdf-rendering" class="nav-link" data-scroll-target="#notes-on-html-and-pdf-rendering">Notes on HTML and PDF Rendering</a></li>
+  <li><a href="#customizing-for-other-datasets" id="toc-customizing-for-other-datasets" class="nav-link" data-scroll-target="#customizing-for-other-datasets">Customizing for Other Datasets</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/dataset_description.html">Data and Computational Pipeline</a></li><li class="breadcrumb-item"><a href="../methods/reporting_pipeline_overview.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Reporting Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Reporting Workflow for Global Cancer Complexity Analysis</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This document describes the reporting pipeline used to transform aggregated complexity, entropy, and pairwise-comparison results into human-readable summary files, generated comparison-specific Quarto source files, optional GO-clustering tables, and final rendered report outputs.</p>
+<p>The reporting pipeline is intentionally downstream of the preprocessing and analysis pipelines. It does not rebuild <code>ExpressionSet</code> objects, recompute probe annotations, or rerun the core entropy/complexity calculations. Instead, it loads previously generated analysis products and converts them into report-ready artifacts.</p>
+<hr>
+<section id="overview" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="overview">Overview</h2>
+<p><strong>Driver script:</strong> <code>scripts/reporting/03_run_report_pipeline.R</code><br>
+<strong>Configuration file:</strong> <code>R/config/global_cancer/report_config.R</code></p>
+<p><strong>Primary input directories:</strong></p>
+<ul>
+<li><code>output/global_cancer/RData/summaries/</code></li>
+<li><code>output/global_cancer/RData/aggregated/</code></li>
+<li><code>output/global_cancer/RData/filtered_probes/</code></li>
+</ul>
+<p><strong>Primary report-output directory:</strong></p>
+<ul>
+<li><code>output/global_cancer/reports/</code></li>
+</ul>
+<p><strong>Primary Quarto/reporting resources:</strong></p>
+<ul>
+<li><code>quarto/reports/generated_reports/</code></li>
+<li><code>quarto/resources/tables/clusters/</code></li>
+</ul>
+<p><strong>Primary log file:</strong></p>
+<ul>
+<li><code>output/global_cancer/logs/reports/reports_pipeline_log.txt</code></li>
+</ul>
+<p>The goal of this reporting pipeline is to create a stable reporting layer on top of the analysis outputs. Its main responsibilities are to load previously saved summary and pairwise-comparison objects, generate cleaned summary artifacts, create comparison-specific Quarto files from templates, optionally generate GO-clustering tables, and optionally render the Quarto book/site.</p>
+<hr>
+</section>
+<section id="methodological-context" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="methodological-context">Methodological Context</h2>
+<p>The reporting layer exists because the analysis pipeline produces several kinds of intermediate objects that are useful computationally but not yet suitable for interpretation or documentation. These include aggregated entropy results, aggregated complexity results, combined comparison summaries, and filtered-probe objects from both Affymetrix platforms.</p>
+<p>The reporting pipeline therefore performs a translation step:</p>
+<ul>
+<li>from serialized R objects to cleaned report tables;</li>
+<li>from comparison-level results to generated <code>.qmd</code> report files;</li>
+<li>from GO/KEGG-associated analysis outputs to report-ready biological tables;</li>
+<li>and, when enabled, from Quarto source files to rendered HTML/PDF outputs.</li>
+</ul>
+<p>This design separates computational analysis from document generation. That separation is important because rendering a full Quarto book can be fragile and slow, whereas summary-table generation and <code>.qmd</code> generation can be tested independently.</p>
+<hr>
+</section>
+<section id="pipeline-controls" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="pipeline-controls">Pipeline Controls</h2>
+<p>The reporting pipeline is controlled through <code>report_config.R</code>. The principal toggles are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Toggle</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>run_summary_reports</code></td>
+<td>Generate text summaries and cleaned entropy/complexity files</td>
+</tr>
+<tr class="even">
+<td><code>run_reports</code></td>
+<td>Generate comparison-specific <code>.qmd</code> files from the reporting template</td>
+</tr>
+<tr class="odd">
+<td><code>run_go_clustering</code></td>
+<td>Run GO-clustering analysis and write cluster tables</td>
+</tr>
+<tr class="even">
+<td><code>run_quarto</code></td>
+<td>Render the Quarto project after report sources are generated</td>
+</tr>
+<tr class="odd">
+<td><code>run_visualization</code></td>
+<td>Placeholder toggle; visualization code is currently removed from the active pipeline</td>
+</tr>
+</tbody>
+</table>
+<p>The current GO-clustering configuration uses:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>go_mode <span class="ot">&lt;-</span> <span class="st">"GO_BP"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Other intended GO modes include <code>GO_MF</code> and <code>GO_UNSPECIFIED</code>, although the validity of a given mode depends on the downstream clustering script and the available annotation fields.</p>
+<hr>
+</section>
+<section id="workflow-steps" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="workflow-steps">Workflow Steps</h2>
+<section id="load-reporting-configuration-and-start-logging" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="load-reporting-configuration-and-start-logging">1. Load Reporting Configuration and Start Logging</h3>
+<p><strong>Purpose:</strong> Initialize paths, toggles, and the reporting log.</p>
+<ul>
+<li>Configuration file: <code>R/config/global_cancer/report_config.R</code></li>
+<li>Logger helper: <code>R/helpers/pipeline_logger.R</code></li>
+<li>Log file: <code>output/global_cancer/logs/reports/reports_pipeline_log.txt</code></li>
+</ul>
+<p>The configuration file defines the study identifier, local output paths, input RDS paths, and reporting toggles. The driver script then starts a dedicated reporting log before loading downstream results.</p>
+<hr>
+</section>
+<section id="load-analysis-outputs-into-the-reporting-environment" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="load-analysis-outputs-into-the-reporting-environment">2. Load Analysis Outputs into the Reporting Environment</h3>
+<p><strong>Purpose:</strong> Load the serialized outputs created by the analysis pipeline.</p>
+<ul>
+<li>Helper script: <code>R/helpers/load_results_into_global.R</code></li>
+</ul>
+<p>The driver calls the following helper functions:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_summaries_df</span>(summaries_dir, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load_cleaned_results</span>(aggregate_dir, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load_filtered_results</span>(filtered_probes_dir, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>These calls populate the reporting environment with the objects required by later stages, including:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Object</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>summaries_combined_df</code></td>
+<td>Combined pairwise-comparison summary table</td>
+</tr>
+<tr class="even">
+<td><code>entropy_df</code></td>
+<td>Cleaned/aggregated entropy results</td>
+</tr>
+<tr class="odd">
+<td><code>complexity_df</code></td>
+<td>Cleaned/aggregated complexity results</td>
+</tr>
+<tr class="even">
+<td><code>res_hu35ksuba</code></td>
+<td>Filtered-probe results for the <code>hu35ksuba</code> platform</td>
+</tr>
+<tr class="odd">
+<td><code>res_hu6800</code></td>
+<td>Filtered-probe results for the <code>hu6800</code> platform</td>
+</tr>
+</tbody>
+</table>
+<p>This stage assumes that the analysis pipeline has already written the required RDS files to <code>output/global_cancer/RData/</code>.</p>
+<hr>
+</section>
+<section id="generate-summary-reports" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="generate-summary-reports">3. Generate Summary Reports</h3>
+<p><strong>Purpose:</strong> Create text summaries and cleaned report-level copies of the entropy and complexity result tables.</p>
+<ul>
+<li>Controlled by: <code>run_summary_reports</code></li>
+<li>Script: <code>R/reports/summarize_pairwise_results.R</code></li>
+</ul>
+<p>The pipeline summarizes entropy and complexity results separately:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>entropy_report    <span class="ot">&lt;-</span> <span class="fu">summarize_pairwise_results</span>(entropy_df, <span class="at">engine =</span> <span class="st">"entropy"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>complexity_report <span class="ot">&lt;-</span> <span class="fu">summarize_pairwise_results</span>(complexity_df, <span class="at">engine =</span> <span class="st">"complexity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Outputs:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>output/global_cancer/reports/entropy_summary.txt</code></td>
+<td>Plain-text entropy summary</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/reports/complexity_summary.txt</code></td>
+<td>Plain-text complexity summary</td>
+</tr>
+<tr class="odd">
+<td><code>output/global_cancer/reports/entropy_cleaned.csv</code></td>
+<td>CSV copy of cleaned entropy results</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/reports/complexity_cleaned.csv</code></td>
+<td>CSV copy of cleaned complexity results</td>
+</tr>
+<tr class="odd">
+<td><code>output/global_cancer/reports/entropy_cleaned.rds</code></td>
+<td>RDS copy of cleaned entropy results</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/reports/complexity_cleaned.rds</code></td>
+<td>RDS copy of cleaned complexity results</td>
+</tr>
+</tbody>
+</table>
+<p>The current driver also renders:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>R<span class="sc">/</span>reports<span class="sc">/</span>pairwise_summary_report.Rmd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This appears to be a legacy or parallel R Markdown summary report. It should be retained unless and until the Quarto reporting layer fully replaces it.</p>
+<hr>
+</section>
+<section id="generate-comparison-specific-quarto-files" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="generate-comparison-specific-quarto-files">4. Generate Comparison-Specific Quarto Files</h3>
+<p><strong>Purpose:</strong> Create one <code>.qmd</code> file per pairwise comparison from a report template.</p>
+<ul>
+<li>Controlled by: <code>run_reports</code></li>
+<li>Wrapper: <code>R/wrappers/run_all_reports.R</code></li>
+</ul>
+<p>The driver passes the major reporting objects into <code>run_all_reports()</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_all_reports</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summaries_combined_df =</span> summaries_combined_df,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">complexity_df =</span> complexity_df,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entropy_df =</span> entropy_df,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">res_hu35ksuba =</span> res_hu35ksuba,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">res_hu6800 =</span> res_hu6800</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This stage is responsible for generating comparison-level Quarto source files, not for rendering the final book. The source files are expected to be consumed later by the Quarto project under <code>quarto/</code>.</p>
+<p><strong>Conceptual output:</strong></p>
+<ul>
+<li>comparison-specific <code>.qmd</code> files, typically under <code>quarto/reports/generated_reports/</code></li>
+</ul>
+<p><strong>Important distinction:</strong><br>
+Despite the name <code>run_reports</code>, this stage primarily creates report source files. The actual Quarto rendering step is controlled separately by <code>run_quarto</code>.</p>
+<hr>
+</section>
+<section id="run-go-clustering-analysis" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="run-go-clustering-analysis">5. Run GO-Clustering Analysis</h3>
+<p><strong>Purpose:</strong> Generate clustered GO-term tables for report integration.</p>
+<ul>
+<li>Controlled by: <code>run_go_clustering</code></li>
+<li>Wrapper: <code>R/wrappers/run_go_clustering.R</code></li>
+<li>Current output base: <code>quarto/resources/tables/clusters/</code></li>
+<li>Current GO mode: <code>GO_BP</code></li>
+</ul>
+<p>The driver calls:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_go_clustering_main</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summaries_combined_df =</span> summaries_combined_df,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">complexity_df =</span> complexity_df,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entropy_df =</span> entropy_df,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_dir_base =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>, <span class="st">"resources"</span>, <span class="st">"tables"</span>, <span class="st">"clusters"</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">go_mode =</span> go_mode</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This stage is currently disabled by default in <code>report_config.R</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>run_go_clustering <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When enabled, it should be treated as a biological-interpretation support layer, not as a replacement for the primary entropy and complexity summaries.</p>
+<hr>
+</section>
+<section id="generate-go-visualizations" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="generate-go-visualizations">6. Generate GO Visualizations</h3>
+<p><strong>Purpose:</strong> Placeholder for GO visualization code.</p>
+<p>This section is currently inactive. The driver contains commented code for a GO DAG plotting function:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># source("R/visualizations/plot_entropy_go_dag.R")</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_entropy_go_dag("PB/B-ALL")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The configuration file also contains:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>run_visualization <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>At present, visualization code should be considered outside the active reporting pipeline. It can be reintroduced later after the table-generation and Quarto rendering layers are stable.</p>
+<hr>
+</section>
+<section id="render-the-quarto-project" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="render-the-quarto-project">7. Render the Quarto Project</h3>
+<p><strong>Purpose:</strong> Render the Quarto book/site from the generated source files.</p>
+<ul>
+<li>Controlled by: <code>run_quarto</code></li>
+<li>Working directory during render: <code>quarto/</code></li>
+</ul>
+<p>When enabled, the driver temporarily changes into the Quarto directory, removes Quarto’s <code>_freeze</code> directory, and renders the project:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>old <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"_freeze"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>quarto<span class="sc">::</span><span class="fu">quarto_render</span>(<span class="st">"."</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(old)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The current configuration disables this step by default:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>run_quarto <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is a conservative default. It allows the pipeline to regenerate source files and summary tables without forcing a full Quarto render on every reporting run.</p>
+<hr>
+</section>
+</section>
+<section id="output-contract" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="output-contract">Output Contract</h2>
+<p>The reporting pipeline exposes three downstream interfaces.</p>
+<section id="report-summary-outputs" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="report-summary-outputs">Report-summary outputs</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>output/global_cancer/reports/entropy_summary.txt</code></td>
+<td>Text summary of entropy results</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/reports/complexity_summary.txt</code></td>
+<td>Text summary of complexity results</td>
+</tr>
+<tr class="odd">
+<td><code>output/global_cancer/reports/entropy_cleaned.csv</code></td>
+<td>Report-level entropy table</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/reports/complexity_cleaned.csv</code></td>
+<td>Report-level complexity table</td>
+</tr>
+<tr class="odd">
+<td><code>output/global_cancer/reports/entropy_cleaned.rds</code></td>
+<td>Serialized entropy table</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/reports/complexity_cleaned.rds</code></td>
+<td>Serialized complexity table</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="generated-quarto-source-outputs" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="generated-quarto-source-outputs">Generated Quarto-source outputs</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Location</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>quarto/reports/generated_reports/</code></td>
+<td>Comparison-specific <code>.qmd</code> files generated from templates</td>
+</tr>
+<tr class="even">
+<td><code>quarto/resources/tables/clusters/</code></td>
+<td>Optional GO-clustering tables for Quarto inclusion</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rendered-documentation-outputs" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="rendered-documentation-outputs">Rendered documentation outputs</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Location</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>docs/</code> or configured Quarto output directory</td>
+<td>Rendered HTML/PDF/book outputs, depending on <code>_quarto.yml</code></td>
+</tr>
+</tbody>
+</table>
+<p>The rendered output directory is controlled by the Quarto project configuration, not directly by <code>report_config.R</code>.</p>
+<hr>
+</section>
+</section>
+<section id="required-upstream-inputs" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="required-upstream-inputs">Required Upstream Inputs</h2>
+<p>The reporting pipeline assumes that the analysis pipeline has already created the following files:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>output/global_cancer/RData/summaries/summaries_combined_df.rds</code></td>
+<td>Combined pairwise summary table</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/RData/aggregated/entropy_aggregated_results.rds</code></td>
+<td>Aggregated entropy results</td>
+</tr>
+<tr class="odd">
+<td><code>output/global_cancer/RData/aggregated/complexity_aggregated_results.rds</code></td>
+<td>Aggregated complexity results</td>
+</tr>
+<tr class="even">
+<td><code>output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds</code></td>
+<td>Filtered-probe results for <code>hu35ksuba</code></td>
+</tr>
+<tr class="odd">
+<td><code>output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds</code></td>
+<td>Filtered-probe results for <code>hu6800</code></td>
+</tr>
+</tbody>
+</table>
+<p>If any of these files are missing, the reporting pipeline should be treated as not ready to run. In that case, rerun or validate the analysis pipeline before attempting report generation.</p>
+<hr>
+</section>
+<section id="testing-and-validation" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="testing-and-validation">Testing and Validation</h2>
+<p>Recommended staged validation is:</p>
+<section id="phase-a-load-only-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-a-load-only-validation">Phase A: Load-only validation</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tests whether the reporting configuration, logger, and upstream result loading functions can run without generating downstream files.</p>
+</section>
+<section id="phase-b-summary-output-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-b-summary-output-validation">Phase B: Summary-output validation</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tests whether the entropy and complexity summaries can be generated and written to <code>output/global_cancer/reports/</code>.</p>
+</section>
+<section id="phase-c-quarto-source-generation-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-c-quarto-source-generation-validation">Phase C: Quarto-source generation validation</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tests whether comparison-specific <code>.qmd</code> files can be generated without triggering a full Quarto render.</p>
+</section>
+<section id="phase-d-go-clustering-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-d-go-clustering-validation">Phase D: GO-clustering validation</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tests whether GO-clustering tables can be generated and made available to the Quarto reporting layer.</p>
+</section>
+<section id="phase-e-full-reporting-render" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-e-full-reporting-render">Phase E: Full reporting render</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This should be reserved for final validation because Quarto rendering is the most operationally fragile stage, especially when both HTML and PDF outputs are being generated.</p>
+<p>Key validation checks include:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"reports"</span>, <span class="st">"entropy_cleaned.csv"</span>)))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"reports"</span>, <span class="st">"complexity_cleaned.csv"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For generated Quarto files, a simple file-count check can be useful:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>generated <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>, <span class="st">"reports"</span>, <span class="st">"generated_reports"</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.qmd$"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(generated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+</section>
+<section id="directory-layout" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="directory-layout">Directory Layout</h2>
+<pre class="text"><code>global-cancer-complexity/
+  R/
+    config/global_cancer/report_config.R
+    helpers/
+      load_results_into_global.R
+      pipeline_logger.R
+    reports/
+      summarize_pairwise_results.R
+      pairwise_summary_report.Rmd
+    wrappers/
+      run_all_reports.R
+      run_go_clustering.R
+    visualizations/
+      plot_entropy_go_dag.R
+  scripts/
+    reporting/
+      03_run_report_pipeline.R
+  output/
+    global_cancer/
+      RData/
+        aggregated/
+        filtered_probes/
+        summaries/
+      reports/
+      logs/reports/
+      plots/
+  quarto/
+    _quarto.yml
+    reports/generated_reports/
+    resources/tables/clusters/</code></pre>
+<hr>
+</section>
+<section id="notes-on-html-and-pdf-rendering" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="notes-on-html-and-pdf-rendering">Notes on HTML and PDF Rendering</h2>
+<p>The reporting pipeline generates Quarto source files, but HTML/PDF rendering is handled by Quarto itself. This distinction matters because some outputs that render correctly in HTML may fail or degrade in PDF, especially if they depend on prebuilt HTML fragments or wide tables.</p>
+<p>For PDF-stable reporting, generated <code>.qmd</code> files should prefer data-frame-based Quarto tables over inserted HTML. Long GO terms and pathway descriptions should be rendered with explicit table-width, wrapping, or column-selection rules rather than relying on browser-style HTML layout.</p>
+<p>A conservative debugging sequence is:</p>
+<ol type="1">
+<li>regenerate the <code>.qmd</code> files with <code>run_quarto &lt;- FALSE</code>;</li>
+<li>inspect the generated <code>.qmd</code> source for HTML fragments or wide tables;</li>
+<li>render a single problematic <code>.qmd</code> or section;</li>
+<li>then render the full Quarto project only after the source-level issue is corrected.</li>
+</ol>
+<hr>
+</section>
+<section id="customizing-for-other-datasets" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="customizing-for-other-datasets">Customizing for Other Datasets</h2>
+<p>This reporting pipeline can be adapted to other studies by:</p>
+<ul>
+<li>changing <code>study_name</code> in <code>report_config.R</code>;</li>
+<li>updating the expected input directories under <code>output/&lt;study_name&gt;/RData/</code>;</li>
+<li>modifying <code>geo_chip_map</code> if additional platforms are used;</li>
+<li>adjusting <code>run_all_reports()</code> to accept the appropriate filtered-probe objects;</li>
+<li>changing the GO mode or clustering output path; and</li>
+<li>updating the Quarto book structure so that generated report files are included in the desired order.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../methods/analysis_pipeline_overview.html" class="pagination-link" aria-label="Analysis Workflow for Global Cancer Expression Structure">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Expression Structure</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../framework/complexity_and_entropy_measures.html" class="pagination-link" aria-label="Complexity and Entropy Measures">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Complexity and Entropy Measures</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

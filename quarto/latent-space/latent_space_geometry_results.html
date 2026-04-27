@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Latent space geometry results</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="latent_space_geometry_results_files/libs/clipboard/clipboard.min.js"></script>
+<script src="latent_space_geometry_results_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="latent_space_geometry_results_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="latent_space_geometry_results_files/libs/quarto-html/popper.min.js"></script>
+<script src="latent_space_geometry_results_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="latent_space_geometry_results_files/libs/quarto-html/anchor.min.js"></script>
+<link href="latent_space_geometry_results_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="latent_space_geometry_results_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="latent_space_geometry_results_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="latent_space_geometry_results_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="latent_space_geometry_results_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Latent space geometry results</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="latent-space-geometry-of-cancer" class="level2">
+<h2 class="anchored" data-anchor-id="latent-space-geometry-of-cancer">Latent Space Geometry of Cancer</h2>
+<section id="setup" class="level3">
+<h3 class="anchored" data-anchor-id="setup">Setup</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gt' was built under R version 4.5.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># csvs &lt;- file.path("quarto", "resources", "tables", "probes")</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Paths (adjust if needed)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>taxonomy_path <span class="ot">&lt;-</span> <span class="st">"latent_taxonomy_table.csv"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>summary_path  <span class="ot">&lt;-</span> <span class="st">"latent_regime_summary_table.csv"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>narrative_path <span class="ot">&lt;-</span> <span class="st">"latent_regime_summary_narrative.csv"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>taxonomy <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(taxonomy_path, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>regime_summary <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(summary_path, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>regime_narrative <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(narrative_path, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="latent-representation" class="level2">
+<h2 class="anchored" data-anchor-id="latent-representation">Latent Representation</h2>
+<p>Gene expression data were embedded into a low-dimensional latent space using a variational autoencoder (VAE). Input features consisted of the top 3000 probes selected by variance. The encoder maps each sample to a latent vector, and all subsequent analyses are performed in this learned space.</p>
+</section>
+<section id="tissue-specific-comparisons" class="level2">
+<h2 class="anchored" data-anchor-id="tissue-specific-comparisons">Tissue-Specific Comparisons</h2>
+<p>Samples were grouped by tissue and disease state (normal vs tumor). For each tissue, latent representations were partitioned into normal and tumor groups, defining a tissue-specific transition.</p>
+</section>
+<section id="geometric-measures" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-measures">Geometric Measures</h2>
+<p>For each group, covariance matrices were computed and decomposed into eigenvalues. From these, the following measures were derived:</p>
+<ul>
+<li><p><strong>Participation Ratio (PR):</strong> effective dimensionality</p></li>
+<li><p><strong>Effective Rank (EffRank):</strong> spectral uniformity</p></li>
+<li><p><strong>Condition Number (κ):</strong> axis dominance</p></li>
+<li><p><strong>Anisotropy:</strong> leading eigenvalue fraction</p></li>
+</ul>
+<p>Spatial measures included centroid distance and group radius.</p>
+</section>
+<section id="delta-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="delta-metrics">Delta Metrics</h2>
+<p>For each metric MMM, changes were defined as:</p>
+<p>ΔM=Mtumor−MnormalM = M_{} - M_{}ΔM=Mtumor​−Mnormal​</p>
+</section>
+<section id="taxonomy-construction" class="level2">
+<h2 class="anchored" data-anchor-id="taxonomy-construction">Taxonomy Construction</h2>
+<p>A geometric taxonomy was defined using the joint behavior of ΔEffRank and ΔPR:</p>
+<ul>
+<li><p><strong>Regime A:</strong> anisotropic expansion (EffRank ↓, PR ↑)</p></li>
+<li><p><strong>Regime B:</strong> compression / canalization (EffRank ↑, PR ↓)</p></li>
+<li><p><strong>Regime C:</strong> uniform expansion (EffRank ↑, PR ↑)</p></li>
+<li><p><strong>Regime D:</strong> collapse / simplification (EffRank ↓, PR ↓)</p></li>
+</ul>
+<p>Transformation types were defined using centroid distance and magnitude of ΔEffRank.</p>
+<hr>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="regime-summary" class="level2">
+<h2 class="anchored" data-anchor-id="regime-summary">Regime Summary</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>regime_summary <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Latent-Space Regime Summary"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Counts and percentages of geometric transformation regimes"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">where</span>(is.numeric), <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="zhcgialaou" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zhcgialaou table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zhcgialaou thead, #zhcgialaou tbody, #zhcgialaou tfoot, #zhcgialaou tr, #zhcgialaou td, #zhcgialaou th {
+  border-style: none;
+}
+
+#zhcgialaou p {
+  margin: 0;
+  padding: 0;
+}
+
+#zhcgialaou .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zhcgialaou .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zhcgialaou .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zhcgialaou .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zhcgialaou .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zhcgialaou .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zhcgialaou .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zhcgialaou .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zhcgialaou .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zhcgialaou .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zhcgialaou .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zhcgialaou .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zhcgialaou .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zhcgialaou .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zhcgialaou .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zhcgialaou .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zhcgialaou .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zhcgialaou .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zhcgialaou .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zhcgialaou .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zhcgialaou .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zhcgialaou .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zhcgialaou .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zhcgialaou .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zhcgialaou .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zhcgialaou .gt_left {
+  text-align: left;
+}
+
+#zhcgialaou .gt_center {
+  text-align: center;
+}
+
+#zhcgialaou .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zhcgialaou .gt_font_normal {
+  font-weight: normal;
+}
+
+#zhcgialaou .gt_font_bold {
+  font-weight: bold;
+}
+
+#zhcgialaou .gt_font_italic {
+  font-style: italic;
+}
+
+#zhcgialaou .gt_super {
+  font-size: 65%;
+}
+
+#zhcgialaou .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zhcgialaou .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zhcgialaou .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zhcgialaou .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zhcgialaou .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zhcgialaou .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zhcgialaou .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zhcgialaou .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zhcgialaou div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="9" class="gt_heading gt_title gt_font_normal">Latent-Space Regime Summary</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="9" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Counts and percentages of geometric transformation regimes</th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="regime_code" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">regime_code</th>
+<th id="regime_label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">regime_label</th>
+<th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">n</th>
+<th id="percent" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">percent</th>
+<th id="exemplars" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">exemplars</th>
+<th id="mean_centroid_distance" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean_centroid_distance</th>
+<th id="mean_abs_effrank_delta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean_abs_effrank_delta</th>
+<th id="mean_pr_delta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean_pr_delta</th>
+<th id="mean_effrank_delta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">mean_effrank_delta</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="regime_code">A</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_right" headers="n">8.00</td>
+<td class="gt_row gt_right" headers="percent">61.50</td>
+<td class="gt_row gt_left" headers="exemplars">BLAD/TCC, Brain/MB, PB/B-ALL</td>
+<td class="gt_row gt_right" headers="mean_centroid_distance">29.56</td>
+<td class="gt_row gt_right" headers="mean_abs_effrank_delta">0.40</td>
+<td class="gt_row gt_right" headers="mean_pr_delta">1.30</td>
+<td class="gt_row gt_right" headers="mean_effrank_delta">−0.40</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="regime_code">B</td>
+<td class="gt_row gt_left" headers="regime_label">compression / canalization</td>
+<td class="gt_row gt_right" headers="n">2.00</td>
+<td class="gt_row gt_right" headers="percent">15.40</td>
+<td class="gt_row gt_left" headers="exemplars">PA/PAAD, KID/RCC</td>
+<td class="gt_row gt_right" headers="mean_centroid_distance">20.59</td>
+<td class="gt_row gt_right" headers="mean_abs_effrank_delta">0.82</td>
+<td class="gt_row gt_right" headers="mean_pr_delta">−0.31</td>
+<td class="gt_row gt_right" headers="mean_effrank_delta">0.82</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="regime_code">C</td>
+<td class="gt_row gt_left" headers="regime_label">uniform expansion</td>
+<td class="gt_row gt_right" headers="n">3.00</td>
+<td class="gt_row gt_right" headers="percent">23.10</td>
+<td class="gt_row gt_left" headers="exemplars">BR/BRAD, Brain/GBM, COL/COADREAD</td>
+<td class="gt_row gt_right" headers="mean_centroid_distance">29.11</td>
+<td class="gt_row gt_right" headers="mean_abs_effrank_delta">0.18</td>
+<td class="gt_row gt_right" headers="mean_pr_delta">0.94</td>
+<td class="gt_row gt_right" headers="mean_effrank_delta">0.18</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="narrative-summary" class="level2">
+<h2 class="anchored" data-anchor-id="narrative-summary">Narrative Summary</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>regime_narrative <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(regime_code, regime_label, summary_phrase) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Narrative Summary of Regimes"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="uzrciepzdt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uzrciepzdt table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#uzrciepzdt thead, #uzrciepzdt tbody, #uzrciepzdt tfoot, #uzrciepzdt tr, #uzrciepzdt td, #uzrciepzdt th {
+  border-style: none;
+}
+
+#uzrciepzdt p {
+  margin: 0;
+  padding: 0;
+}
+
+#uzrciepzdt .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#uzrciepzdt .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#uzrciepzdt .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#uzrciepzdt .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#uzrciepzdt .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#uzrciepzdt .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#uzrciepzdt .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#uzrciepzdt .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#uzrciepzdt .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#uzrciepzdt .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#uzrciepzdt .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#uzrciepzdt .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#uzrciepzdt .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#uzrciepzdt .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#uzrciepzdt .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uzrciepzdt .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#uzrciepzdt .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#uzrciepzdt .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#uzrciepzdt .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uzrciepzdt .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#uzrciepzdt .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uzrciepzdt .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#uzrciepzdt .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uzrciepzdt .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#uzrciepzdt .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uzrciepzdt .gt_left {
+  text-align: left;
+}
+
+#uzrciepzdt .gt_center {
+  text-align: center;
+}
+
+#uzrciepzdt .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#uzrciepzdt .gt_font_normal {
+  font-weight: normal;
+}
+
+#uzrciepzdt .gt_font_bold {
+  font-weight: bold;
+}
+
+#uzrciepzdt .gt_font_italic {
+  font-style: italic;
+}
+
+#uzrciepzdt .gt_super {
+  font-size: 65%;
+}
+
+#uzrciepzdt .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#uzrciepzdt .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#uzrciepzdt .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#uzrciepzdt .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#uzrciepzdt .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#uzrciepzdt .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#uzrciepzdt .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#uzrciepzdt .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#uzrciepzdt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">Narrative Summary of Regimes</th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="regime_code" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">regime_code</th>
+<th id="regime_label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">regime_label</th>
+<th id="summary_phrase" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">summary_phrase</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="regime_code">A</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="summary_phrase">anisotropic expansion: 8 of 13 comparisons (61.5%). Representative cases include BLAD/TCC, Brain/MB, PB/B-ALL.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="regime_code">B</td>
+<td class="gt_row gt_left" headers="regime_label">compression / canalization</td>
+<td class="gt_row gt_left" headers="summary_phrase">compression / canalization: 2 of 13 comparisons (15.4%). Representative cases include PA/PAAD, KID/RCC.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="regime_code">C</td>
+<td class="gt_row gt_left" headers="regime_label">uniform expansion</td>
+<td class="gt_row gt_left" headers="summary_phrase">uniform expansion: 3 of 13 comparisons (23.1%). Representative cases include BR/BRAD, Brain/GBM, COL/COADREAD.</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="dominant-transformation-pattern" class="level2">
+<h2 class="anchored" data-anchor-id="dominant-transformation-pattern">Dominant Transformation Pattern</h2>
+<p>Across all comparisons, the dominant regime is <strong>anisotropic expansion</strong>, characterized by increasing dimensional spread (PR) and decreasing spectral uniformity (EffRank).</p>
+<p>This indicates that tumor states expand into additional degrees of freedom, but in a highly uneven manner.</p>
+<hr>
+</section>
+<section id="taxonomy-table-detailed" class="level2">
+<h2 class="anchored" data-anchor-id="taxonomy-table-detailed">Taxonomy Table (Detailed)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>taxonomy <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    comparison,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    regime_label,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    transformation_type,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    effrank_delta,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    pr_delta,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    centroid_distance,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    summary_phrase</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(regime_label, <span class="fu">desc</span>(centroid_distance)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Latent Geometry Taxonomy Table"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Per-comparison geometric classification and summary"</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(effrank_delta, pr_delta, centroid_distance),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">3</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="ujoikeqxcn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ujoikeqxcn table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ujoikeqxcn thead, #ujoikeqxcn tbody, #ujoikeqxcn tfoot, #ujoikeqxcn tr, #ujoikeqxcn td, #ujoikeqxcn th {
+  border-style: none;
+}
+
+#ujoikeqxcn p {
+  margin: 0;
+  padding: 0;
+}
+
+#ujoikeqxcn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ujoikeqxcn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ujoikeqxcn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ujoikeqxcn .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ujoikeqxcn .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ujoikeqxcn .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ujoikeqxcn .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ujoikeqxcn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ujoikeqxcn .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ujoikeqxcn .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ujoikeqxcn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ujoikeqxcn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ujoikeqxcn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ujoikeqxcn .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ujoikeqxcn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ujoikeqxcn .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ujoikeqxcn .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ujoikeqxcn .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ujoikeqxcn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ujoikeqxcn .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ujoikeqxcn .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ujoikeqxcn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ujoikeqxcn .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ujoikeqxcn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ujoikeqxcn .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ujoikeqxcn .gt_left {
+  text-align: left;
+}
+
+#ujoikeqxcn .gt_center {
+  text-align: center;
+}
+
+#ujoikeqxcn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ujoikeqxcn .gt_font_normal {
+  font-weight: normal;
+}
+
+#ujoikeqxcn .gt_font_bold {
+  font-weight: bold;
+}
+
+#ujoikeqxcn .gt_font_italic {
+  font-style: italic;
+}
+
+#ujoikeqxcn .gt_super {
+  font-size: 65%;
+}
+
+#ujoikeqxcn .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ujoikeqxcn .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ujoikeqxcn .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ujoikeqxcn .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ujoikeqxcn .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ujoikeqxcn .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ujoikeqxcn .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ujoikeqxcn .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ujoikeqxcn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="7" class="gt_heading gt_title gt_font_normal">Latent Geometry Taxonomy Table</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="7" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Per-comparison geometric classification and summary</th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="comparison" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">comparison</th>
+<th id="regime_label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">regime_label</th>
+<th id="transformation_type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">transformation_type</th>
+<th id="effrank_delta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">effrank_delta</th>
+<th id="pr_delta" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pr_delta</th>
+<th id="centroid_distance" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">centroid_distance</th>
+<th id="summary_phrase" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">summary_phrase</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">BLAD/TCC</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">combined shift + reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.410</td>
+<td class="gt_row gt_right" headers="pr_delta">0.032</td>
+<td class="gt_row gt_right" headers="centroid_distance">38.866</td>
+<td class="gt_row gt_left" headers="summary_phrase">BLAD/TCC: tumor shows anisotropic expansion with both strong positional movement and substantial internal restructuring; reduced axis dominance but increased anisotropy.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="comparison">Brain/MB</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">geometric shift</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.080</td>
+<td class="gt_row gt_right" headers="pr_delta">0.844</td>
+<td class="gt_row gt_right" headers="centroid_distance">33.631</td>
+<td class="gt_row gt_left" headers="summary_phrase">Brain/MB: tumor shows anisotropic expansion with large positional movement but limited internal restructuring; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">PB/B-ALL</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">combined shift + reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.600</td>
+<td class="gt_row gt_right" headers="pr_delta">1.446</td>
+<td class="gt_row gt_right" headers="centroid_distance">30.367</td>
+<td class="gt_row gt_left" headers="summary_phrase">PB/B-ALL: tumor shows anisotropic expansion with both strong positional movement and substantial internal restructuring; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="comparison">GC/FL</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">geometric shift</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.060</td>
+<td class="gt_row gt_right" headers="pr_delta">2.003</td>
+<td class="gt_row gt_right" headers="centroid_distance">28.379</td>
+<td class="gt_row gt_left" headers="summary_phrase">GC/FL: tumor shows anisotropic expansion with large positional movement but limited internal restructuring; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">PB/T-ALL</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">combined shift + reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.760</td>
+<td class="gt_row gt_right" headers="pr_delta">0.429</td>
+<td class="gt_row gt_right" headers="centroid_distance">27.368</td>
+<td class="gt_row gt_left" headers="summary_phrase">PB/T-ALL: tumor shows anisotropic expansion with both strong positional movement and substantial internal restructuring; increased axis dominance but reduced anisotropy.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="comparison">UT/EAC</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">structural reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.800</td>
+<td class="gt_row gt_right" headers="pr_delta">2.397</td>
+<td class="gt_row gt_right" headers="centroid_distance">26.499</td>
+<td class="gt_row gt_left" headers="summary_phrase">UT/EAC: tumor shows anisotropic expansion with modest positional movement but substantial internal restructuring; increased axis dominance but reduced anisotropy.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">OV/OVAD</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">structural reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.440</td>
+<td class="gt_row gt_right" headers="pr_delta">0.269</td>
+<td class="gt_row gt_right" headers="centroid_distance">25.847</td>
+<td class="gt_row gt_left" headers="summary_phrase">OV/OVAD: tumor shows anisotropic expansion with modest positional movement but substantial internal restructuring; increased axis dominance but reduced anisotropy.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="comparison">GC/LBCL</td>
+<td class="gt_row gt_left" headers="regime_label">anisotropic expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">limited transformation</td>
+<td class="gt_row gt_right" headers="effrank_delta">−0.040</td>
+<td class="gt_row gt_right" headers="pr_delta">3.011</td>
+<td class="gt_row gt_right" headers="centroid_distance">25.546</td>
+<td class="gt_row gt_left" headers="summary_phrase">GC/LBCL: tumor shows anisotropic expansion with only limited positional and structural change; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">PA/PAAD</td>
+<td class="gt_row gt_left" headers="regime_label">compression / canalization</td>
+<td class="gt_row gt_left" headers="transformation_type">structural reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">0.670</td>
+<td class="gt_row gt_right" headers="pr_delta">−0.413</td>
+<td class="gt_row gt_right" headers="centroid_distance">24.021</td>
+<td class="gt_row gt_left" headers="summary_phrase">PA/PAAD: tumor shows compression or canalization with modest positional movement but substantial internal restructuring; reduced axis dominance but increased anisotropy.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="comparison">KID/RCC</td>
+<td class="gt_row gt_left" headers="regime_label">compression / canalization</td>
+<td class="gt_row gt_left" headers="transformation_type">structural reorganization</td>
+<td class="gt_row gt_right" headers="effrank_delta">0.980</td>
+<td class="gt_row gt_right" headers="pr_delta">−0.214</td>
+<td class="gt_row gt_right" headers="centroid_distance">17.164</td>
+<td class="gt_row gt_left" headers="summary_phrase">KID/RCC: tumor shows compression or canalization with modest positional movement but substantial internal restructuring; increased axis dominance and increased anisotropy.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">BR/BRAD</td>
+<td class="gt_row gt_left" headers="regime_label">uniform expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">geometric shift</td>
+<td class="gt_row gt_right" headers="effrank_delta">0.120</td>
+<td class="gt_row gt_right" headers="pr_delta">1.225</td>
+<td class="gt_row gt_right" headers="centroid_distance">35.518</td>
+<td class="gt_row gt_left" headers="summary_phrase">BR/BRAD: tumor shows relatively uniform expansion with large positional movement but limited internal restructuring; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="comparison">Brain/GBM</td>
+<td class="gt_row gt_left" headers="regime_label">uniform expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">geometric shift</td>
+<td class="gt_row gt_right" headers="effrank_delta">0.030</td>
+<td class="gt_row gt_right" headers="pr_delta">1.310</td>
+<td class="gt_row gt_right" headers="centroid_distance">26.573</td>
+<td class="gt_row gt_left" headers="summary_phrase">Brain/GBM: tumor shows relatively uniform expansion with large positional movement but limited internal restructuring; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="comparison">COL/COADREAD</td>
+<td class="gt_row gt_left" headers="regime_label">uniform expansion</td>
+<td class="gt_row gt_left" headers="transformation_type">limited transformation</td>
+<td class="gt_row gt_right" headers="effrank_delta">0.390</td>
+<td class="gt_row gt_right" headers="pr_delta">0.280</td>
+<td class="gt_row gt_right" headers="centroid_distance">25.238</td>
+<td class="gt_row gt_left" headers="summary_phrase">COL/COADREAD: tumor shows relatively uniform expansion with only limited positional and structural change; reduced axis dominance and reduced anisotropy.</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="decoupling-of-dimensionality-and-spectral-structure" class="level2">
+<h2 class="anchored" data-anchor-id="decoupling-of-dimensionality-and-spectral-structure">Decoupling of Dimensionality and Spectral Structure</h2>
+<p>A moderate negative correlation (≈ −0.41) was observed between ΔEffRank and ΔPR, indicating that increases in dimensionality are accompanied by decreased spectral uniformity. This reflects anisotropic expansion rather than uniform dispersion.</p>
+<hr>
+</section>
+<section id="spatial-vs-structural-transformation" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-vs-structural-transformation">Spatial vs Structural Transformation</h2>
+<p>Centroid displacement and structural change were negatively correlated (≈ −0.47), indicating that:</p>
+<ul>
+<li><p>some cancers undergo <strong>large spatial shifts with minimal restructuring</strong></p></li>
+<li><p>others exhibit <strong>substantial internal reorganization with limited movement</strong></p></li>
+</ul>
+<p>These represent distinct transformation modes.</p>
+<hr>
+</section>
+<section id="secondary-geometric-effects" class="level2">
+<h2 class="anchored" data-anchor-id="secondary-geometric-effects">Secondary Geometric Effects</h2>
+<p>Changes in condition number (κ) and anisotropy were weakly correlated, suggesting that axis dominance and global anisotropy represent partially independent geometric features.</p>
+<hr>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Tumor progression in latent space is characterized by:</p>
+<ul>
+<li><p>dominant <strong>anisotropic expansion</strong></p></li>
+<li><p><strong>decoupling</strong> of dimensionality and spectral structure</p></li>
+<li><p>separation of <strong>spatial movement</strong> and <strong>internal reorganization</strong></p></li>
+</ul>
+<p>These findings support a geometric, multidimensional view of cancer complexity rather than a scalar notion of disorder.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

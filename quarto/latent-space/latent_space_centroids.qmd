@@ -1,0 +1,11 @@
+---
+title: "Latent Space with Centroids"
+format: html
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Latent Space with Centroids
+
+![Latent Space with Centroids](images/latent_space_centroids.png)

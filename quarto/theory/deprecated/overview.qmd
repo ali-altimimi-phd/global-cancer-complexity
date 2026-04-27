@@ -1,0 +1,51 @@
+---
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Theoretical Framework
+
+This report explores the hypothesis that cancer development involves
+opposing **chaotic** and **antichaotic** transcriptional dynamics:
+
+> "**Mesenchyme-derived hematologic cancers** (e.g., leukemias,
+> lymphomas) arise from a highly dynamic, chaotic baseline (e.g., VDJ
+> recombination, immune diversity). As these cells become malignant,
+> they converge toward **monoclonality** — a reduction in expression
+> entropy and signaling diversity."
+>
+> "**Solid tumors** (e.g., breast, prostate, colon) emerge from
+> relatively stable epithelial lineages. Cancerous transformation
+> introduces **chaotic deregulation** in gene expression and signaling.
+> Among these, glandular adenocarcinomas exhibit the most pronounced
+> chaotic shifts."
+
+This theory draws on studies of complexity theory, immune development,
+and cancer biology (Calin et al. 2003; Cucuianu 1998).
+
+## Introduction
+
+Twentieth-century biology, shaped by a reductionist paradigm, sought to
+understand complex phenomena by decomposing them into fundamental
+components governed by simple, linear relationships. This approach,
+while powerful, encounters limitations when applied to systems with
+nonlinearity, feedback loops, and emergent behavior. The emergence of
+theories such as catastrophe theory, chaos theory, and complexity theory
+has expanded our understanding of dynamic biological systems and offers
+an alternative framework for studying cancer biology.
+
+This report reappraises a systems-theoretical approach to cancer,
+examining transcriptomic chaos and complexity using contemporary tools
+in computational biology and R-based statistical methods.
+
+## Paradigms: Reductionism vs. Emergence
+
+While reductionism remains foundational in molecular biology,
+emergentist perspectives have gained traction for understanding systems
+exhibiting nonlinearity, multi-scale organization, and adaptation.
+Emergence describes phenomena where higher-level order arises from the
+interaction of simpler components, such as gene regulatory networks in
+cells. Importantly, the paradigms of reductionism and emergence need not
+be mutually exclusive—they can be integrated to develop more
+comprehensive models.
