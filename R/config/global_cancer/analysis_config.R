@@ -22,18 +22,20 @@ run_aggregator <- FALSE
 run_comparison_summary <- FALSE
 
 # ---- Latent-Space Notebook Toggles ----
-run_latent_notebooks <- FALSE
+run_latent_notebooks <- TRUE
 
 # If TRUE, notebooks are executed in place. This updates notebook outputs.
 # If FALSE, executed copies are written to notebook_executed_dir.
-execute_notebooks_inplace <- TRUE
+execute_notebooks_inplace <- FALSE
 
 # Set to -1 for no timeout; useful for VAE training notebooks.
 notebook_timeout_seconds <- -1
 
-# Optional explicit jupyter command. Usually "jupyter" is sufficient if the
-# correct conda environment is active before running the R pipeline.
-jupyter_command <- Sys.getenv("JUPYTER_EXE", unset = "jupyter")
+latent_python_exe <- "C:/Users/drziy/anaconda3/envs/ml/python.exe"
+jupyter_command <- latent_python_exe
+jupyter_prefix_args <- c("-m", "jupyter")
+jupyter_command <- latent_python_exe
+jupyter_prefix_args <- c("-m", "jupyter")
 
 latent_notebook_dir <- here::here("projects", "cancer-latent-space", "notebooks")
 notebook_executed_dir <- here::here("output", study_name, "notebooks", "executed")
@@ -43,13 +45,13 @@ latent_notebooks <- c(
   "01_load_and_inspect_data.ipynb",
   "02_prepare_data_for_vae.ipynb",
   "03_train_first_vae.ipynb",
-  "04_latent_space_analysis.ipynb",
-  "05_latent_complexity_analysis.ipynb",
+  "04_latent_space_analysis_standardized.ipynb",
+  "05_latent_complexity_analysis_standardized.ipynb",
   "06_between_cancer_geometry_in_latent_space_enhanced.ipynb"
 )
 
 # ---- Latent-Space Postprocessing Toggles ----
-run_latent_postprocessing <- TRUE
+run_latent_postprocessing <- FALSE
 
 latent_project_dir <- here::here("output", "global_cancer")
 latent_postprocessing_table_dir <- file.path(latent_project_dir, "tables", 
@@ -64,12 +66,35 @@ latent_postprocessing_gene_set_name <- "ALL"
 dir.create(latent_postprocessing_table_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(latent_postprocessing_plot_dir, recursive = TRUE, showWarnings = FALSE)
 
-# ---- Filtering Parameters ----
-filter_method <- "limma"  # "limma" or "variance"
+# ---- Probe Selection Parameters ----
+
+# Primary selection method:
+#   "limma"    = differential-expression-based probe selection
+#   "variance" = variability-based probe selection (see mode below)
+filter_method <- "variance"
+
+# ---- Limma mode parameters ----
+# Used only when filter_method == "limma"
 logfc_cutoff <- 0.33
-pval_cutoff <- 0.05
+pval_cutoff  <- 0.05
+
+# ---- Variance mode parameters ----
+# Used only when filter_method == "variance"
+
+# Selection mode:
+#   "top_n"     = retain a fixed number of most variable probes per comparison
+#   "threshold" = retain probes at or above a variability quantile cutoff
+#
+# If an invalid value is supplied, the pipeline will log a warning and
+# default to "threshold".
+variance_selection_mode <- "top_n"
+
+# Fixed-count selection (used only when variance_selection_mode == "top_n")
+analysis_top_n <- 3000
+
+# Threshold-based selection (used only when variance_selection_mode == "threshold")
+# Must be between 0 and 1 (quantile of variability distribution)
 var_threshold <- 0.75
-top_n <- 3000
 
 # ---- Pairwise Comparison Settings ----
 chips <- c("hu35ksuba", "hu6800")

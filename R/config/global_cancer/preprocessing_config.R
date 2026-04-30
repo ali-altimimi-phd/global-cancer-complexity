@@ -75,7 +75,7 @@ annotations_path <- here::here(data_dir, "annotations", "full_chip_annotations.r
 # These are canonical downstream inputs for notebooks and other ML workflows.
 ml_output_dir <- here::here("data", study_name, "processed", "ml_inputs")
 # ml_plot_dir   <- here::here("output", study_name, "plots", "preprocessing")
-ml_plot_dir   <- here::here("quarto", "resources", "plots", "latnt")
+ml_plot_dir   <- here::here("quarto", "resources", "plots", "latent")
 
 # ---- Ensure Directories Exist ----
 dir.create(dirname(preprocess_pipeline_logfile), recursive = TRUE, showWarnings = FALSE)

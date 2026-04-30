@@ -233,18 +233,22 @@ ExpressionSets from CEL files.
 ### 6. Export Machine-Learning / Latent-Space Inputs {.unnumbered}
 
 **Purpose:** Export canonical CSV files from the selected `ExpressionSet` for
-Python/Jupyter workflows.
+Python/Jupyter latent-space workflows.
 
 - Controlled by: `export_ml_inputs`
 - Script: `R/preprocessing/export_ml_inputs.R`
 - Current chip: `ml_chip_id <- "hu35ksuba"`
-- Current filter: `ml_filter_method <- "variance"`
+- Current feature-selection method: `ml_filter_method <- "variance"`
 - Current feature count: `ml_top_n <- 3000`
 
-This stage defines the canonical interface between the R-based preprocessing pipeline and downstream Python-based modeling workflows. It establishes a fixed, reproducible representation of the expression and metadata space upon which latent-space geometry and complexity analyses are computed.
+This stage defines the canonical interface between the R-based preprocessing
+pipeline and downstream Python-based modeling workflows. It establishes a fixed,
+reproducible expression/metadata export used for VAE training, latent-space
+projection, and latent-space geometry analyses.
 
-This stage does **not** train the VAE and does **not** perform latent-space
-analysis. It defines the R-to-Python data contract.
+This stage does **not** train the VAE, does **not** compute latent-space metrics,
+and does **not** perform the comparison-aware probe selection used later by the
+legacy R complexity/entropy pipeline. It defines the R-to-Python data contract.
 
 **Behavior:**
 
@@ -257,8 +261,8 @@ analysis. It defines the R-to-Python data contract.
   - `disease_clean`
   - `tissue_clean`
 - Export the full sample-by-feature expression matrix
-- Select the top `ml_top_n` probes by variance
-- Export the variance-filtered sample-by-feature expression matrix
+- Select the top `ml_top_n` probes by global variance across the selected chip
+- Export the variance-selected sample-by-feature expression matrix
 - Export the selected feature list and probe variances
 - Optionally generate a PCA sanity-check plot
 
@@ -267,10 +271,10 @@ analysis. It defines the R-to-Python data contract.
 | File | Description |
 |---|---|
 | `hu35ksuba_expr_full.csv` | Full sample-by-probe expression matrix |
-| `hu35ksuba_expr_top3000_variance.csv` | Top-3000 variance-filtered matrix used by latent notebooks |
+| `hu35ksuba_expr_top3000_variance.csv` | Top-3000 global-variance matrix used by latent notebooks |
 | `hu35ksuba_metadata_aligned.csv` | Metadata aligned to expression rows and containing standardized aliases |
 | `hu35ksuba_top3000_variance_features.csv` | Selected probe IDs, variances, and ranks |
-| `hu35ksuba_pca_sanity_top3000_variance.png` | PCA sanity-check plot |
+| `hu35ksuba_pca_top3000_variance.png` | PCA sanity-check plot |
 
 ------------------------------------------------------------------------
 

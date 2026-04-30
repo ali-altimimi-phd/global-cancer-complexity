@@ -124,6 +124,101 @@ In this project, the VAE is used as a representation-learning method. The downst
 
 ---
 
+## VAE Training Diagnostics
+
+The following diagnostics verify that the VAE training procedure produces a stable and non-degenerate latent representation suitable for downstream geometric analysis.
+
+These figures summarize the training dynamics of the variational autoencoder (VAE) used to construct the latent representation of gene expression profiles.
+
+#### Total Loss Trajectory
+
+![](../resources/plots/vae-training/vae_training_curve.png)
+
+The total loss is defined as the sum of the reconstruction loss and the Kullback–Leibler (KL) divergence:
+
+$$
+\mathcal{L} = \mathcal{L}_{\text{recon}} + \beta \, \mathcal{L}_{\text{KL}}
+$$
+
+where:
+- $\mathcal{L}_{\text{recon}}$ measures the fidelity of reconstruction of the input expression profiles,
+- $\mathcal{L}_{\text{KL}}$ regularizes the latent space toward a standard normal prior,
+- $\beta$ controls the strength of regularization (set to 0.01 unless otherwise noted).
+
+The training curve shows a steady decrease in total loss over epochs, with validation loss stabilizing after an initial decline. The divergence between training and validation loss at later epochs suggests mild overfitting, though not severe enough to destabilize the latent representation.
+
+---
+
+#### Decomposition of Loss Components
+
+![](../resources/plots/vae-training/vae_loss_components.png)
+
+The loss is decomposed into reconstruction and KL components for both training and validation sets.
+
+Key observations:
+
+- **Reconstruction loss** decreases monotonically during training, indicating improved fidelity of input reconstruction.
+- The **KL divergence** increases during training but remains weakly weighted (β = 0.01). This indicates that the latent variables are utilized, while regularization toward the prior remains modest. As a result, the model prioritizes reconstruction fidelity, and the learned latent space is only partially constrained toward a standard normal distribution.
+- The increase in KL divergence alongside decreasing reconstruction error indicates that the model is utilizing the latent variables rather than collapsing to a trivial solution.
+
+This behavior is consistent with a non-degenerate latent representation, in which the encoder does not ignore the latent variables.
+
+---
+
+#### Distribution of Latent Coordinates
+
+![](../resources/plots/vae-training/latent_value_histogram.png)
+
+The distribution of latent variables across all samples is shown above.
+
+Under ideal VAE behavior, latent coordinates should approximate a standard normal distribution. The observed distribution is approximately centered and continuous, though not perfectly Gaussian, reflecting:
+
+- finite sample effects,
+- deviations induced by structured biological variation,
+- and the absence of explicit β-annealing or stronger regularization.
+
+---
+
+#### Training Parameters
+
+All model hyperparameters were defined in the centralized configuration module (`latent_config.py`) and used consistently throughout training.
+
+- Latent dimension: 10  
+- Number of epochs: 50  
+- Batch size: 32  
+- Learning rate: 1 × 10⁻³  
+- β (KL weight): 0.01  
+- Train/validation/test split:
+  - 70% training
+  - 15% validation
+  - 15% test  
+
+Feature selection and preprocessing:
+
+- Probe selection method: variance-based  
+- Number of features retained: 3000  
+- Random seed: 42  
+
+Optimization:
+
+- Optimizer: Adam  
+- Loss function: reconstruction (MSE) + β-weighted KL divergence  
+
+No explicit KL annealing or early stopping criterion was applied in this initial model.
+
+---
+
+#### Interpretation
+
+These diagnostics indicate that the VAE converges to a stable solution with:
+
+- decreasing reconstruction error,
+- increasing but controlled KL divergence,
+- and a broadly regularized latent space.
+
+This provides a suitable basis for downstream latent-space analysis, including assessment of structural complexity, separability, and geometric organization across cancer types.
+---
+
 ## Latent Representation Pipeline
 
 The latent representation is produced through the following stages:

@@ -32,6 +32,7 @@ book:
     - part: "Structure of Filtered Probe Sets"
       chapters:
         - results/filtered_feature_space_structure.qmd
+        - results/filtered_feature_space_structure_top_n.qmd
 
     - part: "Results and Discussion: Carcinomas"
       chapters:

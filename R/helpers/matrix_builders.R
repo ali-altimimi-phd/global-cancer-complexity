@@ -1,13 +1,27 @@
+# ------------------------------------------------------------------------------
+# File: matrix_builders.R
+# Purpose: Build tissue/state expression matrices and predefined comparison maps
+#          for the Ramaswamy global cancer analysis dataset.
+# Role: Helper
+# Pipeline: Analysis
+# Project: Cancer Complexity Analysis
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
 #' Matrix Builders for Tissue-Specific Cancer Comparisons
 #'
-#' This script constructs the empirical state spaces within which complexity change is evaluated.
-#' It first partitions expression data by tissue and disease state, then defines biologically
-#' curated normal-to-malignant contrasts. In doing so, it operationalizes malignant transformation
-#' not as a generic binary but as a tissue-specific transition, thereby making it possible to ask
-#' whether complexity is gained or lost along particular oncogenic trajectories.
+#' These helper functions construct the empirical expression spaces used by the
+#' analysis pipeline. The first function partitions a preprocessed `ExpressionSet`
+#' into tissue/disease-state-specific expression matrices. The second function
+#' defines the curated normal-to-tumor comparison map and retains only comparisons
+#' whose required matrices are present for the chip being analyzed.
 #'
-#' These matrices and comparison mappings form the foundation for downstream filtering,
-#' pairwise analysis, and gene set–based complexity and entropy calculations.
+#' The resulting matrix lists and comparison maps are used downstream for probe
+#' filtering, pairwise normal/tumor comparisons, and complexity/entropy analyses.
+#'
+#' This script is intentionally dataset-specific. It assumes the phenotype data
+#' contain Ramaswamy/GEO-derived fields identifying organism part and disease state.
 NULL
 #' Build Tissue-Specific Expression Matrices
 #'
@@ -28,7 +42,7 @@ NULL
 #' @importFrom Biobase pData exprs
 #' @importFrom glue glue
 #' @importFrom purrr imap
-#' @export
+
 build_matrix_lists_by_tissue <- function(eset) {
   stopifnot(inherits(eset, "ExpressionSet"))
   
@@ -50,14 +64,15 @@ build_matrix_lists_by_tissue <- function(eset) {
   return(mat_list)
 }
 
-#' Define Predefined Tissue Comparisons
+#' Define Available Predefined Tissue Comparisons
 #'
-#' Creates a set of named, predefined tumor/normal comparisons across cancer types,
-#' such as carcinomas, leukemias, lymphomas, and blastomas.
-#' Each comparison is validated against the provided matrix labels.
+#' Defines curated normal-to-malignant comparison pairs for the analysis dataset
+#' and filters them against the matrix labels available for a given chip.
 #'
-#' @param matrix_labels A character vector of matrix names (e.g., from \code{names(mat_list)}).
-#'
+#' Comparisons are specified using human-readable tissue/state labels and are
+#' converted internally to the matrix-name convention used by
+#' `build_matrix_lists_by_tissue()`.
+NULL
 #' @return A named list of comparison pairs organized by cancer group (e.g., "carcinomas").
 #' Each pair is a character vector of two matrix names: control and case.
 #'
@@ -70,7 +85,10 @@ build_matrix_lists_by_tissue <- function(eset) {
 define_predefined_comparisons <- function(matrix_labels) {
   predefined <- list(
     carcinomas = list(
-      "BLAD/TCC" = c("Bladder/normal", "Bladder/bladder transitional cell carcinoma"),
+      "BLAD/TCC" = c(
+        "Bladder/normal",
+        "Bladder/bladder transitional cell carcinoma"
+      ),
       "BR/BRAD" = c("Breast/normal", "Breast/breast adenocarcinoma"),
       "COL/COADREAD" = c("Colon/normal", "Colon/colorectal adenocarcinoma"),
       "KID/RCC" = c("Kidney/normal", "Kidney/renal cell carcinoma"),
@@ -85,8 +103,14 @@ define_predefined_comparisons <- function(matrix_labels) {
       "Brain/MB"  = c("Brain/normal", "Brain/medulloblastoma")
     ),
     lymphomas = list(
-      "GC/FL"   = c("Lymphoid Tissue/normal", "Lymphoid Tissue/Follicular lymphoma"),
-      "GC/LBCL" = c("Lymphoid Tissue/normal", "Lymphoid Tissue/large B-cell lymphoma")
+      "GC/FL"   = c(
+        "Lymphoid Tissue/normal",
+        "Lymphoid Tissue/Follicular lymphoma"
+      ),
+      "GC/LBCL" = c(
+        "Lymphoid Tissue/normal",
+        "Lymphoid Tissue/large B-cell lymphoma"
+      )
     ),
     leukemias = list(
       "PB/AML"   = c("Blood/normal", "Blood/acute myeloid leukemia"),
@@ -101,8 +125,7 @@ define_predefined_comparisons <- function(matrix_labels) {
       all(paste0("m_", make.names(labels)) %in% matrix_labels)
     })
   }) |>
-    purrr::keep(~ length(.x) > 0)
+    purrr::keep( ~ length(.x) > 0)
   
   return(filtered)
 }
-

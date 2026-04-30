@@ -8,7 +8,7 @@ editor:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-probes_table_base <- file.path("quarto", "resources", "tables", "probes")
+probes_table_base <- file.path("..", "..", "resources", "tables", "probes")
 
 carcinomas_probe_counts_path <- file.path(probes_table_base, "carcinomas_probe_counts.html")
 blastomas_probe_counts_path  <- file.path(probes_table_base, "blastomas_probe_counts.html")
@@ -27,16 +27,34 @@ safe_include_html <- function(path) {
 # Filtering of Microarray Expression Data
 
 This document describes the role of probe filtering in the global cancer analysis workflow.
-It should be read together with the preprocessing and analysis pipeline overviews, because filtering is the first stage at which the high-dimensional expression matrix is converted into comparison-specific feature sets for downstream complexity, entropy, latent-space, and biological interpretation tasks
+It should be read together with the preprocessing and analysis pipeline overviews, because filtering in the analysis pipeline is the stage at which the high-dimensional expression matrix is converted into comparison-specific feature sets for downstream complexity, entropy, and biological interpretation tasks.
 
-The current analysis configuration supports two filtering modes:
+Latent-space modeling uses a related but distinct feature-selection strategy defined in the preprocessing pipeline, and therefore does not necessarily operate on the same comparison-specific feature sets described here.
 
-| Method | Main parameters | Primary emphasis |
+------------------------------------------------------------------------
+
+## Current Analysis Configuration
+
+The current analysis configuration supports two comparison-level probe-selection regimes, with variance filtering available in two modes:
+
+| Method / mode | Main parameters | Primary emphasis |
 |---|---:|---|
-| `limma` | `logfc_cutoff = 0.33`, `pval_cutoff = 0.05` | Differential-expression-oriented filtering |
-| `variance` | `var_threshold = 0.75`, `top_n = 3000` | Structure/dispersion-oriented filtering |
+| `limma` | `logfc_cutoff = 0.33`, `pval_cutoff = 0.05` | Differential-expression-oriented selection within each predefined normal-tumor comparison |
+| `variance`, `top_n` mode | `analysis_top_n = 3000` | Fixed-count high-variance probe selection within each predefined normal-tumor comparison |
+| `variance`, `threshold` mode | `var_threshold = 0.75` | Quantile-threshold high-variance probe selection within each predefined normal-tumor comparison |
 
-The analysis pipeline applies filtering in Stage 3, immediately after expression matrices and normal/tumor comparison maps have been built.
+In the current configuration, the analysis pipeline uses:
+
+```r
+filter_method <- "variance"
+variance_selection_mode <- "top_n"
+analysis_top_n <- 3000
+```
+
+This comparison-specific `analysis_top_n` setting is distinct from the global top-N feature-selection strategy used for latent-space export during preprocessing.
+Both may use the value 3000, but they define different feature spaces: the analysis setting defines local, comparison-specific high-variance probe sets, whereas the latent-space workflow uses a global chip-level high-variance feature set.
+
+The analysis pipeline applies probe selection in Stage 3, immediately after expression matrices and normal/tumor comparison maps have been built.
 The resulting filtered-probe objects are saved as chip-specific RDS files:
 
 | Output | Description |
@@ -58,11 +76,11 @@ Filtering is therefore not only a statistical preprocessing step.
 In this project it has three distinct roles:
 
 1. it defines the probe space used by traditional complexity and entropy measures;
-2. it defines, or at least strongly influences, the feature space used for latent-space modeling and postprocessing;
+2. it provides a comparison-specific feature space that can be contrasted with the global feature-selection strategy used for latent-space modeling;
 3. it shapes the biological interpretation of complexity, entropy, and latent geometry by determining which genes and gene sets are eligible to contribute to the analysis.
 
-These three roles are related but not identical.
-A filter that is appropriate for differential-expression interpretation is not necessarily identical to a filter that is optimal for latent-space geometry, and a filter that stabilizes geometry may not capture all biologically meaningful low-amplitude regulatory changes.
+These roles are related but not identical.
+A filter that is appropriate for differential-expression interpretation is not necessarily identical to one that stabilizes geometric structure, and neither necessarily matches the feature-selection regime used for latent-space modeling.
 For that reason, filtering should be documented as an analytic choice rather than treated as a purely mechanical cleanup step.
 
 ------------------------------------------------------------------------
@@ -72,46 +90,42 @@ For that reason, filtering should be documented as an analytic choice rather tha
 The legacy R-side analysis computes complexity and entropy measures on normal/tumor expression matrices after comparison-specific probe selection.
 In this setting, filtering defines the empirical state space over which covariance structure, dimensionality, dispersion, and entropy-like quantities are estimated.
 
-This matters because measures such as effective rank, participation ratio, eigenvalue entropy, anisotropy, and related covariance-derived statistics are sensitive to the number and identity of retained probes.
+Measures such as effective rank, participation ratio, eigenvalue entropy, anisotropy, and related covariance-derived statistics are sensitive to both the number and identity of retained probes.
 Including many uninformative or noise-dominated probes can inflate apparent dimensionality or obscure coherent structure.
 Conversely, retaining only highly differential probes can make the analysis more focused but may bias the measured state space toward large normal/tumor contrasts.
 
-For this reason, the current pipeline supports two conceptually different filters:
+For this reason, the pipeline supports two conceptually distinct probe-selection regimes:
 
 | Filtering mode | Interpretation for complexity/entropy analysis |
 |---|---|
-| `limma` | Emphasizes probes that show normal/tumor differential expression under the configured fold-change and statistical thresholds. Complexity and entropy are then assessed within a contrast-enriched probe space. |
-| `variance` | Emphasizes probes with high variation across samples. Complexity and entropy are then assessed within a dispersion-enriched probe space, which may be more aligned with geometric structure but less explicitly tied to normal/tumor differential expression. |
+| `limma` | Complexity and entropy are assessed within a contrast-enriched probe space defined by differential expression between normal and tumor samples. |
+| `variance` | Complexity and entropy are assessed within a dispersion-enriched probe space defined by high-variance probes within each comparison. |
 
-The distinction is important when comparing results across versions of the pipeline.
-A limma-filtered complexity result and a variance-filtered complexity result should not be interpreted as interchangeable unless the effect of the filtering choice has been examined.
+Results obtained under different filtering regimes should not be interpreted as interchangeable without explicitly considering the effect of the filtering choice.
 
 ------------------------------------------------------------------------
 
 ## Filtering and Latent Space
 
 The latent-space workflow reduces high-dimensional gene-expression data to a lower-dimensional representation.
-Filtering affects this workflow because the VAE or related latent model can only learn from the feature set it receives.
-Thus, filtering helps define what kinds of biological and geometric variation are available to be represented in latent space.
+Filtering affects this workflow because the model can only learn from the feature set it receives.
 
-A variance-oriented feature set may be useful for latent modeling because it emphasizes probes that contribute to sample-to-sample structure.
-This can help the model capture broad tissue, tumor, and subgroup differences.
-However, high variance alone does not guarantee biological specificity: variation may reflect tissue composition, technical effects, batch-like structure, or strong but nonspecific expression differences.
+In the current project, the latent-space workflow and the R-side complexity/entropy analysis generally operate on different feature universes.
 
-A differential-expression-oriented feature set may be useful when the latent representation is intended to emphasize normal/tumor divergence.
-However, it may also exclude features that help organize the global sample manifold but do not meet a strict normal/tumor threshold within a particular comparison.
+The latent-space pipeline uses a fixed, global set of high-variance probes selected across all samples on a given chip.
+In contrast, the R-side analysis uses comparison-specific probe selection based on predefined normal/tumor contrasts.
 
-In the current project, this distinction is especially important because the R-side complexity/entropy analysis and the latent-space workflow may not always use identical feature universes.
-When comparing legacy complexity/entropy measures to latent geometry, the filtering basis should therefore be stated explicitly.
-A correlation or qualitative agreement between the two systems is more interpretable when the underlying feature spaces are comparable; disagreement may reflect biological differences, geometric differences, or simply different filtering choices.
+As a result, latent-space representations and complexity/entropy measures are computed in different feature spaces.
+Direct numerical correspondence between these systems should therefore be interpreted cautiously.
+Agreement may reflect shared biological structure, whereas disagreement may arise from biological, geometric, or filtering-related differences.
 
-In practice, this means that latent-space representations should be interpreted as embeddings of a filtered transcriptomic subspace rather than of the full gene-expression space.
+Latent-space representations should therefore be interpreted as embeddings of a filtered transcriptomic subspace rather than of the full gene-expression space.
 
 ------------------------------------------------------------------------
 
 ## Filtering and Biological Meaning
 
-Filtering also determines the biological vocabulary available for interpretation.
+Filtering determines the biological vocabulary available for interpretation.
 GO terms, KEGG pathways, and other gene-set summaries depend on which probes remain after filtering and on how those probes map to annotation resources.
 
 A large retained-probe count in a normal/tumor comparison may indicate broad transcriptional reorganization, but it can also reflect sample size, platform coverage, variance structure, or threshold choice.
@@ -122,7 +136,7 @@ Filtered probe sets support statements such as:
 
 - the comparison shows a larger or smaller number of probes meeting the configured filter;
 - the retained probes are enriched for, or annotated to, particular biological functions or pathways;
-- the complexity/entropy or latent-space patterns are being estimated within the retained feature space.
+- complexity/entropy or latent-space patterns are being estimated within the retained feature space.
 
 They do not by themselves prove that a tissue has globally gained or lost biological complexity.
 Rather, they help define the measured transcriptomic subspace in which complexity, entropy, and latent geometry are evaluated.
@@ -155,13 +169,21 @@ The `variance` option is structure-oriented.
 In the current configuration, it is parameterized as:
 
 ```r
-filter_method  <- "variance"
-var_threshold  <- 0.75
-top_n          <- 3000
+filter_method <- "variance"
+variance_selection_mode <- "top_n"
+analysis_top_n <- 3000
 ```
 
-In this mode, retained probes are selected by variability rather than explicit differential-expression significance.
-This can be useful for latent-space modeling and geometry because highly variable probes often define the dominant directions of sample separation.
+The variance filter supports two modes.
+In `top_n` mode, a fixed number of high-variance probes is retained per comparison.
+In `threshold` mode, probes are retained according to the configured variance threshold:
+
+```r
+var_threshold <- 0.75
+```
+
+Retained probes are selected based on variability within each comparison-specific matrix.
+This can emphasize dominant axes of variation and support geometric interpretation.
 
 The corresponding interpretive caution is that variance is not synonymous with biological relevance.
 Highly variable probes may reflect tumor biology, tissue identity, cellular mixture, technical effects, or other sources of heterogeneity.
@@ -217,6 +239,8 @@ Without such thresholds, many GO summaries would be based on too few probes to s
 
 Filtering is implemented as Stage 3 of the analysis workflow.
 The driver script sources the grouped filtering wrapper and high-variance helper, then runs filtering separately for each supported chip.
+During this stage, the pipeline validates `variance_selection_mode`, derives the `top_n` argument only when variance filtering is run in `top_n` mode, and passes the filtering method, variance-selection mode, and active parameters to the grouped filtering wrapper.
+The resulting RDS objects include provenance metadata describing the filtering regime used to generate them.
 The current chips are:
 
 | Chip | GEO platform | Role |
@@ -224,7 +248,7 @@ The current chips are:
 | `hu35ksuba` | `GPL98` | One Affymetrix platform used in the Ramaswamy dataset |
 | `hu6800` | `GPL80` | Second Affymetrix platform used in the Ramaswamy dataset |
 
-The filtering stage is group-aware because it operates against predefined normal/tumor comparison maps rather than applying one universal probe list to all comparisons.
+The filtering stage is comparison-aware because it operates against predefined normal/tumor comparison maps rather than applying one universal probe list to all comparisons.
 This is appropriate for the R-side pairwise framework, where each comparison represents a distinct empirical contrast.
 
 The practical output of this stage is not a final biological claim.
@@ -305,14 +329,14 @@ This filtering document corresponds to the current analysis overview in the foll
 
 | Analysis overview section | Filtering document connection |
 |---|---|
-| Stage 2: Build expression matrix and comparison maps | Defines the normal/tumor comparison maps used by group-aware filtering |
-| Stage 3: Run group-aware probe filtering | Main implementation point for this document |
-| Stage 4: Run pairwise complexity and entropy comparisons | Consumes the filtered probe sets as feature spaces |
+| Stage 2: Build expression matrix and comparison maps | Defines the normal/tumor comparison maps used by comparison-aware filtering |
+| Stage 3: Run probe selection | Main implementation point for this document |
+| Stage 4: Run pairwise complexity and entropy comparisons | Consumes the selected probe sets as feature spaces |
 | Stage 5: Aggregate engine results | Aggregates outputs whose values depend on the selected probe and gene-set filters |
 | Stage 6: Summarize comparison-level patterns | Summarizes complexity and entropy patterns conditional on filtering choices |
-| Stage 7–8: Latent notebooks and postprocessing | Should be interpreted with attention to whether the latent feature space matches or differs from the R-side filtered feature space |
+| Stage 7-8: Latent workflows | Use a separate global feature-selection regime defined in preprocessing; this may share the same top-N value but does not define the same feature space as `analysis_top_n` |
 
-This alignment is important because the same word, “filtering,” can refer to several related but distinct decisions: selecting probes for pairwise analysis, selecting highly variable features for latent modeling, and selecting gene sets with enough mapped probes for stable biological interpretation.
+This alignment is important because the same word, "filtering," can refer to several related but distinct decisions: selecting probes for pairwise analysis, selecting highly variable features for latent modeling, and selecting gene sets with enough mapped probes for stable biological interpretation.
 
 ------------------------------------------------------------------------
 

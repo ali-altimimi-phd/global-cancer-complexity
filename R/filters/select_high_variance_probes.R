@@ -3,7 +3,7 @@
 # Purpose: Select probes based on intrinsic variability across samples using
 #   variance-based filtering for downstream complexity and entropy analysis
 # Role: Probe-level variability filtering utility
-# Pipeline: Preprocessing
+# Pipeline: Shared utility (Analysis; Preprocessing refactor planned)
 # Project: Cancer Complexity Analysis
 # Author: Ali M. Al-Timimi
 # Created: 2026
@@ -24,6 +24,10 @@
 #' selection. Threshold-based selection returns probes whose variability meets
 #' or exceeds a chosen quantile cutoff. Fixed-count selection returns the top
 #' `top_n` probes ranked by the requested variability statistic.
+#' 
+#' If `top_n` is supplied, fixed-count selection is used and `threshold`
+#' is ignored. If `top_n = NULL`, threshold-based quantile selection is used.
+#' The calling pipeline is responsible for deciding which mode to use.
 #'
 #' @param expr_matrix A numeric matrix in probes x samples orientation.
 #' @param method Character string specifying the variability statistic.
@@ -32,7 +36,8 @@
 #' @param threshold Numeric quantile cutoff used when `top_n` is `NULL`.
 #'   Defaults to `0.75`.
 #' @param top_n Optional integer. If supplied, returns the `top_n` probes with
-#'   the highest variability rather than using `threshold`.
+#'   the highest variability and ignores `threshold`. If `NULL`, selection is
+#'   performed using `threshold`.
 #' @param return_stats Logical. If `TRUE`, returns a list containing retained
 #'   probes, full variability statistics, retained statistics, cutoff, and
 #'   method metadata. If `FALSE` (default), returns only a character vector of
@@ -63,10 +68,10 @@
 #' )
 #' }
 select_high_variance_probes <- function(expr_matrix,
-                                     method = method,
-                                     threshold = threshold,
-                                     top_n = NULL,
-                                     return_stats = FALSE) {
+                                        method = "mad",
+                                        threshold = 0.75,
+                                        top_n = NULL,
+                                        return_stats = FALSE) {
   if (!is.matrix(expr_matrix) || !is.numeric(expr_matrix)) {
     stop("Input must be a numeric matrix.", call. = FALSE)
   }

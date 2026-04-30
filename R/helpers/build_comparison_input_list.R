@@ -16,7 +16,7 @@
 #'   - `chip`: Chip ID
 #'   - `m1`: Control matrix (filtered)
 #'   - `m2`: Case matrix (filtered)
-#' @export
+
 build_comparison_input_list <- function(comparison_map,
                                         filtered_results,
                                         chip_id) {

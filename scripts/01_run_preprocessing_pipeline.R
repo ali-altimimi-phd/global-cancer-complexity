@@ -121,7 +121,7 @@ run_preprocessing_pipeline <- function() {
     export_ml_inputs_from_eset(
       eset_list = eset_list,
       output_dir = ml_output_dir,
-      plot_dir = pca_plot_dir,
+      plot_dir = ml_plot_dir,
       chip_id = ml_chip_id,
       top_n = ml_top_n,
       filter_method = ml_filter_method,

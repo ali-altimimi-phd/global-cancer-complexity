@@ -21,7 +21,7 @@
 #' @param chip_id Character chip/platform key in `eset_list`.
 #' @param top_n Integer number of high-variance probes to retain.
 #' @param filter_method Character filter method. Currently supports "variance".
-#' @param run_pca_check Logical; whether to produce a PCA sanity plot.
+#' @param run_pca_check Logical; whether to produce a PCA plot.
 #' @param logger Logger object returned by `start_log()`.
 #'
 #' @return Invisibly returns a list containing output file paths.
@@ -156,6 +156,24 @@ export_ml_inputs_from_eset <- function(eset_list,
   }
 
   top_n <- min(as.integer(top_n), nrow(expr))
+  
+  # ---------------------------------------------------------------------------
+  # TODO (refactor):
+  # This section implements global top-N variance-based feature selection for
+  # latent-space / ML export using a manual apply+sort approach.
+  #
+  # The analysis pipeline uses `select_high_variance_probes()` for comparison-level
+  # probe selection. To ensure consistency and avoid duplicated logic, this block
+  # should be refactored in the future to call that shared helper function:
+  #
+  #   select_high_variance_probes(expr, method = "var", top_n = top_n)
+  #
+  # Any refactor should preserve the current behavior:
+  #   - global (chip-level) selection across all samples
+  #   - variance-based ranking (not MAD unless intentionally changed)
+  #
+  # This distinction (global vs comparison-specific selection) must remain intact.
+  # ---------------------------------------------------------------------------
   probe_variance <- apply(expr, 1, stats::var, na.rm = TRUE)
   top_probes <- names(sort(probe_variance, decreasing = TRUE))[seq_len(top_n)]
   expr_top <- expr[top_probes, , drop = FALSE]
@@ -185,7 +203,7 @@ export_ml_inputs_from_eset <- function(eset_list,
   pca_plot_path <- NULL
 
   if (isTRUE(run_pca_check)) {
-    log_it("Running PCA sanity check", section = "PCA")
+    log_it("Running PCA check", section = "PCA")
 
     pca <- stats::prcomp(t(expr_top), center = TRUE, scale. = TRUE)
     pca_df <- data.frame(
