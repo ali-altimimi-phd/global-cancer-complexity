@@ -163,25 +163,32 @@ run_analysis_pipeline <- function() {
   if (isTRUE(run_pairwise)) {
     source(here::here("R/helpers/load_results_into_global.R"))
     
-    logger$log("🔀 Checking for comparison maps...")
+    logger$log("🔀 Checking for comparison maps...", section = "PAIRWISE")
     load_matrix_maps(matrices_path, overwrite = TRUE)
     
-    logger$log("🔀 Checking for filtered probes...")
+    logger$log("🔀 Checking for filtered probes...", section = "PAIRWISE")
     load_filtered_results(filtered_probes_dir, overwrite = TRUE)
     
     load_annotations_if_needed(logger = logger)
     
-    logger$log("🔀 Starting pairwise comparisons...")
+    logger$log("🔀 Starting pairwise comparisons...", section = "PAIRWISE")
     source(here::here("R/wrappers/run_all_pairwise_comparisons.R"))
     
-    run_all_pairwise_comparisons(
-      chips = chips,
-      annotations = annotations,
-      engines = engines,
-      gene_set_mode = gene_set_mode,
-      quantile_cutoff = quantile_cutoff,
-      min_probes = min_probes
-    )
+    for (mode in gene_set_modes) {
+      logger$log(
+        sprintf("🔀 Running pairwise comparisons for gene_set_mode = %s", mode),
+        section = "PAIRWISE"
+      )
+      
+      run_all_pairwise_comparisons(
+        chips = chips,
+        annotations = annotations,
+        engines = engines,
+        gene_set_mode = mode,
+        quantile_cutoff = quantile_cutoff,
+        min_probes = min_probes
+      )
+    }
   }
   
   # ---- Stage 5: Aggregation + gene set annotation ----

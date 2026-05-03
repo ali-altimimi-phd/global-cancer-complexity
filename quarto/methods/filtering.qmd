@@ -2,7 +2,7 @@
 title: "Filtering Strategy for the Global Cancer Analysis Pipeline"
 editor:
   markdown:
-    wrap: sentence
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -38,14 +38,14 @@ Latent-space modeling uses a related but distinct feature-selection strategy def
 The current analysis configuration supports two comparison-level probe-selection regimes, with variance filtering available in two modes:
 
 | Method / mode | Main parameters | Primary emphasis |
-|---|---:|---|
+|----------------------|----------------------------:|----------------------|
 | `limma` | `logfc_cutoff = 0.33`, `pval_cutoff = 0.05` | Differential-expression-oriented selection within each predefined normal-tumor comparison |
 | `variance`, `top_n` mode | `analysis_top_n = 3000` | Fixed-count high-variance probe selection within each predefined normal-tumor comparison |
 | `variance`, `threshold` mode | `var_threshold = 0.75` | Quantile-threshold high-variance probe selection within each predefined normal-tumor comparison |
 
 In the current configuration, the analysis pipeline uses:
 
-```r
+``` r
 filter_method <- "variance"
 variance_selection_mode <- "top_n"
 analysis_top_n <- 3000
@@ -58,7 +58,7 @@ The analysis pipeline applies probe selection in Stage 3, immediately after expr
 The resulting filtered-probe objects are saved as chip-specific RDS files:
 
 | Output | Description |
-|---|---|
+|------------------------------------|------------------------------------|
 | `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds` | Filtered probes for `hu35ksuba` comparisons |
 | `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds` | Filtered probes for `hu6800` comparisons |
 
@@ -75,9 +75,9 @@ Without filtering, downstream calculations would be dominated by probes that con
 Filtering is therefore not only a statistical preprocessing step.
 In this project it has three distinct roles:
 
-1. it defines the probe space used by traditional complexity and entropy measures;
-2. it provides a comparison-specific feature space that can be contrasted with the global feature-selection strategy used for latent-space modeling;
-3. it shapes the biological interpretation of complexity, entropy, and latent geometry by determining which genes and gene sets are eligible to contribute to the analysis.
+1.  it defines the probe space used by traditional complexity and entropy measures;
+2.  it provides a comparison-specific feature space that can be contrasted with the global feature-selection strategy used for latent-space modeling;
+3.  it shapes the biological interpretation of complexity, entropy, and latent geometry by determining which genes and gene sets are eligible to contribute to the analysis.
 
 These roles are related but not identical.
 A filter that is appropriate for differential-expression interpretation is not necessarily identical to one that stabilizes geometric structure, and neither necessarily matches the feature-selection regime used for latent-space modeling.
@@ -97,7 +97,7 @@ Conversely, retaining only highly differential probes can make the analysis more
 For this reason, the pipeline supports two conceptually distinct probe-selection regimes:
 
 | Filtering mode | Interpretation for complexity/entropy analysis |
-|---|---|
+|------------------------------------|------------------------------------|
 | `limma` | Complexity and entropy are assessed within a contrast-enriched probe space defined by differential expression between normal and tumor samples. |
 | `variance` | Complexity and entropy are assessed within a dispersion-enriched probe space defined by high-variance probes within each comparison. |
 
@@ -107,17 +107,15 @@ Results obtained under different filtering regimes should not be interpreted as 
 
 ## Filtering and Latent Space
 
-The latent-space workflow reduces high-dimensional gene-expression data to a lower-dimensional representation.
-Filtering affects this workflow because the model can only learn from the feature set it receives.
+The latent-space workflow reduces high-dimensional gene-expression data to a lower-dimensional representation.Filtering affects this workflow because the model can only learn from the feature set it receives.
 
 In the current project, the latent-space workflow and the R-side complexity/entropy analysis generally operate on different feature universes.
 
 The latent-space pipeline uses a fixed, global set of high-variance probes selected across all samples on a given chip.
+
 In contrast, the R-side analysis uses comparison-specific probe selection based on predefined normal/tumor contrasts.
 
-As a result, latent-space representations and complexity/entropy measures are computed in different feature spaces.
-Direct numerical correspondence between these systems should therefore be interpreted cautiously.
-Agreement may reflect shared biological structure, whereas disagreement may arise from biological, geometric, or filtering-related differences.
+As a result, latent-space representations and complexity/entropy measures are computed in different feature spaces. Direct numerical correspondence between these systems should therefore be interpreted cautiously. Agreement may reflect shared biological structure, whereas disagreement may arise from biological, geometric, or filtering-related differences.
 
 Latent-space representations should therefore be interpreted as embeddings of a filtered transcriptomic subspace rather than of the full gene-expression space.
 
@@ -129,17 +127,17 @@ Filtering determines the biological vocabulary available for interpretation.
 GO terms, KEGG pathways, and other gene-set summaries depend on which probes remain after filtering and on how those probes map to annotation resources.
 
 A large retained-probe count in a normal/tumor comparison may indicate broad transcriptional reorganization, but it can also reflect sample size, platform coverage, variance structure, or threshold choice.
+
 A small retained-probe count may indicate a more subtle tumor-normal contrast, but it can also reflect low power, heterogeneous samples, conservative thresholds, or platform limitations.
 
 Biological interpretation should therefore be phrased cautiously.
 Filtered probe sets support statements such as:
 
-- the comparison shows a larger or smaller number of probes meeting the configured filter;
-- the retained probes are enriched for, or annotated to, particular biological functions or pathways;
-- complexity/entropy or latent-space patterns are being estimated within the retained feature space.
+-   the comparison shows a larger or smaller number of probes meeting the configured filter;
+-   the retained probes are enriched for, or annotated to, particular biological functions or pathways;
+-   complexity/entropy or latent-space patterns are being estimated within the retained feature space.
 
-They do not by themselves prove that a tissue has globally gained or lost biological complexity.
-Rather, they help define the measured transcriptomic subspace in which complexity, entropy, and latent geometry are evaluated.
+They do not by themselves prove that a tissue has globally gained or lost biological complexity. Rather, they help define the measured transcriptomic subspace in which complexity, entropy, and latent geometry are evaluated.
 
 ------------------------------------------------------------------------
 
@@ -148,7 +146,7 @@ Rather, they help define the measured transcriptomic subspace in which complexit
 The `limma` option is differential-expression-oriented.
 In the current configuration, it uses:
 
-```r
+``` r
 filter_method <- "limma"
 logfc_cutoff  <- 0.33
 pval_cutoff   <- 0.05
@@ -158,8 +156,7 @@ In this mode, the retained probes are those that pass the configured normal/tumo
 This makes the downstream analysis strongly tied to normal/tumor transcriptional divergence.
 It is a defensible choice when the primary question is how the structure of expression changes among probes that differ between normal and malignant tissue.
 
-The corresponding interpretive caution is that the measured complexity and entropy are conditional on a differential-expression filter.
-The results describe the structure of the selected contrast-associated probe set, not the full transcriptome.
+The corresponding interpretive caution is that the measured complexity and entropy are conditional on a differential-expression filter. The results describe the structure of the selected contrast-associated probe set, not the full transcriptome.
 
 ------------------------------------------------------------------------
 
@@ -168,7 +165,7 @@ The results describe the structure of the selected contrast-associated probe set
 The `variance` option is structure-oriented.
 In the current configuration, it is parameterized as:
 
-```r
+``` r
 filter_method <- "variance"
 variance_selection_mode <- "top_n"
 analysis_top_n <- 3000
@@ -178,60 +175,49 @@ The variance filter supports two modes.
 In `top_n` mode, a fixed number of high-variance probes is retained per comparison.
 In `threshold` mode, probes are retained according to the configured variance threshold:
 
-```r
+``` r
 var_threshold <- 0.75
 ```
 
 Retained probes are selected based on variability within each comparison-specific matrix.
 This can emphasize dominant axes of variation and support geometric interpretation.
 
-The corresponding interpretive caution is that variance is not synonymous with biological relevance.
-Highly variable probes may reflect tumor biology, tissue identity, cellular mixture, technical effects, or other sources of heterogeneity.
-For that reason, variance-filtered results should be interpreted together with metadata, annotation, and comparison-specific biological context.
+The corresponding interpretive caution is that variance is not synonymous with biological relevance. Highly variable probes may reflect tumor biology, tissue identity, cellular mixture, technical effects, or other sources of heterogeneity. For that reason, variance-filtered results should be interpreted together with metadata, annotation, and comparison-specific biological context.
 
 ------------------------------------------------------------------------
 
-## Dynamic Filtering of Gene Sets
+## Gene-Set Projection and Minimum Probe Filtering
 
-In addition to probe-level filtering, the analysis workflow also uses gene-set-level filtering for GO, KEGG, MSigDB, or combined gene-set modes.
+In addition to probe-level selection, the analysis workflow supports projection of the filtered comparison-specific probe space onto biological vocabularies such as GO, KEGG, and MSigDB.
+
+The `FULL` mode analyzes the complete filtered probe space defined for each normal–tumor comparison.
+
+Gene-set-restricted modes (`GO_BP`, `GO_MF`, `KEGG`, `MSIGDB`) further restrict this space to probes mapped to the selected biological vocabulary.
+
 The current configuration includes:
 
-```r
-gene_set_mode   <- "ALL"
+``` r
+gene_set_modes  <- c("FULL", "GO_BP", "GO_MF", "KEGG", "MSIGDB")
 quantile_cutoff <- 0.75
 min_probes      <- 5
 ```
 
-Gene-set filtering is necessary because gene-set sizes are highly uneven.
-Some pathways contain many probes, while many GO terms contain very few mapped probes.
-Very small gene sets can produce unstable estimates of complexity, entropy, or enrichment-like summaries.
-Very large gene sets can dominate interpretation because they represent broad biological categories rather than specific mechanisms.
+Gene-set projection operates on the intersection:
 
-The goal of dynamic filtering is therefore to retain gene sets that are large enough to support stable calculation while avoiding indiscriminate inclusion of sparse or poorly supported terms.
+``` r
+filtered comparison-specific probes ∩ gene-set probes
+```
 
-### KEGG pathways
+This ensures that gene-set analyses are grounded in probes already identified as relevant to the specific normal–tumor transition.
 
-| Statistic | hu35ksuba | hu6800 |
-|---|---:|---:|
-| Median | 18 | 41.5 |
-| 3rd quartile | 36 | 77.5 |
-| Mean | 28.4 | 55.9 |
-| Max | 427 | 676 |
+### Minimum Probe Constraint
 
-Most KEGG pathways contain enough probes to support pathway-level summaries, although very small or very large pathway mappings still require caution.
+A minimum probe threshold (`min_probes = 5`) is applied to all gene-set analyses.
+Gene sets with fewer than this number of mapped probes are excluded.
 
-### GO Molecular Function terms
+This constraint is necessary because gene-set sizes are highly uneven. Very small gene sets can produce unstable estimates of covariance structure, complexity, and entropy. Conversely, very large gene sets may represent broad biological categories rather than specific mechanisms, and therefore require careful interpretation.
 
-| Statistic | hu35ksuba | hu6800 |
-|---|---:|---:|
-| Median | 2 | 2 |
-| 3rd quartile | 6 | 6 |
-| Mean | ~12 | ~12 |
-| Max | ~6400 | ~5300 |
-
-Most GO Molecular Function terms are very small in probe-count terms.
-This makes minimum-probe thresholds especially important for GO-level calculations.
-Without such thresholds, many GO summaries would be based on too few probes to support stable interpretation.
+The current threshold should be understood as a pragmatic baseline rather than an optimal setting for all gene-set systems. Because GO, KEGG, and MSIGDB differ substantially in their typical probe-count distributions and biological specificity, future updates will introduce system-specific thresholds and calibration procedures.
 
 ------------------------------------------------------------------------
 
@@ -244,7 +230,7 @@ The resulting RDS objects include provenance metadata describing the filtering r
 The current chips are:
 
 | Chip | GEO platform | Role |
-|---|---|---|
+|------------------------|------------------------|------------------------|
 | `hu35ksuba` | `GPL98` | One Affymetrix platform used in the Ramaswamy dataset |
 | `hu6800` | `GPL80` | Second Affymetrix platform used in the Ramaswamy dataset |
 
@@ -309,7 +295,7 @@ Shared-probe counts summarize how many filtered probes recur across comparisons 
 They can be useful for identifying repeated transcriptional signals within a category, but they should not be treated as direct measures of biological similarity without considering tissue composition, platform coverage, and comparison design.
 
 | Tumor category | Number of shared probes (`hu35ksuba`) | Number of shared probes (`hu6800`) |
-|---|---:|---:|
+|--------------------|-------------------------:|-------------------------:|
 | Carcinomas | 0 | 0 |
 | Blastomas | 51 | 47 |
 | Leukemias | 354 | 328 |
@@ -328,7 +314,7 @@ Missing values should not be interpreted as absence of signal; they may reflect 
 This filtering document corresponds to the current analysis overview in the following way:
 
 | Analysis overview section | Filtering document connection |
-|---|---|
+|------------------------------------|------------------------------------|
 | Stage 2: Build expression matrix and comparison maps | Defines the normal/tumor comparison maps used by comparison-aware filtering |
 | Stage 3: Run probe selection | Main implementation point for this document |
 | Stage 4: Run pairwise complexity and entropy comparisons | Consumes the selected probe sets as feature spaces |

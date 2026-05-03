@@ -46,7 +46,7 @@ combine_entropy_complexity_summaries <- function(summary_complexity_df,
     ) %>%
     mutate(
       mode_label = case_when(
-        mode == "ALL" ~ "all probes",
+        mode == "FULL" ~ "all probes",
         mode == "GO" ~ "GO MF terms",
         mode == "KEGG" ~ "KEGG pathways",
         mode == "MSIG" ~ "Hallmark genes",

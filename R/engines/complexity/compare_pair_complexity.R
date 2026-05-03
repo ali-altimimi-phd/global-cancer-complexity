@@ -15,8 +15,8 @@ source(here::here("R/engines/complexity/statistical_complexity_helpers.R"))
 compare_matrix_pair_complexity <- function(label, chip, mat1, mat2,
                                            filter_probes = NULL,
                                            complexity_fn = get_svd_kappa,
-                                           n_perm = 1000,
-                                           n_boot = 1000) {
+                                           n_perm = 100,
+                                           n_boot = 100) {
   # If a filter is provided, subset matrices
   if (!is.null(filter_probes)) {
     mat1 <- mat1[rownames(mat1) %in% filter_probes, , drop = FALSE]

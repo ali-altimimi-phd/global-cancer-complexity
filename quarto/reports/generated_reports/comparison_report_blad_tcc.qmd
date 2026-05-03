@@ -51,10 +51,75 @@ res_6800       <- comp_data$res_6800
 count_35k <- comp_data$count_35k
 count_6800 <- comp_data$count_6800
 
-summary_all <- summaries_df %>% filter(mode == "ALL")
-summary_go <- summaries_df %>% filter(mode == "GO")
-summary_kegg <- summaries_df %>% filter(mode == "KEGG")
-summary_msig <- summaries_df %>% filter(mode == "MSIG")
+# ---- Overview-summary mode normalization ----
+# The reporting template uses broad display categories, while the analysis
+# pipeline may emit more specific mode labels. These mappings prevent empty
+# overview cells when the upstream schema uses GO_MF, GO_BP, MSIG, or unknown.
+# MODE_MAP <- list(
+#   ALL      = c("FULL", "ALL", "unknown"),
+#   GO_MF    = c("GO_MF", "GO", "GO_UNSPECIFIED"),
+#   KEGG     = c("KEGG"),
+#   HALLMARK = c("MSIG", "HALLMARK")
+# )
+
+MODE_MAP <- list(
+  ALL      = c("FULL", "ALL"),
+  GO_MF    = c("GO_MF"),
+  KEGG     = c("KEGG"),
+  HALLMARK = c("MSIG", "HALLMARK")
+)
+
+first_nonempty <- function(x, fallback = "not available") {
+  x <- x[!is.na(x) & trimws(as.character(x)) != ""]
+  if (length(x) == 0) fallback else as.character(x[[1]])
+}
+
+get_summary_subset <- function(df, modes) {
+  if (is.null(df) || nrow(df) == 0 || !("mode" %in% names(df))) {
+    return(df[0, , drop = FALSE])
+  }
+  df %>% dplyr::filter(.data$mode %in% modes)
+}
+
+fmt_summary <- function(df, strength_col, confidence_col) {
+  if (is.null(df) || nrow(df) == 0) {
+    return("not available")
+  }
+
+  if (!(strength_col %in% names(df)) || !(confidence_col %in% names(df))) {
+    return("not available")
+  }
+
+  strength <- first_nonempty(df[[strength_col]])
+  confidence <- first_nonempty(df[[confidence_col]])
+
+  if (identical(strength, "not available") && identical(confidence, "not available")) {
+    return("not available")
+  }
+
+  if (identical(confidence, "not available")) {
+    return(strength)
+  }
+
+  paste0(strength, " (", confidence, ")")
+}
+
+summary_all  <- get_summary_subset(summaries_df, MODE_MAP$ALL)
+summary_go   <- get_summary_subset(summaries_df, MODE_MAP$GO_MF)
+summary_kegg <- get_summary_subset(summaries_df, MODE_MAP$KEGG)
+summary_msig <- get_summary_subset(summaries_df, MODE_MAP$HALLMARK)
+
+cancer_category_label <- first_nonempty(summaries_df$cancer_category)
+
+available_modes <- sort(unique(summaries_df$mode))
+message("[REPORT] Available summary modes for ", comparison, ": ", paste(available_modes, collapse = ", "))
+
+if (nrow(summary_all) == 0) {
+  warning("No all-probe summary row found for comparison: ", comparison)
+}
+if (nrow(summary_go) == 0) {
+  warning("No GO Molecular Function summary row found for comparison: ", comparison)
+}
 
 # Cleaned name for image file references
 clean_name <- gsub("[^a-zA-Z0-9]", "_", tolower(comparison))
@@ -107,7 +172,7 @@ safe_include_html <- function(path) {
 ::: {.panel-tabset}
 
 #### Probes
-> -   **Cancer Category:** `r summaries_df %>% filter(mode == "ALL") %>% pull(cancer_category) %>% unique()`
+> -   **Cancer Category:** `r cancer_category_label`
 > -   **Chip hu35ksuba**: `r count_35k` filtered probes
 > -   **Chip hu6800**: `r count_6800` filtered probes
 
@@ -121,9 +186,9 @@ safe_include_image(probes_path)
 
 | Measure | All Filtered Probes | GO MF Terms | KEGG Pathways | HALLMARK Genes |
 |:---|:---|:---|:---|:---|
-| **Complexity** | `r summary_all$complexity_strength_label` (`r summary_all$complexity_confidence_label`) | `r summary_go$complexity_strength_label` (`r summary_go$complexity_confidence_label`) | `r summary_kegg$complexity_strength_label` (`r summary_kegg$complexity_confidence_label`) | `r summary_msig$complexity_strength_label` (`r summary_msig$complexity_confidence_label`) |
-| **Shannon Entropy** | `r summary_all$strength_label_shannon` (`r summary_all$confidence_label_shannon`) | `r summary_go$strength_label_shannon` (`r summary_go$confidence_label_shannon`) | `r summary_kegg$strength_label_shannon` (`r summary_kegg$confidence_label_shannon`) | `r summary_msig$strength_label_shannon` (`r summary_msig$confidence_label_shannon`) |
-| **Spectral Entropy** | `r summary_all$strength_label_spectral` (`r summary_all$confidence_label_spectral`) | `r summary_go$strength_label_spectral` (`r summary_go$confidence_label_spectral`) | `r summary_kegg$strength_label_spectral` (`r summary_kegg$confidence_label_spectral`) | `r summary_msig$strength_label_spectral` (`r summary_msig$confidence_label_spectral`) |
+| **Complexity** | `r fmt_summary(summary_all, "complexity_strength_label", "complexity_confidence_label")` | `r fmt_summary(summary_go, "complexity_strength_label", "complexity_confidence_label")` | `r fmt_summary(summary_kegg, "complexity_strength_label", "complexity_confidence_label")` | `r fmt_summary(summary_msig, "complexity_strength_label", "complexity_confidence_label")` |
+| **Shannon Entropy** | `r fmt_summary(summary_all, "strength_label_shannon", "confidence_label_shannon")` | `r fmt_summary(summary_go, "strength_label_shannon", "confidence_label_shannon")` | `r fmt_summary(summary_kegg, "strength_label_shannon", "confidence_label_shannon")` | `r fmt_summary(summary_msig, "strength_label_shannon", "confidence_label_shannon")` |
+| **Spectral Entropy** | `r fmt_summary(summary_all, "strength_label_spectral", "confidence_label_spectral")` | `r fmt_summary(summary_go, "strength_label_spectral", "confidence_label_spectral")` | `r fmt_summary(summary_kegg, "strength_label_spectral", "confidence_label_spectral")` | `r fmt_summary(summary_msig, "strength_label_spectral", "confidence_label_spectral")` |
 
 ::: {.callout-note}
 **Interpretation Guide**

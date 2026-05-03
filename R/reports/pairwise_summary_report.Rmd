@@ -46,18 +46,18 @@ for (engine in c("complexity", "entropy")) {
       # cat(glue("<hr>\n\n#### Comparison: {cmp}\n\n"))
       cat(glue('<hr style="border: 2px solid black; margin-top: 2em; margin-bottom: 2em;">\n\n#### Comparison: {cmp}\n\n'))
 
-      # ALL Probes
-      all_row <- filter(cmp_df, gene_set_normalized == "ALL")
+      # FULL Probes
+      all_row <- filter(cmp_df, gene_set_normalized == "FULL")
       if (nrow(all_row) == 1) {
         p_val <- signif(all_row$p_perm, 4)
         direction <- coalesce(all_row$direction,
                               all_row$spectral_direction,
                               all_row$shannon_direction)
         cat(glue(
-          "**ALL Probes:** p = {p_val} | {str_to_title(direction)}\n\n"
+          "**FULL Probes:** p = {p_val} | {str_to_title(direction)}\n\n"
         ))
       } else {
-        cat("*ALL Probes:* (missing or malformed)\n\n")
+        cat("*FULL Probes:* (missing or malformed)\n\n")
       }
       
       # GO Terms Table

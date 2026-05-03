@@ -1,4 +1,10 @@
-# Preprocessing Workflow for Global Cancer Expression Data
+---
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Preprocessing Workflow for Global Cancer Complexity Analysis
 
 This document describes the preprocessing pipeline used to construct cleaned,
 chip-specific `ExpressionSet` objects from raw Affymetrix CEL files for the

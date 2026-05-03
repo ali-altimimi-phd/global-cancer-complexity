@@ -1,6 +1,6 @@
 ---
 title: "Filtered Probe Sets Summary"
-author: "Dr. Ali Al-Timimi"
+author: "Ali Al-Timimi, PhD"
 date: "`r Sys.Date()`"
 output:
   html_document:

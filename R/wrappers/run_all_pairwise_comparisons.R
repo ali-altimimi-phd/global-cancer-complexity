@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+# File: run_all_pairwise_comparisons.R
+# Purpose: Apply complexity and entropy engines to pairwise biological comparisons for a specific gene set
+# Role: Wrapper
+# Pipeline: Analysis
+# Project: Cancer Complexity Analysis
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
 #' This script operationalizes pairwise biological inference across 
 #' tissue-specific normal-to-malignant transitions by applying complexity 
 #' and entropy engines to chip-specific filtered comparison inputs. 
@@ -12,8 +22,6 @@
 #' biological processes.
 NULL
 
-# R/wrappers/run_all_pairwise_comparisons.R
-
 #' Run Pairwise Comparisons for All Chips and Engines
 #'
 #' Executes complexity- or entropy-based comparisons across all chip platforms,
@@ -22,11 +30,12 @@ NULL
 #' Gene sets (GO, KEGG, MSigDB) are selected adaptively per chip using
 #' platform-specific annotation coverage and probe-count thresholds.
 #' Results are saved as `.rds` objects and summarized via structured logs.
-#'
+NULL
+
 #' @param chips Character vector of chip IDs (e.g., `c("hu35ksuba", "hu6800")`)
 #' @param annotations List of gene set annotations by chip
 #' @param engines Character vector: `"complexity"` and/or `"entropy"`
-#' @param gene_set_mode One of `"ALL"`, `"GO_BP"`, `"GO_MF"`, `"KEGG"`, `"MSIGDB"`
+#' @param gene_set_mode One of `"FULL"`, `"GO_BP"`, `"GO_MF"`, `"KEGG"`, `"MSIGDB"`
 #' @param quantile_cutoff Numeric (e.g., 0.75). Quantile cutoff for adaptive filtering
 #' @param min_probes Integer. Minimum number of probes per gene set
 #'
@@ -53,6 +62,19 @@ run_all_pairwise_comparisons <- function(
                              glue::glue("run_log_{format(Sys.time(), '%Y%m%d_%H%M%S')}.txt"))
   logger <- start_log(logfile = logfile_path)
   
+  # ---- Compute dynamic thresholds ----
+  thresholds_by_chip <- compute_dynamic_gene_set_thresholds(
+    annotations = annotations,
+    output_log_file = here::here(logs_dir, "pairwise", "dynamic_thresholds.txt")
+  )
+  
+  # ---- Precompute gene-set probe indices once per chip ----
+  logger$log("⚙️ Building gene-set probe indices...", section = "PAIRWISE")
+  
+  gene_set_indices <- lapply(annotations, build_gene_set_probe_index)
+  
+  logger$log("✅ Gene-set probe indices built.", section = "PAIRWISE")
+  
   # ---- Main loop: chip × engine ----
   for (engine in engines) {
     for (chip in chips) {
@@ -71,10 +93,10 @@ run_all_pairwise_comparisons <- function(
       )
       
       # ---- Compute dynamic thresholds ----
-      thresholds_by_chip <- compute_dynamic_gene_set_thresholds(
-        annotations = annotations,
-        output_log_file = here::here(logs_dir, "pairwise", "dynamic_thresholds.txt")
-      )
+      # thresholds_by_chip <- compute_dynamic_gene_set_thresholds(
+      #   annotations = annotations,
+      #   output_log_file = here::here(logs_dir, "pairwise", "dynamic_thresholds.txt")
+      # )
       
       # ---- Adaptive gene set selection ----
       normalized_mode <- toupper(gene_set_mode)
@@ -88,8 +110,8 @@ run_all_pairwise_comparisons <- function(
         source_key <- normalized_mode
       }
       
-      gene_sets <- if (source_key == "ALL") {
-        "ALL"
+      gene_sets <- if (source_key == "FULL") {
+        "FULL"
       } else {
         adaptive_gene_set_filter(
           annotation = annotation_set,
@@ -102,13 +124,22 @@ run_all_pairwise_comparisons <- function(
       
       # ---- Run complexity/entropy engine ----
       result <- logger$timed(glue::glue("{engine} - {chip} - {gene_set_mode}"), {
+        # run_pairwise_analysis(
+        #   comparison_list = comparison_list,
+        #   gene_sets = gene_sets,
+        #   engine = engine,
+        #   annotations = annotations,
+        #   verbose = FALSE
+        # )
+        
         run_pairwise_analysis(
           comparison_list = comparison_list,
           gene_sets = gene_sets,
           engine = engine,
-          annotations = annotations,
+          gene_set_indices = gene_set_indices,
           verbose = FALSE
         )
+        
       })
       
       # ---- Save results ----

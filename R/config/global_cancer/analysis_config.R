@@ -18,11 +18,11 @@ study_name <- "global_cancer"
 build_matrix_maps <- FALSE
 run_filtering <- FALSE
 run_pairwise <- FALSE
-run_aggregator <- FALSE
-run_comparison_summary <- FALSE
+run_aggregator <- TRUE
+run_comparison_summary <- TRUE
 
 # ---- Latent-Space Notebook Toggles ----
-run_latent_notebooks <- TRUE
+run_latent_notebooks <- FALSE
 
 # If TRUE, notebooks are executed in place. This updates notebook outputs.
 # If FALSE, executed copies are written to notebook_executed_dir.
@@ -71,7 +71,7 @@ dir.create(latent_postprocessing_plot_dir, recursive = TRUE, showWarnings = FALS
 # Primary selection method:
 #   "limma"    = differential-expression-based probe selection
 #   "variance" = variability-based probe selection (see mode below)
-filter_method <- "variance"
+filter_method <- "limma"
 
 # ---- Limma mode parameters ----
 # Used only when filter_method == "limma"
@@ -102,7 +102,12 @@ geo_chip_map <- list(hu35ksuba = "GPL98", hu6800 = "GPL80")
 engines <- c("complexity", "entropy")
 
 # ---- Gene Set Filter ----
-gene_set_mode <- "ALL"           # Options: "ALL", "GO_BP", "GO_MF", "KEGG", "MSIGDB"
+gene_set_modes <- c("FULL", "GO_BP", "GO_MF", "KEGG", "MSIGDB")
+
+# For repair / partial reruns, use one or more modes, e.g.:
+# gene_set_modes <- c("KEGG")
+# gene_set_modes <- c("GO_BP", "GO_MF")
+
 quantile_cutoff <- 0.75
 min_probes <- 5
 

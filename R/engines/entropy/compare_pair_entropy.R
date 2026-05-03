@@ -15,7 +15,7 @@ source(here::here("R/engines/entropy/statistical_entropy_helpers.R"))
 compare_matrix_pair_entropy <- function(label, chip, mat1, mat2,
                                         filter_probes = NULL,
                                         entropy_fn = compute_shannon_entropy,
-                                        n_perm = 1000) {
+                                        n_perm = 100) {
   if (!is.null(filter_probes)) {
     mat1 <- mat1[rownames(mat1) %in% filter_probes, , drop = FALSE]
     mat2 <- mat2[rownames(mat2) %in% filter_probes, , drop = FALSE]

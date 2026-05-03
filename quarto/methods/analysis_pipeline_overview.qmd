@@ -4,13 +4,14 @@ editor:
     wrap: 72
 ---
 
-# Analysis Workflow for Global Cancer Expression Structure
+# Analysis Workflow for Global Cancer Complexity Analysis
 
 This document describes the analysis pipeline used after preprocessing
 of the Ramaswamy global cancer dataset. The pipeline consumes
 normalized, metadata-enriched `ExpressionSet` objects and full-chip
 annotation outputs from the preprocessing workflow, constructs
-tissue-specific comparison matrices, filters probe sets, runs pairwise
+tissue-specific comparison matrices, performs comparison-aware probe
+selection, runs pairwise
 complexity and entropy analyses, aggregates results, summarizes
 comparison-level patterns, and optionally executes and postprocesses the
 latent-space notebooks.
@@ -60,10 +61,6 @@ expression objects and the downstream reporting layer. It also serves as
 the integration point between the older R-side complexity/entropy
 workflow and the newer Python/Jupyter latent-space workflow.
 
-These workflows share upstream data but operate on different
-feature-selection regimes and therefore different effective feature
-spaces.
-
 ------------------------------------------------------------------------
 
 ## Historical and Methodological Context {.unnumbered}
@@ -72,9 +69,8 @@ The analysis workflow preserves the original dissertation-level aim of
 comparing normal and malignant expression structure within
 tissue-specific contrasts. In the current implementation, that aim is
 operationalized through chip-specific `ExpressionSet` objects,
-predefined tissue/tumor comparison maps, comparison-aware probe
-filtering, pairwise complexity and entropy engines, and gene-set-level
-annotation.
+predefined tissue/tumor comparison maps, comparison-aware probe selection,
+pairwise complexity and entropy engines, and gene-set-level annotation.
 
 The pipeline has also been extended to coordinate latent-space analysis.
 The latent notebooks are executed from the analysis driver only when
@@ -108,19 +104,35 @@ toggles are:
 The current analysis configuration includes:
 
 ``` r
-filter_method <- "limma"  # "limma" or "variance"
-logfc_cutoff  <- 0.33
-pval_cutoff   <- 0.05
-var_threshold <- 0.75
-top_n         <- 3000 # used for latent-space export (preprocessing), not comparison-level filtering
+# ---- Probe Selection Parameters ----
+filter_method <- "variance"  # "limma" or "variance"
 
+# Limma mode parameters; used only when filter_method == "limma"
+logfc_cutoff <- 0.33
+pval_cutoff  <- 0.05
+
+# Variance mode parameters; used only when filter_method == "variance"
+variance_selection_mode <- "top_n"  # "top_n" or "threshold"
+analysis_top_n <- 3000              # used when variance_selection_mode == "top_n"
+var_threshold  <- 0.75              # used when variance_selection_mode == "threshold"
+
+# ---- Pairwise Comparison Settings ----
 chips   <- c("hu35ksuba", "hu6800")
 engines <- c("complexity", "entropy")
 
-gene_set_mode   <- "ALL"
+# ---- Gene Set Modes ----
+gene_set_modes <- c("FULL", "GO_BP", "GO_MF", "KEGG", "MSIGDB")
 quantile_cutoff <- 0.75
 min_probes      <- 5
 ```
+
+`gene_set_modes` may include all available modes, as shown above, or a
+single mode/subset for repair and partial reruns, for example
+`c("KEGG")` or `c("GO_BP", "GO_MF")`. However, the current generated
+comparison reports assume that the full set of biological subspaces is
+available; report generation should therefore be interpreted cautiously
+unless all report-facing modes have been run for the same current
+analysis configuration.
 
 The latent-space postprocessing configuration currently uses:
 
@@ -200,75 +212,46 @@ comparison-specific feature spaces for downstream analysis.
 -   Wrapper: `R/wrappers/run_grouped_probe_filtering.R`
 -   Variance helper: `R/filters/select_high_variance_probes.R`
 -   Outputs:
-    -   `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds`
-    -   `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds`
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds`
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds`
 
 **Current probe-selection regimes:**
 
 | Regime | Parameters | Intended role | Group sensitivity |
-|------------------|------------------|------------------|------------------|
+|---|---|---|---|
 | `limma` | `logfc_cutoff`, `pval_cutoff` | Differential-expression-driven feature selection | Explicitly normal/tumor-aware |
-| `variance`, `top_n` mode | `analysis_top_n` | Fixed-count high-variance feature selection per comparison | Comparison-aware, not class-label-aware |
-| `variance`, `threshold` mode | `var_threshold` | Quantile-threshold high-variance feature selection per comparison | Comparison-aware, not class-label-aware |
-
-In the current configuration, the analysis pipeline uses variance-based
-probe selection with:
-
-``` r
-filter_method <- "variance"
-variance_selection_mode <- "top_n"
-analysis_top_n <- 3000
-```
-
-The pipeline validates `variance_selection_mode`, derives the `top_n`
-argument only when `filter_method = "variance"` and
-`variance_selection_mode = "top_n"`, and then passes both `top_n` and
-`variance_selection_mode` into `run_grouped_probe_filtering()`. If
-`variance_selection_mode = "threshold"`, `top_n` is set to `NULL` and
-`var_threshold` is used instead.
-
-The `analysis_top_n` parameter is distinct from the global top-N
-feature-selection parameter used for latent-space export during
-preprocessing. In the present configuration, both may use the value
-3000, but they define different feature spaces: `analysis_top_n` defines
-local, comparison-specific high-variance probe sets, whereas the
-latent-space export uses a global chip-level high-variance probe set.
-The analysis pipeline itself notes that latent-space workflows may
-operate on a different feature space than the comparison-specific probe
-sets used here.
+| `variance` | `variance_selection_mode`, `analysis_top_n`, `var_threshold` | Variability-based feature selection | Comparison-aware, not class-label-aware |
 
 **Behavior:**
 
 -   Applies probe selection independently for each predefined comparison
--   Uses comparison maps to assemble the relevant normal and tumor
-    matrices
+-   Uses comparison maps to assemble the relevant normal and tumor matrices
 -   Produces comparison-specific probe sets rather than a single global
     feature space
--   Persists selected probe identifiers for reuse in downstream
-    analysis and reporting stages
--   Records filtering provenance metadata in the filtered-probe result
-    object, including chip ID, filtering method, variance-selection
-    mode, and active filtering parameters
+-   Persists selected probe identifiers for reuse in downstream analysis
+    and reporting stages
 
 This stage is comparison-aware: probe selection is performed separately
 within each predefined tissue-specific normal–tumor contrast. However,
 the statistical meaning of “selected probes” depends on the configured
 regime. The `limma` regime explicitly uses normal/tumor class labels,
-whereas the `variance` regime selects high-dispersion probes from the
-assembled comparison matrix without modeling class labels directly.
+whereas the `variance` regime selects high-variability probes from the
+assembled comparison matrix without modeling class labels directly. In
+variance mode, `variance_selection_mode` determines whether selection is
+performed by fixed count (`analysis_top_n`) or by quantile threshold
+(`var_threshold`).
 
 These selected probe sets serve as the input to:
 
 -   complexity and entropy calculations in the legacy R framework
--   downstream biological interpretation layers, including GO/KEGG
-    summaries
+-   downstream biological interpretation layers, including GO/KEGG summaries
 -   cross-framework comparison with latent-space analyses
 
-These probe sets define comparison-specific feature spaces for the
-R-side analysis pipeline. In contrast, latent-space workflows typically
-operate on a fixed, global feature set selected during preprocessing. As
-a result, the two systems may not be evaluated in identical feature
-spaces, and comparisons between them should be interpreted accordingly.
+These probe sets define comparison-specific feature spaces for the R-side
+analysis pipeline. In contrast, latent-space workflows typically operate
+on a fixed, global feature set selected during preprocessing. As a result,
+the two systems may not be evaluated in identical feature spaces, and
+comparisons between them should be interpreted accordingly.
 
 ------------------------------------------------------------------------
 
@@ -282,7 +265,7 @@ chip-specific normal/tumor comparison.
 -   Annotation helper: `R/helpers/load_annotations.R`
 -   Wrapper: `R/wrappers/run_all_pairwise_comparisons.R`
 -   Engines: `complexity`, `entropy`
--   Gene-set modes: `ALL`, `GO_BP`, `GO_MF`, `KEGG`, `MSIGDB`
+-   Gene-set modes: `FULL`, `GO_BP`, `GO_MF`, `KEGG`, `MSIGDB`
 
 **Inputs:**
 
@@ -295,13 +278,45 @@ chip-specific normal/tumor comparison.
 -   Load expression matrices and comparison maps
 -   Load filtered probe results
 -   Load full-chip annotation layer if needed
+-   Iterate over each mode listed in `gene_set_modes`
 -   Run all pairwise comparisons for configured chips, engines, and
-    gene-set modes
+    biological feature-space modes
+
+`FULL` refers to the complete filtered, comparison-specific probe space
+created in Stage 3. It does not mean the full Affymetrix chip or the full
+transcriptome. The GO, KEGG, and MSigDB modes apply an additional
+biological projection by evaluating the intersection between the Stage 3
+filtered probe set and the probes mapped to the selected biological
+vocabulary.
+
+The current `min_probes = 5` threshold is applied uniformly across
+biological feature-space modes to exclude gene sets with too few mapped
+probes for stable covariance-based complexity and entropy estimation.
+Because GO, KEGG, and MSigDB differ substantially in typical gene-set
+size and curation, this uniform threshold should be viewed as a pragmatic
+baseline. A future update may use mode-specific thresholds, for example a
+higher minimum probe count for KEGG or MSigDB than for sparse GO terms.
 
 This stage is where the R-side biological complexity and entropy
 analyses are computed. The exact output layout is produced by the
 pairwise-comparison wrapper and downstream engine functions; these files
 are later collected by the aggregation stage.
+
+**Observed runtime.** In a representative local run on May 2, 2026,
+Stage 4 completed all configured modes (`FULL`, `GO_BP`, `GO_MF`,
+`KEGG`, `MSIGDB`) in approximately 40 minutes. Runtime was dominated by
+`GO_BP`, followed by `GO_MF`; `FULL`, `KEGG`, and `MSIGDB` completed much
+more quickly. These timings are hardware-, configuration-, and
+cache-dependent and should be treated as operational guidance rather
+than fixed benchmarks.
+
+**Reporting note.** Although the pipeline can run one mode or a subset of
+modes for repair or partial updates, the current generated comparison
+reports assume that all report-facing biological subspaces have been
+computed. Rendering reports from mixed or stale outputs can therefore
+combine results from different analysis runs. Until reporting is made
+manifest-driven or run-scoped, report-facing analyses should be generated
+from a complete, consistent set of modes for the same current run.
 
 ------------------------------------------------------------------------
 
@@ -364,7 +379,7 @@ outputs for comparison-level interpretation.
 
 ------------------------------------------------------------------------
 
-### 7. Execute Latent-Space Notebooks (Optional) {.unnumbered}
+### 7. Execute Latent-Space Notebooks Optional {.unnumbered}
 
 **Purpose:** Optionally execute the Python/Jupyter latent-space workflow
 from the R analysis driver.
@@ -393,13 +408,6 @@ written to the configured output directory.
 
 This stage does not itself define the latent-space methodology; it
 orchestrates notebook execution from within the R analysis pipeline.
-
-The latent-space workflow operates on feature sets defined during
-preprocessing (typically global high-variance probes), which may differ
-from the comparison-specific feature spaces used by the R-side analysis
-pipeline. As a result, latent-space metrics and R-side
-complexity/entropy measures are not necessarily computed on identical
-feature spaces.
 
 ------------------------------------------------------------------------
 

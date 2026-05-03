@@ -1,3 +1,9 @@
+---
+editor: 
+  markdown: 
+    wrap: 72
+---
+
 # Reporting Workflow for Global Cancer Complexity Analysis
 
 This document describes the reporting pipeline used to transform aggregated

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Analysis Workflow for Global Cancer Expression Structure – Chaos and Complexity in Cancer</title>
+<title>9&nbsp; Analysis Workflow for Global Cancer Complexity Analysis – Chaos and Complexity in Cancer</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../methods/reporting_pipeline_overview.html" rel="next">
-<link href="../methods/filtering.html" rel="prev">
+<link href="../methods/preprocessing_pipeline_overview.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/dataset_description.html">Data and Computational Pipeline</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Expression Structure</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Computational Pipelines</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -186,7 +186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Data and Computational Pipeline</span></a>
+ <span class="menu-text">Data</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -198,22 +198,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dataset Description</span></span></a>
   </div>
 </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Computational Pipelines</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../methods/preprocessing_pipeline_overview.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Expression Data</span></span></a>
+  <a href="../methods/pipeline_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pipeline Overview</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../methods/filtering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtering Strategy for the Global Cancer Analysis Pipeline</span></span></a>
+  <a href="../methods/preprocessing_pipeline_overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../methods/analysis_pipeline_overview.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Expression Structure</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -226,37 +237,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Quantitative Framework</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../framework/complexity_and_entropy_measures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Complexity and Entropy Measures</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../framework/latent_space.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Latent-Space Representation and Geometric Analysis</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../framework/biological_complexity_dimensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Biological Complexity Dimensions and Interpretive Framework</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Structure of Filtered Probe Sets</span></a>
+ <span class="menu-text">Feature Space Construction and Statistical Calibration</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -264,14 +246,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../results/filtered_feature_space_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Structure and Overlap of Filtered Probe Sets</span></span></a>
+  <a href="../methods/filtering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Filtering Strategy for the Global Cancer Analysis Pipeline</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../results/filtered_feature_space_structure_top_n.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Structure and Overlap of Top-N Variance Probe Sets</span></span></a>
+  <a href="../methods/resampling_and_parameter_calibration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Resampling and Parameter Calibration</span></span></a>
   </div>
 </li>
       </ul>
@@ -279,7 +261,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Results and Discussion: Carcinomas</span></a>
+ <span class="menu-text">Quantitative Framework</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -287,50 +269,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_blad_tcc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Comparison Report: BLAD/TCC</span></span></a>
+  <a href="../framework/complexity_and_entropy_measures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Complexity and Entropy Measures</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_br_brad.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Comparison Report: BR/BRAD</span></span></a>
+  <a href="../framework/latent_space.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Latent-Space Representation and Geometric Analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_col_coadread.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Comparison Report: COL/COADREAD</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_kid_rcc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparison Report: KID/RCC</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_lu_luad.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Comparison Report: LU/LUAD</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_ov_ovad.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Comparison Report: OV/OVAD</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_pa_paad.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Comparison Report: PA/PAAD</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_ut_eac.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Comparison Report: UT/EAC</span></span></a>
+  <a href="../framework/biological_complexity_dimensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biological Complexity Dimensions and Interpretive Framework</span></span></a>
   </div>
 </li>
       </ul>
@@ -338,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Results and Discussion: Blastomas</span></a>
+ <span class="menu-text">Structure of Filtered Probe Sets</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -346,14 +298,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_brain_gbm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Comparison Report: Brain/GBM</span></span></a>
+  <a href="../results/filtered_feature_space_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Structure and Overlap of Filtered Probe Sets</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_brain_mb.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Comparison Report: Brain/MB</span></span></a>
+  <a href="../results/filtered_feature_space_structure_top_n.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Structure and Overlap of Top-N Variance Probe Sets</span></span></a>
   </div>
 </li>
       </ul>
@@ -361,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
- <span class="menu-text">Results and Discussion: Lymphomas</span></a>
+ <span class="menu-text">Results: Carcinomas</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -369,14 +321,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_gc_fl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Comparison Report: GC/FL</span></span></a>
+  <a href="../reports/generated_reports/comparison_report_blad_tcc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Comparison Report: BLAD/TCC</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reports/generated_reports/comparison_report_gc_lbcl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Comparison Report: GC/LBCL</span></span></a>
+  <a href="../reports/generated_reports/comparison_report_br_brad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Comparison Report: BR/BRAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_col_coadread.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Comparison Report: COL/COADREAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_kid_rcc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Comparison Report: KID/RCC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_lu_luad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Comparison Report: LU/LUAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_ov_ovad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Comparison Report: OV/OVAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_pa_paad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Comparison Report: PA/PAAD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_ut_eac.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Comparison Report: UT/EAC</span></span></a>
   </div>
 </li>
       </ul>
@@ -384,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
- <span class="menu-text">Results and Discussion: Leukemias</span></a>
+ <span class="menu-text">Results: Blastomas</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -392,14 +380,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_brain_gbm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Comparison Report: Brain/GBM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_brain_mb.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Comparison Report: Brain/MB</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Results: Lymphomas</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_gc_fl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Comparison Report: GC/FL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reports/generated_reports/comparison_report_gc_lbcl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Comparison Report: GC/LBCL</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+ <span class="menu-text">Results: Leukemias</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../reports/generated_reports/comparison_report_pb_b_all.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Comparison Report: PB/B-ALL</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Comparison Report: PB/B-ALL</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reports/generated_reports/comparison_report_pb_t_all.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Comparison Report: PB/T-ALL</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Comparison Report: PB/T-ALL</span></span></a>
   </div>
 </li>
       </ul>
@@ -425,7 +459,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#run-pairwise-complexity-and-entropy-comparisons" id="toc-run-pairwise-complexity-and-entropy-comparisons" class="nav-link" data-scroll-target="#run-pairwise-complexity-and-entropy-comparisons">4. Run Pairwise Complexity and Entropy Comparisons</a></li>
   <li><a href="#aggregate-engine-results-and-attach-gene-set-names" id="toc-aggregate-engine-results-and-attach-gene-set-names" class="nav-link" data-scroll-target="#aggregate-engine-results-and-attach-gene-set-names">5. Aggregate Engine Results and Attach Gene-Set Names</a></li>
   <li><a href="#summarize-comparison-level-patterns" id="toc-summarize-comparison-level-patterns" class="nav-link" data-scroll-target="#summarize-comparison-level-patterns">6. Summarize Comparison-Level Patterns</a></li>
-  <li><a href="#execute-latent-space-notebooks-optional" id="toc-execute-latent-space-notebooks-optional" class="nav-link" data-scroll-target="#execute-latent-space-notebooks-optional">7. Execute Latent-Space Notebooks (Optional)</a></li>
+  <li><a href="#execute-latent-space-notebooks-optional" id="toc-execute-latent-space-notebooks-optional" class="nav-link" data-scroll-target="#execute-latent-space-notebooks-optional">7. Execute Latent-Space Notebooks Optional</a></li>
   <li><a href="#run-latent-space-postprocessing" id="toc-run-latent-space-postprocessing" class="nav-link" data-scroll-target="#run-latent-space-postprocessing">8. Run Latent-Space Postprocessing</a></li>
   </ul></li>
   <li><a href="#output-contract-current-baseline" id="toc-output-contract-current-baseline" class="nav-link" data-scroll-target="#output-contract-current-baseline">Output Contract Current Baseline</a>
@@ -451,9 +485,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/dataset_description.html">Data and Computational Pipeline</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Expression Structure</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Computational Pipelines</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Expression Structure</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></h1>
 </div>
 
 
@@ -470,7 +504,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This document describes the analysis pipeline used after preprocessing of the Ramaswamy global cancer dataset. The pipeline consumes normalized, metadata-enriched <code>ExpressionSet</code> objects and full-chip annotation outputs from the preprocessing workflow, constructs tissue-specific comparison matrices, filters probe sets, runs pairwise complexity and entropy analyses, aggregates results, summarizes comparison-level patterns, and optionally executes and postprocesses the latent-space notebooks.</p>
+<p>This document describes the analysis pipeline used after preprocessing of the Ramaswamy global cancer dataset. The pipeline consumes normalized, metadata-enriched <code>ExpressionSet</code> objects and full-chip annotation outputs from the preprocessing workflow, constructs tissue-specific comparison matrices, performs comparison-aware probe selection, runs pairwise complexity and entropy analyses, aggregates results, summarizes comparison-level patterns, and optionally executes and postprocesses the latent-space notebooks.</p>
 <p>The purpose of this document is to baseline the current analysis workflow. It is therefore primarily descriptive. In particular, the final sections identify the current reporting interface and open questions about which outputs are stable, which are intermediate, and which may need further inspection before changing the reporting layer.</p>
 <hr>
 <section id="overview" class="level2 unnumbered">
@@ -505,12 +539,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>output/global_cancer/logs/analysis/analysis_pipeline_log.txt</code></li>
 </ul>
 <p>The analysis pipeline is the main bridge between the preprocessed expression objects and the downstream reporting layer. It also serves as the integration point between the older R-side complexity/entropy workflow and the newer Python/Jupyter latent-space workflow.</p>
-<p>These workflows share upstream data but operate on different feature-selection regimes and therefore different effective feature spaces.</p>
 <hr>
 </section>
 <section id="historical-and-methodological-context" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="historical-and-methodological-context">Historical and Methodological Context</h2>
-<p>The analysis workflow preserves the original dissertation-level aim of comparing normal and malignant expression structure within tissue-specific contrasts. In the current implementation, that aim is operationalized through chip-specific <code>ExpressionSet</code> objects, predefined tissue/tumor comparison maps, comparison-aware probe filtering, pairwise complexity and entropy engines, and gene-set-level annotation.</p>
+<p>The analysis workflow preserves the original dissertation-level aim of comparing normal and malignant expression structure within tissue-specific contrasts. In the current implementation, that aim is operationalized through chip-specific <code>ExpressionSet</code> objects, predefined tissue/tumor comparison maps, comparison-aware probe selection, pairwise complexity and entropy engines, and gene-set-level annotation.</p>
 <p>The pipeline has also been extended to coordinate latent-space analysis. The latent notebooks are executed from the analysis driver only when explicitly enabled, and their outputs can then be postprocessed into tables, plots, and report-facing summary files.</p>
 <p>Because the reporting pipeline was developed as a separate abstraction layer, the analysis workflow should be treated as the place where reporting inputs originate or are consolidated. Before changing either pipeline, the practical task is to identify which report-facing objects are produced here, what formats they use, and whether their formats are safe to change.</p>
 <hr>
@@ -561,18 +594,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>The current analysis configuration includes:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>filter_method <span class="ot">&lt;-</span> <span class="st">"limma"</span>  <span class="co"># "limma" or "variance"</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>logfc_cutoff  <span class="ot">&lt;-</span> <span class="fl">0.33</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pval_cutoff   <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>var_threshold <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>top_n         <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># used for latent-space export (preprocessing), not comparison-level filtering</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>chips   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"hu35ksuba"</span>, <span class="st">"hu6800"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>engines <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"complexity"</span>, <span class="st">"entropy"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>gene_set_mode   <span class="ot">&lt;-</span> <span class="st">"ALL"</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>quantile_cutoff <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>min_probes      <span class="ot">&lt;-</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- Probe Selection Parameters ----</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>filter_method <span class="ot">&lt;-</span> <span class="st">"variance"</span>  <span class="co"># "limma" or "variance"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limma mode parameters; used only when filter_method == "limma"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>logfc_cutoff <span class="ot">&lt;-</span> <span class="fl">0.33</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pval_cutoff  <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Variance mode parameters; used only when filter_method == "variance"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>variance_selection_mode <span class="ot">&lt;-</span> <span class="st">"top_n"</span>  <span class="co"># "top_n" or "threshold"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>analysis_top_n <span class="ot">&lt;-</span> <span class="dv">3000</span>              <span class="co"># used when variance_selection_mode == "top_n"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>var_threshold  <span class="ot">&lt;-</span> <span class="fl">0.75</span>              <span class="co"># used when variance_selection_mode == "threshold"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- Pairwise Comparison Settings ----</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>chips   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"hu35ksuba"</span>, <span class="st">"hu6800"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>engines <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"complexity"</span>, <span class="st">"entropy"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- Gene Set Modes ----</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>gene_set_modes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"FULL"</span>, <span class="st">"GO_BP"</span>, <span class="st">"GO_MF"</span>, <span class="st">"KEGG"</span>, <span class="st">"MSIGDB"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>quantile_cutoff <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>min_probes      <span class="ot">&lt;-</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>gene_set_modes</code> may include all available modes, as shown above, or a single mode/subset for repair and partial reruns, for example <code>c("KEGG")</code> or <code>c("GO_BP", "GO_MF")</code>. However, the current generated comparison reports assume that the full set of biological subspaces is available; report generation should therefore be interpreted cautiously unless all report-facing modes have been run for the same current analysis configuration.</p>
 <p>The latent-space postprocessing configuration currently uses:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_chip_id       <span class="ot">&lt;-</span> <span class="st">"hu35ksuba"</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_mode          <span class="ot">&lt;-</span> <span class="st">"ALL"</span></span>
@@ -682,34 +724,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Explicitly normal/tumor-aware</td>
 </tr>
 <tr class="even">
-<td><code>variance</code>, <code>top_n</code> mode</td>
-<td><code>analysis_top_n</code></td>
-<td>Fixed-count high-variance feature selection per comparison</td>
-<td>Comparison-aware, not class-label-aware</td>
-</tr>
-<tr class="odd">
-<td><code>variance</code>, <code>threshold</code> mode</td>
-<td><code>var_threshold</code></td>
-<td>Quantile-threshold high-variance feature selection per comparison</td>
+<td><code>variance</code></td>
+<td><code>variance_selection_mode</code>, <code>analysis_top_n</code>, <code>var_threshold</code></td>
+<td>Variability-based feature selection</td>
 <td>Comparison-aware, not class-label-aware</td>
 </tr>
 </tbody>
 </table>
-<p>In the current configuration, the analysis pipeline uses variance-based probe selection with:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>filter_method <span class="ot">&lt;-</span> <span class="st">"variance"</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>variance_selection_mode <span class="ot">&lt;-</span> <span class="st">"top_n"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>analysis_top_n <span class="ot">&lt;-</span> <span class="dv">3000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The pipeline validates <code>variance_selection_mode</code>, derives the <code>top_n</code> argument only when <code>filter_method = "variance"</code> and <code>variance_selection_mode = "top_n"</code>, and then passes both <code>top_n</code> and <code>variance_selection_mode</code> into <code>run_grouped_probe_filtering()</code>. If <code>variance_selection_mode = "threshold"</code>, <code>top_n</code> is set to <code>NULL</code> and <code>var_threshold</code> is used instead.</p>
-<p>The <code>analysis_top_n</code> parameter is distinct from the global top-N feature-selection parameter used for latent-space export during preprocessing. In the present configuration, both may use the value 3000, but they define different feature spaces: <code>analysis_top_n</code> defines local, comparison-specific high-variance probe sets, whereas the latent-space export uses a global chip-level high-variance probe set. The analysis pipeline itself notes that latent-space workflows may operate on a different feature space than the comparison-specific probe sets used here.</p>
 <p><strong>Behavior:</strong></p>
 <ul>
 <li>Applies probe selection independently for each predefined comparison</li>
 <li>Uses comparison maps to assemble the relevant normal and tumor matrices</li>
 <li>Produces comparison-specific probe sets rather than a single global feature space</li>
 <li>Persists selected probe identifiers for reuse in downstream analysis and reporting stages</li>
-<li>Records filtering provenance metadata in the filtered-probe result object, including chip ID, filtering method, variance-selection mode, and active filtering parameters</li>
 </ul>
-<p>This stage is comparison-aware: probe selection is performed separately within each predefined tissue-specific normal–tumor contrast. However, the statistical meaning of “selected probes” depends on the configured regime. The <code>limma</code> regime explicitly uses normal/tumor class labels, whereas the <code>variance</code> regime selects high-dispersion probes from the assembled comparison matrix without modeling class labels directly.</p>
+<p>This stage is comparison-aware: probe selection is performed separately within each predefined tissue-specific normal–tumor contrast. However, the statistical meaning of “selected probes” depends on the configured regime. The <code>limma</code> regime explicitly uses normal/tumor class labels, whereas the <code>variance</code> regime selects high-variability probes from the assembled comparison matrix without modeling class labels directly. In variance mode, <code>variance_selection_mode</code> determines whether selection is performed by fixed count (<code>analysis_top_n</code>) or by quantile threshold (<code>var_threshold</code>).</p>
 <p>These selected probe sets serve as the input to:</p>
 <ul>
 <li>complexity and entropy calculations in the legacy R framework</li>
@@ -728,7 +757,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Annotation helper: <code>R/helpers/load_annotations.R</code></li>
 <li>Wrapper: <code>R/wrappers/run_all_pairwise_comparisons.R</code></li>
 <li>Engines: <code>complexity</code>, <code>entropy</code></li>
-<li>Gene-set modes: <code>ALL</code>, <code>GO_BP</code>, <code>GO_MF</code>, <code>KEGG</code>, <code>MSIGDB</code></li>
+<li>Gene-set modes: <code>FULL</code>, <code>GO_BP</code>, <code>GO_MF</code>, <code>KEGG</code>, <code>MSIGDB</code></li>
 </ul>
 <p><strong>Inputs:</strong></p>
 <ul>
@@ -741,9 +770,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Load expression matrices and comparison maps</li>
 <li>Load filtered probe results</li>
 <li>Load full-chip annotation layer if needed</li>
-<li>Run all pairwise comparisons for configured chips, engines, and gene-set modes</li>
+<li>Iterate over each mode listed in <code>gene_set_modes</code></li>
+<li>Run all pairwise comparisons for configured chips, engines, and biological feature-space modes</li>
 </ul>
+<p><code>FULL</code> refers to the complete filtered, comparison-specific probe space created in Stage 3. It does not mean the full Affymetrix chip or the full transcriptome. The GO, KEGG, and MSigDB modes apply an additional biological projection by evaluating the intersection between the Stage 3 filtered probe set and the probes mapped to the selected biological vocabulary.</p>
+<p>The current <code>min_probes = 5</code> threshold is applied uniformly across biological feature-space modes to exclude gene sets with too few mapped probes for stable covariance-based complexity and entropy estimation. Because GO, KEGG, and MSigDB differ substantially in typical gene-set size and curation, this uniform threshold should be viewed as a pragmatic baseline. A future update may use mode-specific thresholds, for example a higher minimum probe count for KEGG or MSigDB than for sparse GO terms.</p>
 <p>This stage is where the R-side biological complexity and entropy analyses are computed. The exact output layout is produced by the pairwise-comparison wrapper and downstream engine functions; these files are later collected by the aggregation stage.</p>
+<p><strong>Observed runtime.</strong> In a representative local run on May 2, 2026, Stage 4 completed all configured modes (<code>FULL</code>, <code>GO_BP</code>, <code>GO_MF</code>, <code>KEGG</code>, <code>MSIGDB</code>) in approximately 40 minutes. Runtime was dominated by <code>GO_BP</code>, followed by <code>GO_MF</code>; <code>FULL</code>, <code>KEGG</code>, and <code>MSIGDB</code> completed much more quickly. These timings are hardware-, configuration-, and cache-dependent and should be treated as operational guidance rather than fixed benchmarks.</p>
+<p><strong>Reporting note.</strong> Although the pipeline can run one mode or a subset of modes for repair or partial updates, the current generated comparison reports assume that all report-facing biological subspaces have been computed. Rendering reports from mixed or stale outputs can therefore combine results from different analysis runs. Until reporting is made manifest-driven or run-scoped, report-facing analyses should be generated from a complete, consistent set of modes for the same current run.</p>
 <hr>
 </section>
 <section id="aggregate-engine-results-and-attach-gene-set-names" class="level3 unnumbered">
@@ -802,7 +836,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 <section id="execute-latent-space-notebooks-optional" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="execute-latent-space-notebooks-optional">7. Execute Latent-Space Notebooks (Optional)</h3>
+<h3 class="unnumbered anchored" data-anchor-id="execute-latent-space-notebooks-optional">7. Execute Latent-Space Notebooks Optional</h3>
 <p><strong>Purpose:</strong> Optionally execute the Python/Jupyter latent-space workflow from the R analysis driver.</p>
 <ul>
 <li>Controlled by: <code>run_latent_notebooks</code></li>
@@ -855,7 +889,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>When <code>execute_notebooks_inplace</code> is <code>TRUE</code>, notebook outputs are written back into the notebooks themselves. When <code>FALSE</code>, executed copies are written to the configured output directory.</p>
 <p>This stage does not itself define the latent-space methodology; it orchestrates notebook execution from within the R analysis pipeline.</p>
-<p>The latent-space workflow operates on feature sets defined during preprocessing (typically global high-variance probes), which may differ from the comparison-specific feature spaces used by the R-side analysis pipeline. As a result, latent-space metrics and R-side complexity/entropy measures are not necessarily computed on identical feature spaces.</p>
 <hr>
 </section>
 <section id="run-latent-space-postprocessing" class="level3 unnumbered">
@@ -869,9 +902,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Report output directory: <code>output/global_cancer/reports/</code></li>
 </ul>
 <p><strong>Current settings:</strong></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_chip_id       <span class="ot">&lt;-</span> <span class="st">"hu35ksuba"</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_mode          <span class="ot">&lt;-</span> <span class="st">"ALL"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_gene_set_name <span class="ot">&lt;-</span> <span class="st">"ALL"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_chip_id       <span class="ot">&lt;-</span> <span class="st">"hu35ksuba"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_mode          <span class="ot">&lt;-</span> <span class="st">"ALL"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>latent_postprocessing_gene_set_name <span class="ot">&lt;-</span> <span class="st">"ALL"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This stage is especially relevant to the reporting pipeline because it appears to produce table, plot, and report-facing outputs after the Jupyter notebooks have completed. It should be inspected together with the reporting pipeline before any assumption is made about whether the current report layer consumes structured files, rendered fragments, generated QMD content, or a mixture of these.</p>
 <hr>
 </section>
@@ -1043,57 +1076,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Recommended staged validation is:</p>
 <section id="phase-a-check-existing-analysis-checkpoints" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="phase-a-check-existing-analysis-checkpoints">Phase A: Check existing analysis checkpoints</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This mode verifies that the pipeline initializes, reads configuration, starts logging, and exits without rebuilding analysis products.</p>
+</section>
+<section id="phase-b-rebuild-matrix-and-comparison-maps" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-b-rebuild-matrix-and-comparison-maps">Phase B: Rebuild matrix and comparison maps</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This mode verifies that the pipeline initializes, reads configuration, starts logging, and exits without rebuilding analysis products.</p>
+<p>This tests whether the preprocessed <code>ExpressionSet</code> checkpoint can still support matrix-list and comparison-map construction.</p>
 </section>
-<section id="phase-b-rebuild-matrix-and-comparison-maps" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="phase-b-rebuild-matrix-and-comparison-maps">Phase B: Rebuild matrix and comparison maps</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<section id="phase-c-re-run-filtering-only" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-c-re-run-filtering-only">Phase C: Re-run filtering only</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This tests whether the preprocessed <code>ExpressionSet</code> checkpoint can still support matrix-list and comparison-map construction.</p>
-</section>
-<section id="phase-c-re-run-filtering-only" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="phase-c-re-run-filtering-only">Phase C: Re-run filtering only</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This tests whether the current filtering configuration is compatible with the saved matrix/comparison-map checkpoint.</p>
 </section>
 <section id="phase-d-rebuild-aggregation-and-summaries" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="phase-d-rebuild-aggregation-and-summaries">Phase D: Rebuild aggregation and summaries</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This tests whether existing pairwise comparison outputs can still be consolidated into aggregate and summary files.</p>
 </section>
 <section id="phase-e-rebuild-latent-postprocessing-outputs-only" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="phase-e-rebuild-latent-postprocessing-outputs-only">Phase E: Rebuild latent postprocessing outputs only</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>build_matrix_maps       <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>run_filtering           <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>run_pairwise            <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>run_aggregator          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>run_comparison_summary  <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>run_latent_notebooks    <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>run_latent_postprocessing <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This tests the latent-space reporting interface without rerunning the notebooks. It is a useful mode for investigating whether rendering issues are introduced at the postprocessing/report-facing output layer.</p>
 <hr>
 </section>
@@ -1562,8 +1595,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../methods/filtering.html" class="pagination-link" aria-label="Filtering Strategy for the Global Cancer Analysis Pipeline">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtering Strategy for the Global Cancer Analysis Pipeline</span></span>
+      <a href="../methods/preprocessing_pipeline_overview.html" class="pagination-link" aria-label="Preprocessing Workflow for Global Cancer Complexity Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

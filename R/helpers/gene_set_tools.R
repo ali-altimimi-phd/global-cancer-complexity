@@ -148,25 +148,55 @@ attach_gene_set_names <- function(df, annotations) {
   return(df)
 }
 
-#' Get probe IDs for a gene set (GO, KEGG, MSigDB)
+#' Build fast probe lookup index for GO, KEGG, and MSigDB gene sets
 #'
-#' @param gene_set_id Gene set identifier
-#' @param annotation Annotation list for one chip
-#' @return Character vector of probe IDs
+#' @param annotation Annotation list for one chip.
+#' @return Named list of probe vectors indexed by gene-set ID.
 #' @export
-get_probes_for_set <- function(gene_set_id, annotation) {
+build_gene_set_probe_index <- function(annotation) {
   tab <- annotation$annotation_table
   
+  list(
+    GO = tab |>
+      dplyr::filter(!is.na(go_id), !is.na(PROBEID)) |>
+      dplyr::distinct(go_id, PROBEID) |>
+      dplyr::group_by(go_id) |>
+      dplyr::summarise(probes = list(unique(PROBEID)), .groups = "drop") |>
+      tibble::deframe(),
+    
+    KEGG = tab |>
+      dplyr::filter(!is.na(PATH), !is.na(PROBEID)) |>
+      dplyr::distinct(PATH, PROBEID) |>
+      dplyr::group_by(PATH) |>
+      dplyr::summarise(probes = list(unique(PROBEID)), .groups = "drop") |>
+      tibble::deframe(),
+    
+    MSIGDB = tab |>
+      dplyr::filter(!is.na(gs_name), !is.na(PROBEID)) |>
+      dplyr::distinct(gs_name, PROBEID) |>
+      dplyr::group_by(gs_name) |>
+      dplyr::summarise(probes = list(unique(PROBEID)), .groups = "drop") |>
+      tibble::deframe()
+  )
+}
+
+#' Get probe IDs for a gene set using precomputed index
+#'
+#' @param gene_set_id Gene set identifier.
+#' @param gene_set_index Precomputed index from build_gene_set_probe_index().
+#' @return Character vector of probe IDs.
+#' @export
+get_probes_for_set <- function(gene_set_id, gene_set_index) {
   if (startsWith(gene_set_id, "GO:")) {
-    probes <- tab$PROBEID[tab$go_id == gene_set_id]
+    probes <- gene_set_index$GO[[gene_set_id]]
   } else if (stringr::str_detect(gene_set_id, "^[0-9]{4,5}$")) {
-    probes <- tab$PROBEID[tab$PATH == gene_set_id]
+    probes <- gene_set_index$KEGG[[gene_set_id]]
   } else if (startsWith(gene_set_id, "HALLMARK_")) {
-    probes <- tab$PROBEID[tab$gs_name == gene_set_id]
+    probes <- gene_set_index$MSIGDB[[gene_set_id]]
   } else {
     warning(glue::glue("⚠️ Unknown gene set prefix: {gene_set_id}"))
     return(character(0))
   }
   
-  return(unique(na.omit(probes)))
+  unique(na.omit(probes))
 }

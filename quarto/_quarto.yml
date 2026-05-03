@@ -2,9 +2,10 @@ project:
   type: book
   output-dir: ../docs
 
-book:
+book: 
   title: "Chaos and Complexity in Cancer"
   author: Ali Al-Timimi, PhD
+
   chapters:
     - index.qmd
 
@@ -15,13 +16,21 @@ book:
         - theory/cancer_cas.qmd
         - theory/theory_summary.qmd
 
-    - part: "Data and Computational Pipeline"
+    - part: "Data"
       chapters:
         - methods/dataset_description.qmd
+
+    - part: "Workflows"
+      chapters:
+        - methods/pipeline_overview.qmd
         - methods/preprocessing_pipeline_overview.qmd
-        - methods/filtering.qmd
         - methods/analysis_pipeline_overview.qmd
         - methods/reporting_pipeline_overview.qmd
+
+    - part: "Feature Space Construction and Statistical Calibration"
+      chapters:
+        - methods/filtering.qmd
+        - methods/resampling_and_parameter_calibration.qmd
 
     - part: "Quantitative Framework"
       chapters:
@@ -34,7 +43,7 @@ book:
         - results/filtered_feature_space_structure.qmd
         - results/filtered_feature_space_structure_top_n.qmd
 
-    - part: "Results and Discussion: Carcinomas"
+    - part: "Results: Carcinomas"
       chapters:
         - reports/generated_reports/comparison_report_blad_tcc.qmd
         - reports/generated_reports/comparison_report_br_brad.qmd
@@ -45,17 +54,17 @@ book:
         - reports/generated_reports/comparison_report_pa_paad.qmd
         - reports/generated_reports/comparison_report_ut_eac.qmd
 
-    - part: "Results and Discussion: Blastomas"
+    - part: "Results: Blastomas"
       chapters:
         - reports/generated_reports/comparison_report_brain_gbm.qmd
         - reports/generated_reports/comparison_report_brain_mb.qmd
 
-    - part: "Results and Discussion: Lymphomas"
+    - part: "Results: Lymphomas"
       chapters:
         - reports/generated_reports/comparison_report_gc_fl.qmd
         - reports/generated_reports/comparison_report_gc_lbcl.qmd
 
-    - part: "Results and Discussion: Leukemias"
+    - part: "Results: Leukemias"
       chapters:
         - reports/generated_reports/comparison_report_pb_b_all.qmd
         - reports/generated_reports/comparison_report_pb_t_all.qmd

@@ -32,13 +32,13 @@ build_comparison_html <- function(df, engine = c("complexity", "entropy"), p_thr
 
       section <- glue::glue("<h2>{cmp} ({engine})</h2>")
 
-      all_row <- dplyr::filter(cmp_df, gene_set_normalized == "ALL")
+      all_row <- dplyr::filter(cmp_df, gene_set_normalized == "FULL")
       if (nrow(all_row) == 1) {
         p_val <- signif(all_row$p_perm, 4)
         direction <- dplyr::coalesce(all_row$direction, all_row$spectral_direction, all_row$shannon_direction)
-        all_text <- glue::glue("<h4>ALL Probes: p = {p_val} | {stringr::str_to_title(direction)}</h4>")
+        all_text <- glue::glue("<h4>FULL Probes: p = {p_val} | {stringr::str_to_title(direction)}</h4>")
       } else {
-        all_text <- "<h4>ALL Probes: (missing or malformed)</h4>"
+        all_text <- "<h4>FULL Probes: (missing or malformed)</h4>"
       }
 
       go_rows <- cmp_df |>
