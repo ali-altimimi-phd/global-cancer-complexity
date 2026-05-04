@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Computational Pipelines</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Workflows</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -203,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Computational Pipelines</span></a>
+ <span class="menu-text">Workflows</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -457,8 +457,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#build-expression-matrix-and-comparison-maps" id="toc-build-expression-matrix-and-comparison-maps" class="nav-link" data-scroll-target="#build-expression-matrix-and-comparison-maps">2. Build Expression Matrix and Comparison Maps</a></li>
   <li><a href="#run-comparison-aware-probe-selection" id="toc-run-comparison-aware-probe-selection" class="nav-link" data-scroll-target="#run-comparison-aware-probe-selection">3. Run Comparison-Aware Probe Selection</a></li>
   <li><a href="#run-pairwise-complexity-and-entropy-comparisons" id="toc-run-pairwise-complexity-and-entropy-comparisons" class="nav-link" data-scroll-target="#run-pairwise-complexity-and-entropy-comparisons">4. Run Pairwise Complexity and Entropy Comparisons</a></li>
-  <li><a href="#aggregate-engine-results-and-attach-gene-set-names" id="toc-aggregate-engine-results-and-attach-gene-set-names" class="nav-link" data-scroll-target="#aggregate-engine-results-and-attach-gene-set-names">5. Aggregate Engine Results and Attach Gene-Set Names</a></li>
+  <li><a href="#aggregate-engine-results-and-attach-gene-set-annotations" id="toc-aggregate-engine-results-and-attach-gene-set-annotations" class="nav-link" data-scroll-target="#aggregate-engine-results-and-attach-gene-set-annotations">5. Aggregate Engine Results and Attach Gene-Set Annotations</a></li>
   <li><a href="#summarize-comparison-level-patterns" id="toc-summarize-comparison-level-patterns" class="nav-link" data-scroll-target="#summarize-comparison-level-patterns">6. Summarize Comparison-Level Patterns</a></li>
+  <li><a href="#provenance-note" id="toc-provenance-note" class="nav-link" data-scroll-target="#provenance-note"><span class="header-section-number">9.0.1</span> Provenance Note</a></li>
   <li><a href="#execute-latent-space-notebooks-optional" id="toc-execute-latent-space-notebooks-optional" class="nav-link" data-scroll-target="#execute-latent-space-notebooks-optional">7. Execute Latent-Space Notebooks Optional</a></li>
   <li><a href="#run-latent-space-postprocessing" id="toc-run-latent-space-postprocessing" class="nav-link" data-scroll-target="#run-latent-space-postprocessing">8. Run Latent-Space Postprocessing</a></li>
   </ul></li>
@@ -485,7 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Computational Pipelines</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Workflows</a></li><li class="breadcrumb-item"><a href="../methods/analysis_pipeline_overview.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analysis Workflow for Global Cancer Complexity Analysis</span></h1>
 </div>
@@ -780,59 +781,91 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Reporting note.</strong> Although the pipeline can run one mode or a subset of modes for repair or partial updates, the current generated comparison reports assume that all report-facing biological subspaces have been computed. Rendering reports from mixed or stale outputs can therefore combine results from different analysis runs. Until reporting is made manifest-driven or run-scoped, report-facing analyses should be generated from a complete, consistent set of modes for the same current run.</p>
 <hr>
 </section>
-<section id="aggregate-engine-results-and-attach-gene-set-names" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="aggregate-engine-results-and-attach-gene-set-names">5. Aggregate Engine Results and Attach Gene-Set Names</h3>
-<p><strong>Purpose:</strong> Consolidate pairwise engine outputs into cleaned aggregate tables for complexity and entropy.</p>
+<section id="aggregate-engine-results-and-attach-gene-set-annotations" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="aggregate-engine-results-and-attach-gene-set-annotations">5. Aggregate Engine Results and Attach Gene-Set Annotations</h3>
+<p><strong>Purpose:</strong> Consolidate pairwise comparison results across all gene-set modes and attach biological annotation labels for downstream analysis.</p>
 <ul>
 <li>Controlled by: <code>run_aggregator</code></li>
-<li>Loader: <code>R/helpers/load_results_into_global.R</code></li>
-<li>Aggregator: <code>R/aggregate/aggregate_engine_results_by_engine.R</code></li>
-<li>Gene-set helper: <code>R/helpers/gene_set_tools.R</code></li>
-<li>Cleaning helper: <code>R/helpers/clean_aggregated_results.R</code></li>
+<li>Inputs:
+<ul>
+<li>Pairwise comparison results from Stage 4</li>
+<li>Chip-specific annotation mappings</li>
+</ul></li>
+<li>Key scripts:
+<ul>
+<li><code>R/aggregate/aggregate_engine_results_by_engine.R</code></li>
+<li><code>R/helpers/gene_set_tools.R</code></li>
+<li><code>R/helpers/clean_aggregated_results.R</code></li>
+</ul></li>
 <li>Outputs:
 <ul>
-<li><code>output/global_cancer/RData/aggregated/complexity_aggregated_results.csv</code></li>
-<li><code>output/global_cancer/RData/aggregated/complexity_aggregated_results.rds</code></li>
-<li><code>output/global_cancer/RData/aggregated/entropy_aggregated_results.csv</code></li>
-<li><code>output/global_cancer/RData/aggregated/entropy_aggregated_results.rds</code></li>
+<li><code>complexity_aggregated_results.csv</code></li>
+<li><code>entropy_aggregated_results.csv</code></li>
+<li>Corresponding <code>.rds</code> files</li>
 </ul></li>
 </ul>
 <p><strong>Behavior:</strong></p>
 <ul>
-<li>Load pairwise comparison results from the analysis data directory</li>
-<li>Ensure the annotation layer is available</li>
-<li>Aggregate results separately for the complexity and entropy engines</li>
-<li>Attach gene-set names from the annotation layer</li>
-<li>Clean the aggregate tables</li>
-<li>Save both CSV and RDS forms of each aggregate table</li>
+<li>Loads all available pairwise comparison results</li>
+<li>Aggregates results separately for each engine:
+<ul>
+<li><code>complexity</code></li>
+<li><code>entropy</code></li>
+</ul></li>
+<li>Attaches gene-set names and annotation metadata</li>
+<li>Cleans and standardizes output structure</li>
+<li>Persists aggregated results for downstream summarization</li>
 </ul>
-<p>This stage is a major candidate source for downstream reporting tables because it produces explicit tabular complexity and entropy result files.</p>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>This stage operates deterministically on the full set of pairwise comparison outputs generated in Stage 4.</li>
+<li>No additional filtering or selection is applied at this stage.</li>
+<li>Aggregation assumes that all relevant gene-set modes (<code>FULL</code>, <code>GO_BP</code>, <code>GO_MF</code>, <code>KEGG</code>, <code>MSIGDB</code>) have been executed in Stage 4.</li>
+</ul>
 <hr>
 </section>
 <section id="summarize-comparison-level-patterns" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="summarize-comparison-level-patterns">6. Summarize Comparison-Level Patterns</h3>
-<p><strong>Purpose:</strong> Collapse aggregated complexity and entropy outputs into comparison-level summaries.</p>
+<p><strong>Purpose:</strong> Derive comparison-level summaries of complexity and entropy across gene-set modes and engines.</p>
 <ul>
 <li>Controlled by: <code>run_comparison_summary</code></li>
-<li>Loader: <code>R/helpers/load_results_into_global.R</code></li>
-<li>Complexity summary: <code>R/summarize/summarize_complexity.R</code></li>
-<li>Entropy summary: <code>R/summarize/summarize_entropy.R</code></li>
-<li>Summary combiner: <code>R/summarize/combine_entropy_complexity_summaries.R</code></li>
+<li>Inputs:
+<ul>
+<li>Aggregated results from Stage 5</li>
+</ul></li>
+<li>Key scripts:
+<ul>
+<li><code>R/summarize/summarize_complexity.R</code></li>
+<li><code>R/summarize/summarize_entropy.R</code></li>
+<li><code>R/summarize/combine_entropy_complexity_summaries.R</code></li>
+</ul></li>
 <li>Outputs:
 <ul>
-<li><code>output/global_cancer/RData/summaries/summaries_combined_df.csv</code></li>
-<li><code>output/global_cancer/RData/summaries/summaries_combined_df.rds</code></li>
+<li><code>summaries_combined_df.csv</code></li>
+<li><code>summaries_combined_df.rds</code></li>
 </ul></li>
 </ul>
 <p><strong>Behavior:</strong></p>
 <ul>
-<li>Load cleaned aggregate complexity and entropy results</li>
-<li>Recalculate the complexity summary table</li>
-<li>Recalculate the entropy summary table</li>
-<li>Combine both summaries into a unified comparison-level table</li>
-<li>Save both CSV and RDS forms of the combined summary table</li>
+<li>Loads cleaned aggregated results</li>
+<li>Computes comparison-level summaries for:
+<ul>
+<li>complexity metrics</li>
+<li>entropy metrics</li>
+</ul></li>
+<li>Combines summaries into a unified table</li>
+<li>Saves outputs for reporting and downstream interpretation</li>
 </ul>
-<p>This summary file appears to represent one of the most compact R-side outputs for comparison-level interpretation.</p>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>This stage performs deterministic summarization and introduces no additional modeling or filtering parameters.</li>
+<li>Summary tables reflect the structure of results produced in Stages 3 and 4 and therefore depend on the selected probe-filtering and gene-set configurations.</li>
+</ul>
+</section>
+<section id="provenance-note" class="level3" data-number="9.0.1">
+<h3 data-number="9.0.1" class="anchored" data-anchor-id="provenance-note"><span class="header-section-number">9.0.1</span> Provenance Note</h3>
+<p>Aggregation and summarization stages operate on all available comparison results present in the output directory. Care must be taken to ensure that these results correspond to a consistent analysis run.</p>
+<p>Residual outputs from prior runs (e.g., different gene-set modes or filtering configurations) may otherwise be included unintentionally. For fully reproducible reporting, all gene-set modes should be executed within a single pipeline run, or output directories should be cleared prior to execution.</p>
 <hr>
 </section>
 <section id="execute-latent-space-notebooks-optional" class="level3 unnumbered">

@@ -71,8 +71,8 @@ run_preprocessing_pipeline <- function() {
 
   # ---- Step 3: Attach and Process GEO Metadata ----
   if (process_metadata) {
-    logger$log("🧬 Processing GEO metadata: attach → clean → label...", section = "METADATA")
-
+    logger$log("🧬 Processing GEO metadata: attach → clean → label → align...", section = "METADATA")
+    
     source(here::here("R/preprocessing/attach_geo_metadata.R"))
     eset_list <- attach_geo_metadata(
       eset_list = eset_list,
@@ -88,6 +88,13 @@ run_preprocessing_pipeline <- function() {
       logger = logger
     )
 
+    source(here::here("R/helpers/repair_eset_metadata_alignment.R"), local = TRUE)
+    
+    eset_list <- repair_eset_metadata_alignment(
+      eset_list = eset_list,
+      logger = logger
+    )
+    
     logger$log("✅ GEO metadata processing complete.", section = "METADATA")
   } else {
     logger$log("⏭️ GEO metadata processing skipped (process_metadata = FALSE).", section = "METADATA")

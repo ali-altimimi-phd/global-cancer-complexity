@@ -1,4 +1,34 @@
-# File: R/tables/write_go_complexity_table_html.R
+# ------------------------------------------------------------------------------
+# File: write_go_complexity_table_html.R
+# Purpose: Generate comparison-level GO term reporting tables for complexity
+#   results and write them as HTML fragments for Quarto integration.
+# Role: Helper (GO complexity table writer)
+# Pipeline: Reporting
+# Project: Global Cancer Complexity
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
+#' Write GO Complexity Table (HTML)
+#'
+#' Generates a comparison-specific reporting table of significant GO terms based
+#' on complexity analysis results and writes it to an HTML file.
+#'
+#' The table is grouped by direction of structural change (e.g., "gained",
+#' "lost") and includes gene set names and associated p-values.
+#'
+#' Output is formatted as HTML for inclusion in Quarto-generated reports.
+#'
+#' @param comparison Character string identifying the comparison
+#'   (e.g., "BR/BRAD").
+#' @param complexity_df Data frame containing complexity results.
+#' @param output_dir Directory where the HTML table will be written.
+#'
+#' @details
+#' Filters GO-mode results with permutation p-value ≤ 0.05, orders results by
+#' direction and gene set name, and splits output into directional subgroups.
+#'
+#' @return Invisibly returns the output file path.
 
 write_go_complexity_table_html <- function(comparison, complexity_df, output_dir = "quarto/resources/tables/go") {
   fs::dir_create(output_dir)

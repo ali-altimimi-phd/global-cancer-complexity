@@ -320,62 +320,88 @@ from a complete, consistent set of modes for the same current run.
 
 ------------------------------------------------------------------------
 
-### 5. Aggregate Engine Results and Attach Gene-Set Names {.unnumbered}
+### 5. Aggregate Engine Results and Attach Gene-Set Annotations {.unnumbered}
 
-**Purpose:** Consolidate pairwise engine outputs into cleaned aggregate
-tables for complexity and entropy.
+**Purpose:** Consolidate pairwise comparison results across all gene-set
+modes and attach biological annotation labels for downstream analysis.
 
 -   Controlled by: `run_aggregator`
--   Loader: `R/helpers/load_results_into_global.R`
--   Aggregator: `R/aggregate/aggregate_engine_results_by_engine.R`
--   Gene-set helper: `R/helpers/gene_set_tools.R`
--   Cleaning helper: `R/helpers/clean_aggregated_results.R`
+-   Inputs:
+    - Pairwise comparison results from Stage 4
+    - Chip-specific annotation mappings
+-   Key scripts:
+    - `R/aggregate/aggregate_engine_results_by_engine.R`
+    - `R/helpers/gene_set_tools.R`
+    - `R/helpers/clean_aggregated_results.R`
 -   Outputs:
-    -   `output/global_cancer/RData/aggregated/complexity_aggregated_results.csv`
-    -   `output/global_cancer/RData/aggregated/complexity_aggregated_results.rds`
-    -   `output/global_cancer/RData/aggregated/entropy_aggregated_results.csv`
-    -   `output/global_cancer/RData/aggregated/entropy_aggregated_results.rds`
+    - `complexity_aggregated_results.csv`
+    - `entropy_aggregated_results.csv`
+    - Corresponding `.rds` files
 
 **Behavior:**
 
--   Load pairwise comparison results from the analysis data directory
--   Ensure the annotation layer is available
--   Aggregate results separately for the complexity and entropy engines
--   Attach gene-set names from the annotation layer
--   Clean the aggregate tables
--   Save both CSV and RDS forms of each aggregate table
+-   Loads all available pairwise comparison results
+-   Aggregates results separately for each engine:
+    - `complexity`
+    - `entropy`
+-   Attaches gene-set names and annotation metadata
+-   Cleans and standardizes output structure
+-   Persists aggregated results for downstream summarization
 
-This stage is a major candidate source for downstream reporting tables
-because it produces explicit tabular complexity and entropy result
-files.
+**Notes:**
+
+-   This stage operates deterministically on the full set of pairwise
+    comparison outputs generated in Stage 4.
+-   No additional filtering or selection is applied at this stage.
+-   Aggregation assumes that all relevant gene-set modes (`FULL`, `GO_BP`,
+    `GO_MF`, `KEGG`, `MSIGDB`) have been executed in Stage 4.
 
 ------------------------------------------------------------------------
 
 ### 6. Summarize Comparison-Level Patterns {.unnumbered}
 
-**Purpose:** Collapse aggregated complexity and entropy outputs into
-comparison-level summaries.
+**Purpose:** Derive comparison-level summaries of complexity and entropy
+across gene-set modes and engines.
 
 -   Controlled by: `run_comparison_summary`
--   Loader: `R/helpers/load_results_into_global.R`
--   Complexity summary: `R/summarize/summarize_complexity.R`
--   Entropy summary: `R/summarize/summarize_entropy.R`
--   Summary combiner:
-    `R/summarize/combine_entropy_complexity_summaries.R`
+-   Inputs:
+    - Aggregated results from Stage 5
+-   Key scripts:
+    - `R/summarize/summarize_complexity.R`
+    - `R/summarize/summarize_entropy.R`
+    - `R/summarize/combine_entropy_complexity_summaries.R`
 -   Outputs:
-    -   `output/global_cancer/RData/summaries/summaries_combined_df.csv`
-    -   `output/global_cancer/RData/summaries/summaries_combined_df.rds`
+    - `summaries_combined_df.csv`
+    - `summaries_combined_df.rds`
 
 **Behavior:**
 
--   Load cleaned aggregate complexity and entropy results
--   Recalculate the complexity summary table
--   Recalculate the entropy summary table
--   Combine both summaries into a unified comparison-level table
--   Save both CSV and RDS forms of the combined summary table
+-   Loads cleaned aggregated results
+-   Computes comparison-level summaries for:
+    - complexity metrics
+    - entropy metrics
+-   Combines summaries into a unified table
+-   Saves outputs for reporting and downstream interpretation
 
-This summary file appears to represent one of the most compact R-side
-outputs for comparison-level interpretation.
+**Notes:**
+
+-   This stage performs deterministic summarization and introduces no
+    additional modeling or filtering parameters.
+-   Summary tables reflect the structure of results produced in Stages 3
+    and 4 and therefore depend on the selected probe-filtering and
+    gene-set configurations.
+
+### Provenance Note
+
+Aggregation and summarization stages operate on all available comparison
+results present in the output directory. Care must be taken to ensure
+that these results correspond to a consistent analysis run.
+
+Residual outputs from prior runs (e.g., different gene-set modes or
+filtering configurations) may otherwise be included unintentionally.
+For fully reproducible reporting, all gene-set modes should be executed
+within a single pipeline run, or output directories should be cleared
+prior to execution.
 
 ------------------------------------------------------------------------
 

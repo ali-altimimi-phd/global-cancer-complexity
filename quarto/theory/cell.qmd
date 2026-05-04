@@ -57,6 +57,6 @@ Because the system is high-dimensional and structured, meaningful analysis requi
 
 - dimensionality-sensitive measures  
 - entropy-based measures  
-- geometric representations  
+- geometric representations, including learned latent representations  
 
 These tools allow us to quantify how cellular organization changes between normal and tumor states.

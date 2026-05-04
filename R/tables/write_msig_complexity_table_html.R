@@ -1,3 +1,37 @@
+# ------------------------------------------------------------------------------
+# File: write_msig_complexity_table_html.R
+# Purpose: Generate comparison-level MSigDB Hallmark reporting tables for
+#   complexity results and write them as HTML fragments for Quarto integration.
+# Role: Helper (MSigDB complexity table writer)
+# Pipeline: Reporting
+# Project: Global Cancer Complexity
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
+#' Write MSigDB Hallmark Complexity Table (HTML)
+#'
+#' Generates a comparison-specific reporting table of significant MSigDB Hallmark
+#' gene sets based on complexity analysis results and writes it to an HTML file.
+#'
+#' The table is grouped by direction of structural change (e.g., "gained",
+#' "lost") and includes Hallmark gene set names and associated p-values.
+#'
+#' Output is formatted as an HTML fragment for inclusion in Quarto-generated
+#' reports.
+#'
+#' @param comparison Character string identifying the comparison
+#'   (e.g., "BR/BRAD").
+#' @param complexity_df Data frame containing complexity results.
+#' @param output_dir Directory where the HTML table will be written.
+#'
+#' @details
+#' Filters MSigDB Hallmark complexity results with permutation p-value ≤ 0.05,
+#' orders results by direction and gene set name, and splits output into
+#' directional subgroups.
+#'
+#' @return Invisibly returns the output file path.
+
 write_msig_complexity_table_html <- function(comparison, complexity_df, output_dir = "quarto/resources/tables/msig") {
   fs::dir_create(output_dir)
   clean_name <- gsub("[^a-zA-Z0-9]", "_", tolower(comparison))

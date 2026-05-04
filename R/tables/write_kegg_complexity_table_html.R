@@ -1,3 +1,37 @@
+# ------------------------------------------------------------------------------
+# File: write_kegg_complexity_table_html.R
+# Purpose: Generate comparison-level KEGG pathway reporting tables for complexity
+#   results and write them as HTML fragments for Quarto integration.
+# Role: Helper (KEGG complexity table writer)
+# Pipeline: Reporting
+# Project: Global Cancer Complexity
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
+#' Write KEGG Complexity Table (HTML)
+#'
+#' Generates a comparison-specific reporting table of significant KEGG pathways
+#' based on complexity analysis results and writes it to an HTML file.
+#'
+#' The table is grouped by direction of structural change (e.g., "gained",
+#' "lost") and includes pathway names and associated p-values.
+#'
+#' Output is formatted as an HTML fragment for inclusion in Quarto-generated
+#' reports.
+#'
+#' @param comparison Character string identifying the comparison
+#'   (e.g., "BR/BRAD").
+#' @param complexity_df Data frame containing complexity results.
+#' @param output_dir Directory where the HTML table will be written.
+#'
+#' @details
+#' Filters KEGG-mode complexity results with permutation p-value ≤ 0.05, orders
+#' results by direction and pathway name, and splits output into directional
+#' subgroups.
+#'
+#' @return Invisibly returns the output file path.
+
 write_kegg_complexity_table_html <- function(comparison, complexity_df, output_dir = "quarto/resources/tables") {
   clean_name <- gsub("[^a-zA-Z0-9]", "_", tolower(comparison))
   out_file <- file.path(output_dir, paste0(clean_name, "_kegg_complexity.html"))
@@ -12,8 +46,8 @@ write_kegg_complexity_table_html <- function(comparison, complexity_df, output_d
     dplyr::arrange(direction, gene_set_name, p_perm)
   
   if (nrow(kegg_complex) == 0) {
-    cat("No significant KEGG pathways found (complexity).\n", file = out_file)
-    return(invisible(NULL))
+    writeLines("<p><em>No significant KEGG pathways found.</em></p>", out_file)
+    return(invisible(out_file))
   }
   
   kegg_complex_split <- dplyr::group_split(kegg_complex, direction)
@@ -42,4 +76,5 @@ write_kegg_complexity_table_html <- function(comparison, complexity_df, output_d
   
   full_html <- paste(html_blocks, collapse = "\n\n")
   writeLines(full_html, out_file)
+  invisible(out_file)
 }

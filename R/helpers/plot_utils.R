@@ -3,10 +3,30 @@
 #' General-purpose plotting utilities used across analyses
 #' -------------------------------------------------------------
 
-#' @author XXX
+#' @author Ali M. Al-Timimi
 
+library(dplyr)
 library(ggplot2)
 library(tibble)
+
+
+#' Filter Rows with Valid P-Values for Plotting
+#'
+#' Removes rows with missing, non-finite, or non-positive permutation p-values
+#' before computing transformations such as \code{-log10(p_perm)}.
+#'
+#' @param df Data frame containing a \code{p_perm} column.
+#'
+#' @return Filtered data frame containing only rows with valid positive p-values.
+#' @export
+valid_plot_rows <- function(df) {
+  df |>
+    dplyr::filter(
+      !is.na(p_perm),
+      is.finite(p_perm),
+      p_perm > 0
+    )
+}
 
 #' Create a bar plot with confidence intervals
 #'

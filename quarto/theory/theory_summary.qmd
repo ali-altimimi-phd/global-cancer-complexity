@@ -11,53 +11,75 @@ format:
 
 The preceding chapters establish the following:
 
-- The cell is a high-dimensional system with structured variability  
-- Gene expression provides a measurable representation of this system  
-- Cancer represents a transformation in system organization  
-- Different tumors may exhibit distinct modes of transformation  
+- The cell is a high-dimensional system with structured variability\
+- Gene expression provides a measurable representation of this system\
+- Cancer represents a transformation in system organization\
+- Different tumors may exhibit distinct modes of transformation
 
 These ideas motivate a shift from gene-level analysis to system-level analysis.
 
----
+------------------------------------------------------------------------
 
 ## From Concepts to Quantities
 
 To evaluate these ideas empirically, we require quantitative measures of:
 
-- dimensionality  
-- dispersion  
-- predictability  
-- structure  
+- dimensionality\
+- dispersion\
+- predictability\
+- structure
 
 These are derived from the covariance matrix $\Sigma$ and its eigenvalues $\lambda_i$.
 
----
+------------------------------------------------------------------------
 
 ## Core Quantities
 
 The following quantities are used:
 
-- participation ratio (effective dimensionality)  
-- entropy of eigenvalue distribution  
-- effective rank  
-- anisotropy  
+- participation ratio (effective dimensionality)\
+- entropy of eigenvalue distribution\
+- effective rank\
+- anisotropy
 
 These measures quantify how variance is distributed across dimensions.
 
----
+------------------------------------------------------------------------
 
 ## Geometric Interpretation
 
 These statistical quantities have geometric interpretations:
 
-- higher dimensionality → broader occupation of state space  
-- lower dimensionality → collapse onto fewer directions  
-- higher entropy → diffuse distributions  
-- lower entropy → concentrated distributions  
+- higher dimensionality → broader occupation of state space\
+- lower dimensionality → collapse onto fewer directions\
+- higher entropy → diffuse distributions\
+- lower entropy → concentrated distributions
 
-Principal component analysis provides a linear geometric representation of these properties, while latent-space methods extend this representation to nonlinear embeddings.
+Principal component analysis provides a linear geometric representation of these properties, while latent-space methods provide a learned nonlinear representation of system structure.
 
----
+------------------------------------------------------------------------
+
+## Representation and Latent Structure
+
+Biological structure, as developed in the preceding sections, is not directly observable in its full dimensionality. Gene expression measurements provide a high-dimensional projection of the system, but the intrinsic organization of this system is governed by a smaller number of coordinated degrees of freedom.
+
+To analyze this organization, it is necessary to introduce a representation layer. Linear methods such as principal component analysis provide an initial approximation of this structure through covariance decomposition. However, biological systems exhibit nonlinear dependencies that are not fully captured by linear projections.
+
+Latent-space models provide a learned representation of system structure. These models construct a lower-dimensional manifold that preserves dominant patterns of variation and coordination, enabling geometric analysis of system organization beyond linear approximations.
+
+Within this framework:
+
+-  **complexity** corresponds to the structure of the system
+
+-  **entropy** corresponds to the distribution of activity across that structure
+
+-  **latent space** provides a representation in which this structure becomes geometrically tractable
+
+-  **tumorigenesis** is interpreted as a transformation of this structure, observable through changes in distribution and geometry
+
+Latent space is therefore not an additional analytic layer, but a representation of the underlying system organization that enables quantitative analysis of its transformation.
+
+------------------------------------------------------------------------
 
 ## Transition to Methods
 
@@ -65,7 +87,7 @@ The next chapters operationalize these concepts.
 
 First, complexity and entropy are quantified using eigenvalue-based measures derived from expression data. Next, PCA provides a linear geometric projection of these structures. Finally, variational autoencoders construct nonlinear latent representations for deeper geometric analysis.
 
----
+------------------------------------------------------------------------
 
 ## Transition to Interpretive Framework
 

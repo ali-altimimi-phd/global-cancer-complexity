@@ -66,6 +66,9 @@ combine_entropy_complexity_summaries <- function(summary_complexity_df,
   # Optional: export structured summaries for downstream 
   # AI-assisted interpretation. This is not part of the core analytical pipeline.
   # Save ChatGPT input for review
+  chatgpt_dir <- here::here("output", "global_cancer", "chatgpt")
+  dir.create(chatgpt_dir, recursive = TRUE, showWarnings = FALSE)
+  
   combined %>%
     select(cancer_category, summary_statement) %>%
     write_csv(here::here("output/global_cancer/chatgpt/chatgpt_input.txt"))

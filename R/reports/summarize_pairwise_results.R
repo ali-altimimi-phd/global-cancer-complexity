@@ -1,17 +1,55 @@
 # ------------------------------------------------------------------------------
 # File: summarize_pairwise_results.R
-# Purpose: Generate human-readable report from aggregated complexity/entropy results
-# Role: Reporting utility
+# Purpose: Generate human-readable summary reports from aggregated
+#   complexity or entropy results for comparison-level interpretation.
+# Role: Helper (text summary generator)
 # Pipeline: Reporting
-# Project: Cancer Complexity Analysis
+# Project: Global Cancer Complexity
 # Author: Ali M. Al-Timimi
 # Created: 2026
 # ------------------------------------------------------------------------------
+
+#' Summarize Pairwise Results for Reporting
+#'
+#' Generates a human-readable textual summary of comparison-level results for
+#' either complexity or entropy analyses. The output includes overall probe-level
+#' summaries and significant gene-set findings for GO, KEGG, and MSigDB Hallmark
+#' collections.
+#'
+#' @param df Data frame containing either complexity or entropy results.
+#' @param engine Character string specifying the analysis engine:
+#'   \code{"complexity"} or \code{"entropy"}.
+#' @param p_thresh Numeric significance threshold for reporting gene sets
+#'   (default = 0.05).
+#' @param output_path Optional file path to write the summary report. If
+#'   \code{NULL}, the summary is returned as a character vector.
+#'
+#' @details
+#' For complexity results, directionality is derived from the \code{direction}
+#' column. For entropy results, directionality is derived from
+#' \code{spectral_direction} or \code{shannon_direction}, depending on
+#' availability.
+#'
+#' @return A character vector of formatted summary lines, or invisibly writes to
+#'   file if \code{output_path} is provided.
 
 summarize_pairwise_results <- function(df,
                                        engine = c("complexity", "entropy"),
                                        p_thresh = 0.05,
                                        output_path = NULL) {
+  get_direction <- function(row, engine) {
+    if (engine == "complexity") {
+      return(row$direction)
+    } else if (engine == "entropy") {
+      return(dplyr::coalesce(
+        row$spectral_direction,
+        row$shannon_direction
+      ))
+    } else {
+      return(NA_character_)
+    }
+  }
+  
   engine <- match.arg(engine)
   lines <- c()
   
@@ -27,22 +65,20 @@ summarize_pairwise_results <- function(df,
       cmp_df <- dplyr::filter(chip_df, comparison == cmp)
       lines <- c(lines, glue::glue("comparison: {cmp}"))
       
-      # --- Level 1: ALL Probes ---
-      all_row <- dplyr::filter(cmp_df, gene_set_normalized == "ALL")
+      # --- Level 1: FULL Probes ---
+      all_row <- dplyr::filter(cmp_df, gene_set_normalized == "FULL")
       
       if (nrow(all_row) == 1) {
         p_val <- signif(all_row$p_perm, 4)
-        direction <- dplyr::coalesce(all_row$direction,
-                                     all_row$spectral_direction,
-                                     all_row$shannon_direction)
+        direction <- get_direction(all_row, engine)
         lines <- c(
           lines,
           glue::glue(
-            "  ALL Probes:     p = {p_val} | {stringr::str_to_title(direction)}"
+            "  FULL Probes:     p = {p_val} | {stringr::str_to_title(direction)}"
           )
         )
       } else {
-        lines <- c(lines, "  ALL Probes:     (missing or malformed)")
+        lines <- c(lines, "  FULL Probes:     (missing or malformed)")
       }
       
       # --- Level 2a: Significant GO Terms ---
@@ -56,9 +92,7 @@ summarize_pairwise_results <- function(df,
         lines <- c(lines, "  ▸ Significant GO Terms:")
         for (i in seq_len(nrow(go_sig))) {
           row <- go_sig[i, ]
-          direction <- dplyr::coalesce(row$direction,
-                                       row$spectral_direction,
-                                       row$shannon_direction)
+          direction <- get_direction(row, engine)
           name <- dplyr::coalesce(row$gene_set_name, row$gene_set_normalized)
           lines <- c(
             lines,
@@ -91,9 +125,7 @@ summarize_pairwise_results <- function(df,
         lines <- c(lines, "  ▸ Significant or Cancer-related KEGG Pathways:")
         for (i in seq_len(nrow(kegg_combined))) {
           row <- kegg_combined[i, ]
-          direction <- dplyr::coalesce(row$direction,
-                                       row$spectral_direction,
-                                       row$shannon_direction)
+          direction <- get_direction(row, engine)
           name <- dplyr::coalesce(row$gene_set_name, row$gene_set_normalized)
           flag <- if (row$kegg_cancer)
             " (cancer)"
@@ -116,7 +148,7 @@ summarize_pairwise_results <- function(df,
     }
     
     # --- Level 2c: MSig Hallmark Genes ---
-    msig_sig <<- cmp_df |>
+    msig_sig <- cmp_df |>
       dplyr::filter(
         stringr::str_detect(gene_set_normalized, "HALLMARK"),!is.na(p_perm),
         p_perm <= p_thresh
@@ -126,9 +158,7 @@ summarize_pairwise_results <- function(df,
       lines <- c(lines, "  ▸ Significant HALLMARK Genes:")
       for (i in seq_len(nrow(msig_sig))) {
         row <- msig_sig[i, ]
-        direction <- dplyr::coalesce(row$direction,
-                                     row$spectral_direction,
-                                     row$shannon_direction)
+        direction <- get_direction(row, engine)
         name <- dplyr::coalesce(row$gene_set_name, row$gene_set_normalized)
         lines <- c(
           lines,

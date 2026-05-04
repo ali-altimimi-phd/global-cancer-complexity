@@ -6,26 +6,34 @@ editor:
 
 # Preprocessing Workflow for Global Cancer Complexity Analysis
 
-This document describes the preprocessing pipeline used to construct cleaned,
-chip-specific `ExpressionSet` objects from raw Affymetrix CEL files for the
-Ramaswamy global cancer dataset, represented in GEO as
-[GSE68928](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68928). The
-pipeline now also exports machine-learning-ready expression and metadata files
-used by the downstream latent-space notebooks.
+This document describes the preprocessing pipeline used to construct
+cleaned, chip-specific `ExpressionSet` objects from raw Affymetrix CEL
+files for the Ramaswamy global cancer dataset, represented in GEO as
+[GSE68928](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68928).
+The pipeline now also exports machine-learning-ready expression and
+metadata files used by the downstream latent-space notebooks.
 
 ------------------------------------------------------------------------
 
 ## Overview {.unnumbered}
 
-The preprocessing pipeline operates on the Ramaswamy et al. dataset described in the previous section, including its dual-platform microarray structure (Affymetrix Hu6800 and Hu35KsubA). As such, preprocessing must account for platform-specific probe representations, metadata inconsistencies, and quality-controlled sample inclusion.
+The preprocessing pipeline operates on the Ramaswamy et al. dataset
+described in the previous section, including its dual-platform
+microarray structure (Affymetrix Hu6800 and Hu35KsubA). As such,
+preprocessing must account for platform-specific probe representations,
+metadata inconsistencies, and quality-controlled sample inclusion.
 
-**Driver script:** `scripts/preprocessing/01_run_preprocessing_pipeline.R`  
+**Driver script:**
+`scripts/preprocessing/01_run_preprocessing_pipeline.R`\
 **Configuration file:** `R/config/global_cancer/preprocessing_config.R`
 
 **Estimated runtime:**
 
-- ~15 minutes when CEL files and GEO metadata are already available locally
-- ~75 minutes if FTP download is enabled or remote resources must be retrieved
+- \~20–25 minutes when CEL files and GEO metadata are already available
+  locally, based on a complete local preprocessing run under R 4.6.0
+- Longer when FTP download is enabled or remote resources must be
+  retrieved; total runtime depends on network speed, cache state, and
+  remote server availability
 
 **Primary ExpressionSet outputs:**
 
@@ -43,24 +51,35 @@ The preprocessing pipeline operates on the Ramaswamy et al. dataset described in
 
 - `output/global_cancer/logs/preprocess/preprocess_pipeline_log.txt`
 
-The goal of this preprocessing pipeline is to transform raw public microarray
-data into normalized, metadata-enriched `ExpressionSet` objects suitable for
-downstream analysis of cancer expression structure, complexity, entropy, and
-latent-space geometry. The latent-space notebooks do not process raw
-`ExpressionSet` objects directly; instead, they consume the canonical CSV files
-exported by the final preprocessing stage.
+The goal of this preprocessing pipeline is to transform raw public
+microarray data into normalized, metadata-enriched `ExpressionSet`
+objects suitable for downstream analysis of cancer expression structure,
+complexity, entropy, and latent-space geometry. The latent-space
+notebooks do not process raw `ExpressionSet` objects directly; instead,
+they consume the canonical CSV files exported by the final preprocessing
+stage.
+
+**Note on legacy Affymetrix metadata warnings.** During CEL-file import,
+`affy::read.affybatch()` may emit repeated warnings of the form
+`Incompatible phenoData object. Created a new one.` These warnings arise
+during initial import of legacy Affymetrix CEL files and occur before
+the pipeline attaches cleaned GEO sample metadata. The downstream
+metadata-attachment step explicitly realigns GEO metadata to the
+`ExpressionSet` sample columns and verifies complete sample matching for
+both platforms. In the current reference run, metadata were matched for
+278/278 `hu35ksuba` samples and 261/261 `hu6800` samples.
 
 ------------------------------------------------------------------------
 
 ## Historical and Methodological Context {.unnumbered}
 
-The original version of this research was implemented using a text-based data
-pipeline. Microarray data were processed as flat files, stored in a relational
-database, and queried to generate analysis-ready subsets.
+The original version of this research was implemented using a text-based
+data pipeline. Microarray data were processed as flat files, stored in a
+relational database, and queried to generate analysis-ready subsets.
 
 In the current reconstruction, this workflow has been translated into a
-Bioconductor-centered architecture based on chip-specific `ExpressionSet`
-objects. This introduces a clean separation among:
+Bioconductor-centered architecture based on chip-specific
+`ExpressionSet` objects. This introduces a clean separation among:
 
 - raw expression data derived directly from CEL files via RMA;
 - phenotype metadata retrieved from GEO and attached post hoc;
@@ -69,24 +88,29 @@ objects. This introduces a clean separation among:
 
 Because public GEO metadata are not always perfectly aligned with the
 CEL-derived sample structure—and because the metadata include spelling,
-formatting, and labeling inconsistencies—a dedicated metadata attachment and
-cleaning stage is required.
+formatting, and labeling inconsistencies—a dedicated metadata attachment
+and cleaning stage is required.
 
-The preprocessing pipeline therefore serves as the bridge between the original
-data-engineering architecture, the modern Bioconductor representation, and the
-latent-space analysis pipeline.
+The preprocessing pipeline therefore serves as the bridge between the
+original data-engineering architecture, the modern Bioconductor
+representation, and the latent-space analysis pipeline.
 
-It should be noted that this preprocessing framework differs from the original analytical workflow of Ramaswamy et al. (2001), which employed variation-based gene filtering and standardized expression values prior to classification. In contrast, the present pipeline applies RMA normalization and defers feature selection to downstream analysis stages, enabling flexible comparison between filtering strategies.
+It should be noted that this preprocessing framework differs from the
+original analytical workflow of Ramaswamy et al. (2001), which employed
+variation-based gene filtering and standardized expression values prior
+to classification. In contrast, the present pipeline applies RMA
+normalization and defers feature selection to downstream analysis
+stages, enabling flexible comparison between filtering strategies.
 
 ------------------------------------------------------------------------
 
 ## Pipeline Controls {.unnumbered}
 
-The pipeline is controlled through `preprocessing_config.R`. The principal
-toggles are:
+The pipeline is controlled through `preprocessing_config.R`. The
+principal toggles are:
 
 | Toggle | Purpose |
-|---|---|
+|------------------------------------|------------------------------------|
 | `download_enabled` | Download CEL files from FTP if needed |
 | `build_esets` | Build chip-specific `ExpressionSet` objects from CEL files |
 | `process_metadata` | Attach, clean, and label GEO phenotype metadata |
@@ -96,15 +120,16 @@ toggles are:
 
 The current latent-space configuration uses:
 
-```r
+``` r
 ml_chip_id       <- "hu35ksuba"
 ml_filter_method <- "variance"
 ml_top_n         <- 3000
 ```
 
 This means the final export stage writes a full expression matrix and a
-variance-filtered top-3000-probe matrix for the `hu35ksuba` platform. The design
-can later be generalized to both chips by iterating over `names(geo_chip_map)`.
+variance-filtered top-3000-probe matrix for the `hu35ksuba` platform.
+The design can later be generalized to both chips by iterating over
+`names(geo_chip_map)`.
 
 ------------------------------------------------------------------------
 
@@ -112,24 +137,26 @@ can later be generalized to both chips by iterating over `names(geo_chip_map)`.
 
 ### 1. Download `.CEL` Files (Optional) {.unnumbered}
 
-**Purpose:** Retrieve raw Affymetrix CEL files if not already available locally.
+**Purpose:** Retrieve raw Affymetrix CEL files if not already available
+locally.
 
 - Controlled by: `download_enabled`
 - Script: `R/preprocessing/download_cel_files.R`
 - Source: EBI FTP (`E-GEOD-68928`)
 - Destination: `data/global_cancer/CEL/`
 
-**Notes:**  
-In the current workflow, downloads are usually disabled because CEL files are
-already present locally. Download behavior can be tested conservatively by using
-`dry_run` and `download_limit` before enabling a full retrieval.
+**Notes:**\
+In the current workflow, downloads are usually disabled because CEL
+files are already present locally. Download behavior can be tested
+conservatively by using `dry_run` and `download_limit` before enabling a
+full retrieval.
 
 ------------------------------------------------------------------------
 
 ### 2. Build ExpressionSet Objects {.unnumbered}
 
-**Purpose:** Detect chip type, validate CEL files, group samples by platform, and
-normalize each chip-specific group using RMA.
+**Purpose:** Detect chip type, validate CEL files, group samples by
+platform, and normalize each chip-specific group using RMA.
 
 - Controlled by: `build_esets`
 - Script: `R/preprocessing/build_expression_sets.R`
@@ -137,9 +164,9 @@ normalize each chip-specific group using RMA.
 **Chip/platform map:**
 
 | Internal chip key | GEO platform |
-|---|---|
-| `hu35ksuba` | `GPL98` |
-| `hu6800` | `GPL80` |
+|-------------------|--------------|
+| `hu35ksuba`       | `GPL98`      |
+| `hu6800`          | `GPL80`      |
 
 **Behavior:**
 
@@ -153,16 +180,24 @@ normalize each chip-specific group using RMA.
 
 - `eset_list`, a named list of chip-specific `ExpressionSet` objects
 
-Because the dataset spans two microarray platforms with partially distinct probe sets, all preprocessing steps are performed at the chip level. This avoids introducing artifacts from probe mismatch and preserves a consistent feature space within each platform for downstream analysis.
+Because the dataset spans two microarray platforms with partially
+distinct probe sets, all preprocessing steps are performed at the chip
+level. This avoids introducing artifacts from probe mismatch and
+preserves a consistent feature space within each platform for downstream
+analysis.
 
 ------------------------------------------------------------------------
 
 ### 3. Attach and Clean GEO Metadata {.unnumbered}
 
-Accurate alignment between expression data and phenotype metadata is a critical requirement for all downstream analyses. This step ensures that biological labels such as tissue type and disease state are correctly associated with each expression profile, forming the basis for both statistical comparisons and latent-space modeling.
+Accurate alignment between expression data and phenotype metadata is a
+critical requirement for all downstream analyses. This step ensures that
+biological labels such as tissue type and disease state are correctly
+associated with each expression profile, forming the basis for both
+statistical comparisons and latent-space modeling.
 
-**Purpose:** Attach phenotype metadata from GEO and convert free-text fields into
-analysis-ready labels.
+**Purpose:** Attach phenotype metadata from GEO and convert free-text
+fields into analysis-ready labels.
 
 - Controlled by: `process_metadata`
 - Scripts:
@@ -184,17 +219,19 @@ analysis-ready labels.
 - Derive `condition` as `normal` or `cancer`
 - Derive `tissue_label` for downstream grouping
 
-**Important alignment convention:**  
+**Important alignment convention:**\
 Expression columns often use CEL-derived names such as
-`GSM1686773_CL2000062805AA.CEL`, whereas GEO metadata are keyed by GSM accession
-such as `GSM1686773`. The pipeline therefore matches samples using the GSM prefix
-and then restores the CEL-derived sample IDs for downstream consistency.
+`GSM1686773_CL2000062805AA.CEL`, whereas GEO metadata are keyed by GSM
+accession such as `GSM1686773`. The pipeline therefore matches samples
+using the GSM prefix and then restores the CEL-derived sample IDs for
+downstream consistency.
 
 ------------------------------------------------------------------------
 
 ### 4. Annotate Full-Chip Probe Sets {.unnumbered}
 
-**Purpose:** Attach biological annotation to all probes on each supported chip.
+**Purpose:** Attach biological annotation to all probes on each
+supported chip.
 
 - Controlled by: `run_annotation`
 - Scripts:
@@ -204,7 +241,8 @@ and then restores the CEL-derived sample IDs for downstream consistency.
 **Annotation dimensions:**
 
 - Gene symbols (`SYMBOL`)
-- Gene Ontology terms, including Molecular Function and Biological Process
+- Gene Ontology terms, including Molecular Function and Biological
+  Process
 - KEGG pathways
 - MSigDB Hallmark gene sets
 
@@ -212,34 +250,35 @@ and then restores the CEL-derived sample IDs for downstream consistency.
 
 - `output/global_cancer/RData/annotations/full_chip_annotations.rds`
 
-**Notes:**  
-Annotation is performed on the full chip once during preprocessing. Downstream
-analysis subsets from this complete annotation layer rather than recomputing
-annotations repeatedly. Many-to-many gene-symbol relationships can occur during
-annotation joins and should be interpreted as a property of the probe-to-gene and
-gene-set mappings rather than as a preprocessing failure.
+**Notes:**\
+Annotation is performed on the full chip once during preprocessing.
+Downstream analysis subsets from this complete annotation layer rather
+than recomputing annotations repeatedly. Many-to-many gene-symbol
+relationships can occur during annotation joins and should be
+interpreted as a property of the probe-to-gene and gene-set mappings
+rather than as a preprocessing failure.
 
 ------------------------------------------------------------------------
 
 ### 5. Save ExpressionSets {.unnumbered}
 
-**Purpose:** Persist the normalized, metadata-enriched `ExpressionSet` objects for
-reuse by analysis and reporting pipelines.
+**Purpose:** Persist the normalized, metadata-enriched `ExpressionSet`
+objects for reuse by analysis and reporting pipelines.
 
 **Output:**
 
 - `output/global_cancer/RData/global_cancer_eset_list.RData`
 
 This file serves as the primary R-side preprocessing checkpoint. When
-`build_esets = FALSE`, the runner reloads this file instead of rebuilding the
-ExpressionSets from CEL files.
+`build_esets = FALSE`, the runner reloads this file instead of
+rebuilding the ExpressionSets from CEL files.
 
 ------------------------------------------------------------------------
 
 ### 6. Export Machine-Learning / Latent-Space Inputs {.unnumbered}
 
-**Purpose:** Export canonical CSV files from the selected `ExpressionSet` for
-Python/Jupyter latent-space workflows.
+**Purpose:** Export canonical CSV files from the selected
+`ExpressionSet` for Python/Jupyter latent-space workflows.
 
 - Controlled by: `export_ml_inputs`
 - Script: `R/preprocessing/export_ml_inputs.R`
@@ -247,14 +286,16 @@ Python/Jupyter latent-space workflows.
 - Current feature-selection method: `ml_filter_method <- "variance"`
 - Current feature count: `ml_top_n <- 3000`
 
-This stage defines the canonical interface between the R-based preprocessing
-pipeline and downstream Python-based modeling workflows. It establishes a fixed,
-reproducible expression/metadata export used for VAE training, latent-space
-projection, and latent-space geometry analyses.
+This stage defines the canonical interface between the R-based
+preprocessing pipeline and downstream Python-based modeling workflows.
+It establishes a fixed, reproducible expression/metadata export used for
+VAE training, latent-space projection, and latent-space geometry
+analyses.
 
-This stage does **not** train the VAE, does **not** compute latent-space metrics,
-and does **not** perform the comparison-aware probe selection used later by the
-legacy R complexity/entropy pipeline. It defines the R-to-Python data contract.
+This stage does **not** train the VAE, does **not** compute latent-space
+metrics, and does **not** perform the comparison-aware probe selection
+used later by the legacy R complexity/entropy pipeline. It defines the
+R-to-Python data contract.
 
 **Behavior:**
 
@@ -267,7 +308,8 @@ legacy R complexity/entropy pipeline. It defines the R-to-Python data contract.
   - `disease_clean`
   - `tissue_clean`
 - Export the full sample-by-feature expression matrix
-- Select the top `ml_top_n` probes by global variance across the selected chip
+- Select the top `ml_top_n` probes by global variance across the
+  selected chip
 - Export the variance-selected sample-by-feature expression matrix
 - Export the selected feature list and probe variances
 - Optionally generate a PCA sanity-check plot
@@ -275,7 +317,7 @@ legacy R complexity/entropy pipeline. It defines the R-to-Python data contract.
 **Outputs:**
 
 | File | Description |
-|---|---|
+|------------------------------------|------------------------------------|
 | `hu35ksuba_expr_full.csv` | Full sample-by-probe expression matrix |
 | `hu35ksuba_expr_top3000_variance.csv` | Top-3000 global-variance matrix used by latent notebooks |
 | `hu35ksuba_metadata_aligned.csv` | Metadata aligned to expression rows and containing standardized aliases |
@@ -291,7 +333,7 @@ The preprocessing pipeline now exposes two stable downstream interfaces.
 ### R-side checkpoint {.unnumbered}
 
 | File | Description |
-|---|---|
+|------------------------------------|------------------------------------|
 | `output/global_cancer/RData/global_cancer_eset_list.RData` | List of normalized, metadata-enriched `ExpressionSet` objects |
 | `output/global_cancer/RData/annotations/full_chip_annotations.rds` | Full-chip annotation results |
 | `output/global_cancer/logs/preprocess/preprocess_pipeline_log.txt` | Main preprocessing log |
@@ -299,24 +341,25 @@ The preprocessing pipeline now exposes two stable downstream interfaces.
 ### Python/Jupyter input contract {.unnumbered}
 
 | File | Description |
-|---|---|
+|------------------------------------|------------------------------------|
 | `data/global_cancer/processed/ml_inputs/hu35ksuba_expr_top3000_variance.csv` | Canonical expression input for VAE preparation |
 | `data/global_cancer/processed/ml_inputs/hu35ksuba_metadata_aligned.csv` | Canonical metadata input for latent notebooks |
 | `data/global_cancer/processed/ml_inputs/hu35ksuba_top3000_variance_features.csv` | Feature provenance for the variance-filtered input matrix |
 
-The latent-space notebooks should treat these files as the only direct inputs
-from the R preprocessing layer. They should not re-read raw CEL files, directly
-manipulate `ExpressionSet` objects, or depend on obsolete paths such as
-`projects/cancer-latent-space/data/inputs/`.
+The latent-space notebooks should treat these files as the only direct
+inputs from the R preprocessing layer. They should not re-read raw CEL
+files, directly manipulate `ExpressionSet` objects, or depend on
+obsolete paths such as `projects/cancer-latent-space/data/inputs/`.
 
 ------------------------------------------------------------------------
 
 ## Required Metadata Fields for Latent-Space Workflows {.unnumbered}
 
-The ML export stage guarantees the following fields for downstream notebooks:
+The ML export stage guarantees the following fields for downstream
+notebooks:
 
 | Field | Purpose |
-|---|---|
+|------------------------------------|------------------------------------|
 | `sample_id` | Canonical sample identifier matching expression rows |
 | `geo_accession` | GEO GSM accession used for sample matching |
 | `title` | GEO sample title, retained for traceability |
@@ -326,8 +369,8 @@ The ML export stage guarantees the following fields for downstream notebooks:
 | `disease_clean` | Standardized disease-state alias for notebook compatibility |
 | `tissue_clean` | Standardized tissue-source alias for notebook compatibility |
 
-These fields are intentionally enforced at the export boundary so that all
-latent-space notebooks share a stable metadata contract.
+These fields are intentionally enforced at the export boundary so that
+all latent-space notebooks share a stable metadata contract.
 
 ------------------------------------------------------------------------
 
@@ -337,57 +380,66 @@ Recommended staged validation is:
 
 ### Phase A: Export-only validation {.unnumbered}
 
-```r
+``` r
 download_enabled <- FALSE
 build_esets      <- FALSE
 process_metadata <- FALSE
 export_ml_inputs <- TRUE
 ```
 
-This tests whether existing saved `ExpressionSet` objects can be loaded and
-exported successfully.
+This tests whether existing saved `ExpressionSet` objects can be loaded
+and exported successfully.
 
 ### Phase B: Metadata-regeneration validation {.unnumbered}
 
-```r
+``` r
 download_enabled <- FALSE
 build_esets      <- FALSE
 process_metadata <- TRUE
 export_ml_inputs <- TRUE
 ```
 
-This tests whether metadata attachment and cleaning remain compatible with the ML
-export contract.
+This tests whether metadata attachment and cleaning remain compatible
+with the ML export contract.
 
 ### Phase C: Full local rebuild without FTP download {.unnumbered}
 
-```r
+``` r
 download_enabled <- FALSE
 build_esets      <- TRUE
 process_metadata <- TRUE
 export_ml_inputs <- TRUE
 ```
 
-This tests the full local preprocessing workflow while avoiding the slow remote
-download step.
+This tests the full local preprocessing workflow while avoiding the slow
+remote download step.
 
 ### Phase D: Full reproducibility run {.unnumbered}
 
-```r
+``` r
 download_enabled <- TRUE
 build_esets      <- TRUE
 process_metadata <- TRUE
 export_ml_inputs <- TRUE
 ```
 
-This should be reserved for final validation because it is the slowest and most
-operationally fragile run mode.
+This should be reserved for final validation because it is the slowest
+and most operationally fragile run mode.
+
+## Machine-learning export validation {.unnumbered}
 
 Key validation checks include:
 
-```r
-expr <- read.csv("data/global_cancer/processed/ml_inputs/hu35ksuba_expr_top3000_variance.csv", row.names = 1)
-meta <- read.csv("data/global_cancer/processed/ml_inputs/hu35ksuba_metadata_aligned.csv")
+``` r
+expr <- read.csv(
+  "data/global_cancer/processed/ml_inputs/hu35ksuba_expr_top3000_variance.csv",
+  row.names = 1
+)
+
+meta <- read.csv(
+  "data/global_cancer/processed/ml_inputs/hu35ksuba_metadata_aligned.csv"
+)
+
 stopifnot(nrow(expr) == nrow(meta))
 stopifnot(all(rownames(expr) == meta$sample_id))
 ```
@@ -395,19 +447,64 @@ stopifnot(all(rownames(expr) == meta$sample_id))
 In Python, metadata should be loaded in a way that preserves `sample_id` as a
 column:
 
-```python
+``` r
 metadata = pd.read_csv(metadata_path)
 metadata = metadata.set_index("sample_id", drop=False)
 ```
-
 Using `index_col=0` directly on the metadata CSV removes `sample_id` from
 `metadata.columns` and can break downstream notebook checks.
 
 ------------------------------------------------------------------------
 
+### ExpressionSet checkpoint validation {.unnumbered}
+
+In addition to validating exported CSV files, the saved R-side
+preprocessing checkpoint should be verified directly:
+
+``` r
+load(here::here(
+  "output", "global_cancer", "RData", "global_cancer_eset_list.RData"
+))
+
+sapply(eset_list, function(es) {
+  c(
+    probes = nrow(Biobase::exprs(es)),
+    samples = ncol(Biobase::exprs(es)),
+    pdata_rows = nrow(Biobase::pData(es)),
+    aligned = identical(
+      colnames(Biobase::exprs(es)),
+      rownames(Biobase::pData(es))
+    )
+  )
+})
+```
+
+Prior to enforcing canonical metadata alignment, this check returned:
+
+|            | hu35ksuba | hu6800 |
+|------------|-----------|--------|
+| probes     | 8934      | 7129   |
+| samples    | 278       | 261    |
+| pdata_rows | 278       | 261    |
+| aligned    | 0         | 0      |
+
+The matching sample counts confirm that phenotype metadata are present for all
+expression samples, while `aligned = 0` indicates a representation-level
+mismatch between `pData` row names (GSM accessions) and expression column
+names (CEL-derived sample identifiers).
+
+``` r
+rownames(pData(es)) == colnames(exprs(es))
+```
+
+A successful current run should therefore return `aligned = TRUE` for both
+platforms.
+
+------------------------------------------------------------------------
+
 ## Directory Layout {.unnumbered}
 
-```text
+``` text
 global-cancer-complexity/
   R/
     config/global_cancer/preprocessing_config.R
@@ -418,6 +515,7 @@ global-cancer-complexity/
       export_ml_inputs.R
     helpers/
       clean_and_label_metadata.R
+      repair_eset_metadata_alignment.R
       pipeline_logger.R
     wrappers/
       run_annotate_chip_probes.R
@@ -438,7 +536,13 @@ global-cancer-complexity/
 
 ------------------------------------------------------------------------
 
-The outputs of the preprocessing pipeline define the structured input space for all downstream analyses. In particular, they establish the feature space (genes/probes) and sample space (annotated tissues and disease states) upon which both complexity/entropy measures and latent-space representations are computed. As such, preprocessing is not merely a technical step but a foundational stage that constrains the interpretation of all subsequent results.
+The outputs of the preprocessing pipeline define the structured input
+space for all downstream analyses. In particular, they establish the
+feature space (genes/probes) and sample space (annotated tissues and
+disease states) upon which both complexity/entropy measures and
+latent-space representations are computed. As such, preprocessing is not
+merely a technical step but a foundational stage that constrains the
+interpretation of all subsequent results.
 
 ## Customizing for Other Datasets {.unnumbered}
 
@@ -448,7 +552,8 @@ This pipeline can be adapted to other Affymetrix or GEO datasets by:
 - adjusting chip-to-platform mappings in `geo_chip_map`;
 - modifying metadata parsing and label-cleaning logic;
 - adding or changing ML export filters; and
-- generalizing `ml_chip_id` to a vector of chip IDs if multiple platforms should
-  be exported for downstream modeling.
+- generalizing `ml_chip_id` to a vector of chip IDs if multiple
+  platforms should be exported for downstream modeling.
 
-See Section: Filtering for formal definition of the feature space used in downstream complexity and latent-space analyses.
+See Section: Filtering for formal definition of the feature space used
+in downstream complexity and latent-space analyses.

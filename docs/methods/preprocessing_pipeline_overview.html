@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Computational Pipelines</a></li><li class="breadcrumb-item"><a href="../methods/preprocessing_pipeline_overview.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Workflows</a></li><li class="breadcrumb-item"><a href="../methods/preprocessing_pipeline_overview.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -203,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Computational Pipelines</span></a>
+ <span class="menu-text">Workflows</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -473,6 +473,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#phase-c-full-local-rebuild-without-ftp-download" id="toc-phase-c-full-local-rebuild-without-ftp-download" class="nav-link" data-scroll-target="#phase-c-full-local-rebuild-without-ftp-download">Phase C: Full local rebuild without FTP download</a></li>
   <li><a href="#phase-d-full-reproducibility-run" id="toc-phase-d-full-reproducibility-run" class="nav-link" data-scroll-target="#phase-d-full-reproducibility-run">Phase D: Full reproducibility run</a></li>
   </ul></li>
+  <li><a href="#machine-learning-export-validation" id="toc-machine-learning-export-validation" class="nav-link" data-scroll-target="#machine-learning-export-validation">Machine-learning export validation</a>
+  <ul class="collapse">
+  <li><a href="#expressionset-checkpoint-validation" id="toc-expressionset-checkpoint-validation" class="nav-link" data-scroll-target="#expressionset-checkpoint-validation">ExpressionSet checkpoint validation</a></li>
+  </ul></li>
   <li><a href="#directory-layout" id="toc-directory-layout" class="nav-link" data-scroll-target="#directory-layout">Directory Layout</a></li>
   <li><a href="#customizing-for-other-datasets" id="toc-customizing-for-other-datasets" class="nav-link" data-scroll-target="#customizing-for-other-datasets">Customizing for Other Datasets</a></li>
   </ul>
@@ -481,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Computational Pipelines</a></li><li class="breadcrumb-item"><a href="../methods/preprocessing_pipeline_overview.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../methods/pipeline_overview.html">Workflows</a></li><li class="breadcrumb-item"><a href="../methods/preprocessing_pipeline_overview.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Preprocessing Workflow for Global Cancer Complexity Analysis</span></h1>
 </div>
@@ -509,8 +513,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <strong>Configuration file:</strong> <code>R/config/global_cancer/preprocessing_config.R</code></p>
 <p><strong>Estimated runtime:</strong></p>
 <ul>
-<li>~15 minutes when CEL files and GEO metadata are already available locally</li>
-<li>~75 minutes if FTP download is enabled or remote resources must be retrieved</li>
+<li>~20–25 minutes when CEL files and GEO metadata are already available locally, based on a complete local preprocessing run under R 4.6.0</li>
+<li>Longer when FTP download is enabled or remote resources must be retrieved; total runtime depends on network speed, cache state, and remote server availability</li>
 </ul>
 <p><strong>Primary ExpressionSet outputs:</strong></p>
 <ul>
@@ -529,6 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>output/global_cancer/logs/preprocess/preprocess_pipeline_log.txt</code></li>
 </ul>
 <p>The goal of this preprocessing pipeline is to transform raw public microarray data into normalized, metadata-enriched <code>ExpressionSet</code> objects suitable for downstream analysis of cancer expression structure, complexity, entropy, and latent-space geometry. The latent-space notebooks do not process raw <code>ExpressionSet</code> objects directly; instead, they consume the canonical CSV files exported by the final preprocessing stage.</p>
+<p><strong>Note on legacy Affymetrix metadata warnings.</strong> During CEL-file import, <code>affy::read.affybatch()</code> may emit repeated warnings of the form <code>Incompatible phenoData object. Created a new one.</code> These warnings arise during initial import of legacy Affymetrix CEL files and occur before the pipeline attaches cleaned GEO sample metadata. The downstream metadata-attachment step explicitly realigns GEO metadata to the <code>ExpressionSet</code> sample columns and verifies complete sample matching for both platforms. In the current reference run, metadata were matched for 278/278 <code>hu35ksuba</code> samples and 261/261 <code>hu6800</code> samples.</p>
 <hr>
 </section>
 <section id="historical-and-methodological-context" class="level2 unnumbered">
@@ -935,15 +940,80 @@ Annotation is performed on the full chip once during preprocessing. Downstream a
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>process_metadata <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>export_ml_inputs <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This should be reserved for final validation because it is the slowest and most operationally fragile run mode.</p>
+</section>
+</section>
+<section id="machine-learning-export-validation" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="machine-learning-export-validation">Machine-learning export validation</h2>
 <p>Key validation checks include:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>expr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/global_cancer/processed/ml_inputs/hu35ksuba_expr_top3000_variance.csv"</span>, <span class="at">row.names =</span> <span class="dv">1</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/global_cancer/processed/ml_inputs/hu35ksuba_metadata_aligned.csv"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(expr) <span class="sc">==</span> <span class="fu">nrow</span>(meta))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">rownames</span>(expr) <span class="sc">==</span> meta<span class="sc">$</span>sample_id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>expr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/global_cancer/processed/ml_inputs/hu35ksuba_expr_top3000_variance.csv"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="dv">1</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/global_cancer/processed/ml_inputs/hu35ksuba_metadata_aligned.csv"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(expr) <span class="sc">==</span> <span class="fu">nrow</span>(meta))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">rownames</span>(expr) <span class="sc">==</span> meta<span class="sc">$</span>sample_id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In Python, metadata should be loaded in a way that preserves <code>sample_id</code> as a column:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>metadata <span class="op">=</span> pd.read_csv(metadata_path)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>metadata <span class="op">=</span> metadata.set_index(<span class="st">"sample_id"</span>, drop<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">=</span> <span class="fu">pd.read_csv</span>(metadata_path)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">=</span> <span class="fu">metadata.set_index</span>(<span class="st">"sample_id"</span>, <span class="at">drop=</span>False)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Using <code>index_col=0</code> directly on the metadata CSV removes <code>sample_id</code> from <code>metadata.columns</code> and can break downstream notebook checks.</p>
+<hr>
+<section id="expressionset-checkpoint-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="expressionset-checkpoint-validation">ExpressionSet checkpoint validation</h3>
+<p>In addition to validating exported CSV files, the saved R-side preprocessing checkpoint should be verified directly:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"RData"</span>, <span class="st">"global_cancer_eset_list.RData"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(eset_list, <span class="cf">function</span>(es) {</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">probes =</span> <span class="fu">nrow</span>(Biobase<span class="sc">::</span><span class="fu">exprs</span>(es)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">samples =</span> <span class="fu">ncol</span>(Biobase<span class="sc">::</span><span class="fu">exprs</span>(es)),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">pdata_rows =</span> <span class="fu">nrow</span>(Biobase<span class="sc">::</span><span class="fu">pData</span>(es)),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">aligned =</span> <span class="fu">identical</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colnames</span>(Biobase<span class="sc">::</span><span class="fu">exprs</span>(es)),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rownames</span>(Biobase<span class="sc">::</span><span class="fu">pData</span>(es))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Prior to enforcing canonical metadata alignment, this check returned:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>hu35ksuba</th>
+<th>hu6800</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>probes</td>
+<td>8934</td>
+<td>7129</td>
+</tr>
+<tr class="even">
+<td>samples</td>
+<td>278</td>
+<td>261</td>
+</tr>
+<tr class="odd">
+<td>pdata_rows</td>
+<td>278</td>
+<td>261</td>
+</tr>
+<tr class="even">
+<td>aligned</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>The matching sample counts confirm that phenotype metadata are present for all expression samples, while <code>aligned = 0</code> indicates a representation-level mismatch between <code>pData</code> row names (GSM accessions) and expression column names (CEL-derived sample identifiers).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(<span class="fu">pData</span>(es)) <span class="sc">==</span> <span class="fu">colnames</span>(<span class="fu">exprs</span>(es))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A successful current run should therefore return <code>aligned = TRUE</code> for both platforms.</p>
 <hr>
 </section>
 </section>
@@ -959,6 +1029,7 @@ Annotation is performed on the full chip once during preprocessing. Downstream a
       export_ml_inputs.R
     helpers/
       clean_and_label_metadata.R
+      repair_eset_metadata_alignment.R
       pipeline_logger.R
     wrappers/
       run_annotate_chip_probes.R

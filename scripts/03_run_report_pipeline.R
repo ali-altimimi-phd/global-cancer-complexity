@@ -1,21 +1,29 @@
 # ------------------------------------------------------------------------------
 # File: 03_run_report_pipeline.R
-# Purpose: Execute the reporting pipeline by orchestrating the generation of
-#   per-comparison reports, figures, and summary tables from aggregated results
+# Purpose: Execute the reporting pipeline by orchestrating summary exports,
+#   optional per-comparison report generation, optional GO clustering outputs,
+#   and optional Quarto rendering from aggregated analysis results.
 # Role: Pipeline driver (entry point)
 # Pipeline: Reporting
-# Project: Cancer Complexity Analysis
+# Project: Global Cancer Complexity
 # Author: Ali M. Al-Timimi
 # Created: 2026
 # ------------------------------------------------------------------------------
 
-#' Run Global Cancer Expression Report Pipeline
+#' Run Global Cancer Reporting Pipeline
 #'
-#' Report generation
+#' Orchestrates report-stage outputs from analysis-stage products, including
+#' summary exports, optional per-comparison report generation, optional GO
+#' clustering outputs, and optional Quarto rendering.
 #'
-#' @note Requires datasets created via `run_analysis_pipeline()`.
-#' @seealso \code{R/config/analysis_pipeline_config.R}
-#' @return No return value; writes all outputs to disk.
+#' @details
+#' This function assumes that the analysis pipeline has already produced cleaned
+#' pairwise comparison results and, when enabled, summary and filtered-probe
+#' objects required for downstream reporting artifacts.
+#'
+#' @note Requires datasets created by the analysis pipeline.
+#' @seealso \code{R/config/global_cancer/report_config.R}
+#' @return Invisibly returns \code{NULL}; writes reporting outputs to disk.
 run_report_pipeline <- function() {
   # ---- Config ----
   source(here::here("R/config/global_cancer/report_config.R"),
@@ -26,25 +34,80 @@ run_report_pipeline <- function() {
   logger <- start_log(reports_pipeline_logfile)
   logger$log("🚀 Starting Global Cancer report pipeline")
   
-  # ---- Stage 1: Load data sets ----
+  # ---- Stage 1: Load required datasets ----
   source(here::here("R/helpers/load_results_into_global.R"))
   
-  logger$log("🔀 Checking for summary results...")
-  load_summaries_df(summaries_dir, overwrite = TRUE)
+  if (isTRUE(run_summary_exports) ||
+      isTRUE(run_comparison_qmd_generation) ||
+      isTRUE(run_go_clustering)) {
+    logger$log("🔀 Loading cleaned pairwise comparison results...")
+    load_cleaned_results(aggregate_dir, overwrite = TRUE)
+  }
   
-  logger$log("🔀 Checking for cleaned pairwise comparison results...")
-  load_cleaned_results(aggregate_dir, overwrite = TRUE)
+  if (isTRUE(run_comparison_qmd_generation) ||
+      isTRUE(run_go_clustering)) {
+    logger$log("🔀 Loading summary results...")
+    load_summaries_df(summaries_dir, overwrite = TRUE)
+  }
+  
+  if (isTRUE(run_comparison_qmd_generation)) {
+    logger$log("🔀 Loading filtered probes...")
+    load_filtered_results(filtered_probes_dir, overwrite = TRUE)
+  }
+  
+  # ---- Validate loaded datasets ----
+  validate_reporting_inputs <- function() {
+    
+    required_objects <- c()
+    
+    if (isTRUE(run_summary_exports)) {
+      required_objects <- c(required_objects, "entropy_df", "complexity_df")
+    }
+    
+    if (isTRUE(run_comparison_qmd_generation) || isTRUE(run_go_clustering)) {
+      required_objects <- c(required_objects, "summaries_combined_df")
+    }
+    
+    if (isTRUE(run_comparison_qmd_generation)) {
+      required_objects <- c(required_objects, "res_hu35ksuba", "res_hu6800")
+    }
+    
+    missing <- required_objects[
+      !sapply(required_objects, exists, envir = .GlobalEnv)
+    ]
+    
+    if (length(missing) > 0) {
+      stop(sprintf(
+        "Missing required reporting object(s): %s",
+        paste(missing, collapse = ", ")
+      ))
+    }
+  }
+  
+  validate_reporting_inputs()
 
-  logger$log("🔀 Checking for filtered probes...")
-  load_filtered_results(filtered_probes_dir, overwrite = TRUE)
-
-  # ---- Stage 2: Create summary reports ----
-  if (run_summary_reports) {
-    logger$log("📄 Generating summary reports...")
+  # ---- Stage 2: Create summary exports ----
+  if (isTRUE(run_summary_exports)) {
+    logger$log("📄 Generating summary exports...")
     source(here::here("R/reports/summarize_pairwise_results.R"))
     
     entropy_report    <- summarize_pairwise_results(entropy_df, engine = "entropy")
     complexity_report <- summarize_pairwise_results(complexity_df, engine = "complexity")
+    
+    if (!dir.exists(reports_dir)) {
+      stop("Reports directory does not exist: ", reports_dir)
+    }
+    
+    test_file <- file.path(reports_dir, ".write_test")
+    ok <- tryCatch({
+      writeLines("test", test_file)
+      unlink(test_file)
+      TRUE
+    }, error = function(e) FALSE)
+    
+    if (!ok) {
+      stop("Reports directory is not writable: ", reports_dir)
+    }
     
     readr::write_lines(entropy_report,
                        file.path(reports_dir, "entropy_summary.txt"))
@@ -60,30 +123,38 @@ run_report_pipeline <- function() {
             file.path(reports_dir, "entropy_cleaned.rds"))
     saveRDS(complexity_df,
             file.path(reports_dir, "complexity_cleaned.rds"))
-    rmarkdown::render(here::here(("R/reports/pairwise_summary_report.Rmd")))
+    
+    if (isTRUE(run_pairwise_summary_html)) {
+      logger$log("⚠️ Rendering legacy pairwise summary report...")
+      rmarkdown::render(
+        input = here::here("R/legacy/reports/pairwise_summary_report.Rmd"),
+        output_file = "pairwise_summary_report.html",
+        output_dir = reports_dir
+      )
+    }
     
     logger$log("✅ Reports saved.")
-    
   }
   
-  # ---- Stage 3: Create reports from .qmd template ----
+  # ---- Stage 3: Generate comparison-level QMD reports ----
   
-  # `run_reports` might be a misnomer as we are not running reports
-  # but we are creating comparison qmds from a template qmd
-  if (run_reports) {
+  if (isTRUE(run_comparison_qmd_generation)) {
     source(here::here("R/wrappers/run_all_reports.R"))
+    
     run_all_reports(
       summaries_combined_df = summaries_combined_df,
       complexity_df = complexity_df,
       entropy_df = entropy_df,
       res_hu35ksuba = res_hu35ksuba,
-      res_hu6800 = res_hu6800
+      res_hu6800 = res_hu6800,
+      rds_output_dir = data_dir
     )
   }
   
   # ---- Stage 4: GO clusters analysis ----
-  if (run_go_clustering) {
-    logger$log("🧬 Running GO clustering analysis...", {go_mode})
+  if (isTRUE(run_go_clustering)) {
+    # logger$log("🧬 Running GO clustering analysis...", {go_mode})
+    logger$log(sprintf("🧬 Running GO clustering analysis... (mode = %s)", go_mode))
     
     source(here::here("R/wrappers/run_go_clustering.R")) # Dispatcher for all comparisons
     
@@ -113,4 +184,8 @@ run_report_pipeline <- function() {
 
   # ---- Final message ----
   logger$log("🎉 Report pipeline completed successfully.")
+}
+
+if (sys.nframe() == 0) {
+  run_report_pipeline()
 }

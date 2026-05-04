@@ -1,3 +1,38 @@
+# ------------------------------------------------------------------------------
+# File: write_msig_entropy_table_html.R
+# Purpose: Generate comparison-level MSigDB Hallmark reporting tables for
+#   entropy results and write them as HTML fragments for Quarto integration.
+# Role: Helper (MSigDB entropy table writer)
+# Pipeline: Reporting
+# Project: Global Cancer Complexity
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
+#' Write MSigDB Hallmark Entropy Table (HTML)
+#'
+#' Generates a comparison-specific reporting table of significant MSigDB
+#' Hallmark gene sets based on entropy analysis results and writes it to an
+#' HTML file.
+#'
+#' The table groups gene sets by spectral entropy direction, using the project
+#' interpretation labels for anti-chaotic, neutral, and chaotic structure.
+#'
+#' Output is formatted as an HTML fragment for inclusion in Quarto-generated
+#' reports.
+#'
+#' @param comparison Character string identifying the comparison
+#'   (e.g., "BR/BRAD").
+#' @param entropy_df Data frame containing entropy results.
+#' @param output_dir Directory where the HTML table will be written.
+#'
+#' @details
+#' Filters MSigDB Hallmark entropy results with permutation p-value ≤ 0.05,
+#' classifies gene sets according to \code{spectral_direction}, orders results
+#' by group and gene set name, and writes grouped HTML table blocks.
+#'
+#' @return Invisibly returns the output file path.
+
 write_msig_entropy_table_html <- function(comparison, entropy_df, output_dir = "quarto/resources/tables/msig") {
   fs::dir_create(output_dir)
   clean_name <- gsub("[^a-zA-Z0-9]", "_", tolower(comparison))
@@ -29,8 +64,8 @@ write_msig_entropy_table_html <- function(comparison, entropy_df, output_dir = "
     dplyr::arrange(group, gene_set_name, p_perm)
   
   if (nrow(msig_entropy) == 0) {
-    cat("No significant MSigDB gene sets found (spectral entropy).\n", file = out_file)
-    return(invisible(NULL))
+    writeLines("<p><em>No significant MSigDB gene sets found.</em></p>", out_file)
+    return(invisible(out_file))
   }
   
   msig_entropy_split <- dplyr::group_split(msig_entropy, group)

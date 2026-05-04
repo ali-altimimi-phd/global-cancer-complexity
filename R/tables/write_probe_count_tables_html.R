@@ -1,12 +1,41 @@
-#' Write filtered probe count tables as HTML and CSV
+# ------------------------------------------------------------------------------
+# File: write_probe_count_tables_html.R
+# Purpose: Generate filtered-probe count summary tables by cancer group and write
+#   them as HTML fragments and CSV outputs for reporting.
+# Role: Helper (filtered probe-count table writer)
+# Pipeline: Reporting
+# Project: Global Cancer Complexity
+# Author: Ali M. Al-Timimi
+# Created: 2026
+# ------------------------------------------------------------------------------
+
+#' Write Filtered-Probe Count Tables
 #'
-#' @param res_hu35ksuba Result object for chip "hu35ksuba"
-#' @param res_hu6800 Result object for chip "hu6800"
-#' @param geo_chip_map Named list mapping chip IDs to GEO platforms
-#' @param output_dir Directory to write HTML tables (e.g., "quarto/resources/tables/probes")
-#' @param data_dir Root directory to write CSV table (will write to `data_dir/filter_data/`)
-#' @return Invisibly returns named list of HTML file paths by cancer group
-#' @export
+#' Generates filtered-probe count summaries by comparison and cancer group for
+#' the supported Affymetrix chip platforms, then writes group-level HTML
+#' fragments and a CSV summary table.
+#'
+#' The HTML files are intended for inclusion in Quarto-generated reports. The
+#' CSV output provides a structured tabular record of filtered-probe counts by
+#' comparison and chip platform.
+#'
+#' @param res_hu35ksuba Result object for the hu35ksuba chip.
+#' @param res_hu6800 Result object for the hu6800 chip.
+#' @param geo_chip_map Named list mapping internal chip IDs to GEO platform IDs.
+#'   Defaults to \code{list(hu35ksuba = "GPL98", hu6800 = "GPL80")}.
+#' @param output_dir Directory where HTML fragments will be written.
+#' @param data_dir Root directory where the CSV summary will be written under
+#'   \code{filter_data/}.
+#'
+#' @details
+#' This helper extracts probe-count summaries from the \code{__summary__}
+#' element of each chip-specific result object, reshapes the counts into a wide
+#' comparison-by-chip table, writes the full summary to CSV, and writes one HTML
+#' fragment per cancer group.
+#'
+#' @return Invisibly returns a named character vector of HTML file paths, indexed
+#' by cancer group.
+
 write_probe_count_tables_html <- function(res_hu35ksuba,
                                           res_hu6800,
                                           geo_chip_map = list(hu35ksuba = "GPL98", hu6800 = "GPL80"),
