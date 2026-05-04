@@ -14,11 +14,11 @@ renv/              # local package library (reproducible via lockfile)
 # =========================================================
 # Pipeline-generated data and results (rebuildable artifacts)
 # =========================================================
-data/              # raw or intermediate data (external / large)
-output/            # pipeline outputs (RData, tables, etc.)
-results/           # analysis results (derived)
-writeups/          # draft outputs / exports
-projects/          # local project-specific workspaces
+/data/             # raw or intermediate data (external / large)
+/output/           # pipeline outputs (RData, tables, etc.)
+/results/          # analysis results (derived)
+/writeups/         # draft outputs / exports
+/projects/         # local project-specific workspaces
 
 # =========================================================
 # System / OS / logs
@@ -39,12 +39,16 @@ Thumbs.db
 # =========================================================
 # Quarto / documentation build artifacts (derived state)
 # =========================================================
-docs/              # rendered HTML/PDF site output
-docs/site_libs/    # JS/CSS dependencies for Quarto HTML
+/docs/                     # rendered HTML/PDF site output
+/docs/resources/           # generated figures
+/docs/results/             # rendered result tables
+/docs/site_libs/           # JS/CSS dependencies
 
-quarto/_freeze/    # Quarto cache
-quarto/*.tex       # LaTeX intermediates (PDF rendering)
+/quarto/_freeze/           # Quarto cache
+/quarto/*.tex              # LaTeX intermediates
+/quarto/data/              # generated intermediate data
+/quarto/results/           # rendered outputs
 
 # Generated figures and diagnostics (reproducible)
-quarto/resources/plots/
-quarto/resources/diagnostics/
+/quarto/resources/plots/
+/quarto/resources/diagnostics/
