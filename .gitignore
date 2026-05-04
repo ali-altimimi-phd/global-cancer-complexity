@@ -1,16 +1,50 @@
+# =========================================================
+# R / RStudio session state (never version control)
+# =========================================================
 .Rhistory
 .RData
 .Ruserdata
 .Rproj.user/
 
-renv/
-data/
-output/
-results/
-writeups/
-projects/
+# =========================================================
+# Dependency / environment management
+# =========================================================
+renv/              # local package library (reproducible via lockfile)
 
+# =========================================================
+# Pipeline-generated data and results (rebuildable artifacts)
+# =========================================================
+data/              # raw or intermediate data (external / large)
+output/            # pipeline outputs (RData, tables, etc.)
+results/           # analysis results (derived)
+writeups/          # draft outputs / exports
+projects/          # local project-specific workspaces
+
+# =========================================================
+# System / OS / logs
+# =========================================================
 *.log
 .DS_Store
 Thumbs.db
+
+# Posit / IDE-specific
 .positai
+.vscode/
+
+# =========================================================
+# Deprecated code (explicitly excluded from version control)
+# =========================================================
+**/deprecated/
+
+# =========================================================
+# Quarto / documentation build artifacts (derived state)
+# =========================================================
+docs/              # rendered HTML/PDF site output
+docs/site_libs/    # JS/CSS dependencies for Quarto HTML
+
+quarto/_freeze/    # Quarto cache
+quarto/*.tex       # LaTeX intermediates (PDF rendering)
+
+# Generated figures and diagnostics (reproducible)
+quarto/resources/plots/
+quarto/resources/diagnostics/
