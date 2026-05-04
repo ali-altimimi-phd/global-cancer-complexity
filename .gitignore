@@ -1,28 +1,20 @@
-# =========================================================
-# R / RStudio session state (never version control)
-# =========================================================
+# R / RStudio session state
 .Rhistory
 .RData
 .Ruserdata
 .Rproj.user/
 
-# =========================================================
 # Dependency / environment management
-# =========================================================
-renv/              # local package library (reproducible via lockfile)
+renv/
 
-# =========================================================
-# Pipeline-generated data and results (rebuildable artifacts)
-# =========================================================
-/data/             # raw or intermediate data (external / large)
-/output/           # pipeline outputs (RData, tables, etc.)
-/results/          # analysis results (derived)
-/writeups/         # draft outputs / exports
-/projects/         # local project-specific workspaces
+# Pipeline-generated data and results
+/data/
+/output/
+/results/
+/writeups/
+/projects/
 
-# =========================================================
 # System / OS / logs
-# =========================================================
 *.log
 .DS_Store
 Thumbs.db
@@ -31,24 +23,14 @@ Thumbs.db
 .positai
 .vscode/
 
-# =========================================================
-# Deprecated code (explicitly excluded from version control)
-# =========================================================
+# Deprecated code
 **/deprecated/
 
-# =========================================================
-# Quarto / documentation build artifacts (derived state)
-# =========================================================
-/docs/                     # rendered HTML/PDF site output
-/docs/resources/           # generated figures
-/docs/results/             # rendered result tables
-/docs/site_libs/           # JS/CSS dependencies
-
-/quarto/_freeze/           # Quarto cache
-/quarto/*.tex              # LaTeX intermediates
-/quarto/data/              # generated intermediate data
-/quarto/results/           # rendered outputs
-
-# Generated figures and diagnostics (reproducible)
+# Quarto / documentation build artifacts
+/docs/
+/quarto/_freeze/
+/quarto/*.tex
+/quarto/data/
+/quarto/results/
 /quarto/resources/plots/
 /quarto/resources/diagnostics/
