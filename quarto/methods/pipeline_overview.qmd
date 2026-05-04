@@ -1,0 +1,30 @@
+---
+title: "Pipeline Overview"
+editor:
+  markdown:
+    wrap: 72
+---
+
+## Data
+
+As indicated the analysis uses the Ramaswamy et al. (2001) dataset:
+
+-   **GEO accession:** GSE68928
+-   Affymetrix microarrays (\~16,000 genes)
+
+Raw **CEL files** are processed within this project, enabling full
+control over normalization, annotation, and filtering.
+
+The dataset is reorganized into **paired normal vs tumor comparisons**
+across multiple cancer categories.
+
+------------------------------------------------------------------------
+
+## Computational Framework
+
+The analysis is implemented as a three-stage system:
+
+1.  **Preprocessing** — normalization, metadata integration, annotation
+2.  **Analysis** — comparison mapping, filtering, complexity and entropy
+    computation
+3.  **Reporting** — structured summaries and Quarto-generated reports

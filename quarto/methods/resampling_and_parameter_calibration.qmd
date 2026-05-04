@@ -1,0 +1,342 @@
+---
+title: "Resampling and Parameter Calibration"
+subtitle: "Permutation and bootstrap settings for complexity and entropy analyses"
+editor:
+  markdown:
+    wrap: 72
+---
+
+## Purpose
+
+This document describes the statistical role and empirical calibration of resampling parameters used in the pairwise complexity and entropy engines of the global cancer transcriptomic analysis pipeline.
+
+The analysis pipeline compares matched biological states, typically normal and malignant tissue, using comparison-specific expression matrices. These matrices are first subjected to probe filtering and are then evaluated by the complexity and entropy engines. Because both engines use resampling-based procedures, the number of resampling iterations must be chosen carefully.
+
+The goal is to select resampling values that are large enough to produce stable estimates, but not so large that they impose unnecessary computational cost.
+
+## Gene-Set Probe-Count Calibration
+
+This section documents the rationale for calibrating probe-count thresholds used in gene-set-restricted complexity and entropy analyses. It should be read together with the filtering and analysis-pipeline chapters.
+
+The analysis pipeline first defines a comparison-specific probe space through probe selection. The `FULL` mode then analyzes this complete filtered comparison-specific space. Gene-set modes such as `GO_BP`, `GO_MF`, `KEGG`, and `MSIGDB` apply an additional biological projection:
+
+```text
+filtered comparison-specific probes ∩ gene-set probes
+```
+
+This means that gene-set-restricted analyses are not performed on the full chip and are not independent pathway analyses in the conventional enrichment sense. They are conditional subspace analyses: complexity and entropy are estimated only within the portion of the selected comparison space that maps to the chosen biological vocabulary.
+
+### Current baseline
+
+The current baseline configuration uses:
+
+```r
+gene_set_modes  <- c("FULL", "GO_BP", "GO_MF", "KEGG", "MSIGDB")
+quantile_cutoff <- 0.75
+min_probes      <- 5
+```
+
+The `min_probes = 5` threshold excludes gene sets with too few mapped probes to support stable covariance-based complexity or entropy estimates. This threshold is intentionally permissive and should be treated as a baseline rather than a final calibrated value.
+
+### Why calibration is needed
+
+A single minimum-probe threshold is convenient but biologically and statistically imperfect. GO, KEGG, and MSigDB differ in their annotation structure, gene-set sizes, redundancy, and biological specificity.
+
+Very small gene sets can produce unstable covariance estimates. Very large gene sets can dominate interpretation because they may correspond to broad biological categories rather than specific mechanisms. Therefore, future updates should evaluate mode-specific thresholds rather than assuming that the same `min_probes` value is appropriate for all gene-set vocabularies.
+
+A likely future structure is:
+
+```r
+min_probes_by_mode <- list(
+  FULL   = NA_integer_,
+  GO_BP  = 5,
+  GO_MF  = 5,
+  KEGG   = 10,
+  MSIGDB = 10
+)
+```
+
+These values are illustrative, not final. They should be calibrated empirically using probe-count distributions, sensitivity checks, and stability of downstream complexity/entropy summaries.
+
+### KEGG pathways
+
+| Statistic | hu35ksuba | hu6800 |
+|---|---:|---:|
+| Median | 18 | 41.5 |
+| 3rd quartile | 36 | 77.5 |
+| Mean | 28.4 | 55.9 |
+| Max | 427 | 676 |
+
+Most KEGG pathways contain enough probes to support pathway-level summaries, although very small or very large pathway mappings still require caution. Because KEGG pathways are curated mechanistic modules, a higher minimum-probe threshold may be biologically and statistically reasonable in future analyses.
+
+### GO Molecular Function terms
+
+| Statistic | hu35ksuba | hu6800 |
+|---|---:|---:|
+| Median | 2 | 2 |
+| 3rd quartile | 6 | 6 |
+| Mean | ~12 | ~12 |
+| Max | ~6400 | ~5300 |
+
+GO Molecular Function terms are often very small in mapped-probe terms. This makes minimum-probe thresholds especially consequential for GO-level calculations. Without such thresholds, many GO summaries would be based on too few probes to support stable interpretation.
+
+### Interpretation
+
+The current `min_probes = 5` setting should be interpreted as a pragmatic exploratory baseline. It enables broad coverage across GO, KEGG, and MSigDB while excluding the sparsest gene sets.
+
+Future calibration should ask:
+
+- whether results are stable across plausible `min_probes` values;
+- whether GO, KEGG, and MSigDB require separate thresholds;
+- whether the same threshold should be used for both complexity and entropy engines;
+- whether different tumor categories are disproportionately affected by gene-set eligibility rules;
+- whether the biological interpretation changes materially when sparse gene sets are excluded.
+
+The goal of calibration is not simply to maximize the number of retained gene sets. The goal is to define biologically meaningful and numerically stable subspaces for complexity and entropy estimation.
+
+## Resampling Parameters in the Complexity Engine
+
+The complexity engine is implemented through the following function interface:
+
+```{r, eval=FALSE}
+compare_matrix_pair_complexity <- function(
+  label, chip, mat1, mat2,
+  filter_probes = NULL,
+  complexity_fn = get_svd_kappa,
+  n_perm = 1000,
+  n_boot = 1000
+)
+```
+
+The complexity engine uses two distinct resampling parameters: `n_perm` and `n_boot`.
+
+### Permutation resampling
+
+The parameter `n_perm` controls the number of permutations used by the permutation test:
+
+```{r, eval=FALSE}
+perm <- permutation_test_complexity(
+  mat1,
+  mat2,
+  complexity_fn,
+  n_perm
+)
+```
+
+This procedure generates a permutation-based null distribution for the observed difference in complexity between the paired biological states. The resulting permutation p-value is reported as:
+
+```{r, eval=FALSE}
+p_perm = perm$p_value
+```
+
+Conceptually, permutation resampling is used to assess whether the observed difference in complexity is larger than expected under a null model in which the state-specific structure is disrupted.
+
+### Bootstrap resampling
+
+The parameter `n_boot` controls the number of bootstrap resamples used to estimate uncertainty around the state-specific complexity statistic:
+
+```{r, eval=FALSE}
+boot_1 <- bootstrap_kappa_ci(mat1, complexity_fn, n_boot)
+boot_2 <- bootstrap_kappa_ci(mat2, complexity_fn, n_boot)
+```
+
+The bootstrap distributions are used to estimate confidence intervals for the complexity statistic in each biological state:
+
+```{r, eval=FALSE}
+CI_1_Low  = boot_1$ci_lower
+CI_1_High = boot_1$ci_upper
+CI_2_Low  = boot_2$ci_lower
+CI_2_High = boot_2$ci_upper
+```
+
+Thus, the two complexity resampling parameters have distinct statistical roles:
+
+| Parameter | Procedure | Statistical role | Main outputs |
+|---|---|---|---|
+| `n_perm` | Permutation testing | Null-model approximation for the difference between paired states | `p_perm`, `perm_dist` |
+| `n_boot` | Bootstrap resampling | Uncertainty estimation for state-specific complexity values | confidence intervals, bootstrap distributions |
+
+The complexity engine therefore combines effect-size estimation, permutation-based comparison, bootstrap confidence intervals, per-sample distributional comparisons, effective rank, sparsity, and composite complexity measures. Complexity gain or loss is interpreted as a multi-criterion structural property of the expression matrix rather than as a single scalar summary.
+
+## Resampling Parameter in the Entropy Engine
+
+The entropy engine is implemented through the following function interface:
+
+```{r, eval=FALSE}
+compare_matrix_pair_entropy <- function(
+  label, chip, mat1, mat2,
+  filter_probes = NULL,
+  entropy_fn = compute_shannon_entropy,
+  n_perm = 1000
+)
+```
+
+Unlike the complexity engine, the entropy engine currently uses a single resampling parameter: `n_perm`.
+
+The parameter `n_perm` controls the number of permutations used by the entropy permutation test:
+
+```{r, eval=FALSE}
+perm <- perm_test_entropy(
+  mat1,
+  mat2,
+  entropy_fn = entropy_fn,
+  n_perm = n_perm
+)
+```
+
+The entropy engine computes both Shannon entropy and spectral entropy:
+
+```{r, eval=FALSE}
+shannon_1 <- compute_shannon_entropy(mat1)
+shannon_2 <- compute_shannon_entropy(mat2)
+
+spectral_1 <- compute_spectral_entropy(mat1)
+spectral_2 <- compute_spectral_entropy(mat2)
+```
+
+The corresponding deltas are interpreted directionally as entropy gain or entropy loss:
+
+```{r, eval=FALSE}
+shannon_delta  <- shannon_2  - shannon_1
+spectral_delta <- spectral_2 - spectral_1
+```
+
+In the current implementation, the permutation test is applied using `entropy_fn`, which defaults to `compute_shannon_entropy`. Therefore, unless another entropy function is supplied, the reported permutation p-value corresponds to the Shannon entropy comparison.
+
+| Parameter | Procedure | Statistical role | Main output |
+|---|---|---|---|
+| `n_perm` | Permutation testing | Null-model approximation for the entropy difference between paired states | `p_perm` |
+
+The entropy engine does not currently compute bootstrap confidence intervals. This asymmetry is statistically defensible at the present stage because the complexity engine treats SVD-based complexity as a primary structural statistic requiring bootstrap uncertainty estimates, whereas the entropy engine is used as a complementary directional and permutation-tested measure of uncertainty and spectral disorder.
+
+Bootstrap intervals for Shannon entropy and spectral entropy could be added in a later methodological extension, but they are not required for the present resampling calibration.
+
+## Need for Empirical Calibration
+
+The resampling parameters directly affect Monte Carlo precision. Too few resamples can produce unstable estimates, while excessive resampling increases runtime without necessarily improving inference.
+
+For this reason, the resampling levels were treated as empirically tunable analysis parameters. The purpose of calibration was not to preserve a historical default, but to determine a defensible setting based on observed convergence behavior in the current pipeline.
+
+## Diagnostic Utility
+
+A standalone diagnostic utility script was created to evaluate convergence across candidate resampling levels. The diagnostic was deliberately kept separate from the main pipeline so that it could assess parameter stability without modifying production analysis behavior.
+
+The diagnostic was designed to use the same filtered, comparison-specific feature spaces used by the pairwise analysis pipeline. This is important because convergence should be evaluated on the actual matrices used downstream, not on an artificial or global probe universe.
+
+The tested resampling grid was:
+
+```{r, eval=FALSE}
+resample_grid <- c(50, 100, 250)
+```
+
+The diagnostic summarized convergence using one representative complexity metric and one representative entropy metric:
+
+- participation ratio, representing eigenvalue-spectrum complexity
+- eigenvalue entropy, representing spectral disorder
+
+For each resampling level, the diagnostic computed coefficient of variation summaries across the tested runs:
+
+```{r, eval=FALSE}
+median_cv_pr
+q75_cv_pr
+max_cv_pr
+median_cv_entropy
+q75_cv_entropy
+max_cv_entropy
+total_runtime_seconds
+```
+
+## Filtering Context
+
+The diagnostic was applied to limma-filtered comparison-specific feature spaces. The relevant limma filtering parameters were:
+
+```{r, eval=FALSE}
+filter_method <- "limma"
+logfc_cutoff <- 0.33
+pval_cutoff  <- 0.05
+```
+
+Thus, the diagnostic did not evaluate all chip probes indiscriminately. Instead, it evaluated the feature spaces actually passed into the pairwise comparison functions after comparison-aware limma filtering.
+
+This is especially important because the number of retained probes differs by chip and comparison.
+
+## Diagnostic Results
+
+The convergence diagnostic was applied to `FULL`, `KEGG`, and `MSIGDB` modes. Across these modes, convergence behavior was essentially identical.
+
+### FULL mode
+
+| n_resamples | n_runs | median_cv_pr | q75_cv_pr | max_cv_pr | median_cv_entropy | q75_cv_entropy | max_cv_entropy | total_runtime_seconds |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 50  | 7 | 0.00783 | 0.00896 | 0.01640 | 0.01803 | 0.02084 | 0.02178 | 4.52 |
+| 100 | 7 | 0.00787 | 0.00896 | 0.01682 | 0.01887 | 0.02100 | 0.02293 | 7.27 |
+| 250 | 7 | 0.00762 | 0.00905 | 0.01512 | 0.01789 | 0.01966 | 0.02408 | 15.21 |
+
+### KEGG mode
+
+| n_resamples | n_runs | median_cv_pr | q75_cv_pr | max_cv_pr | median_cv_entropy | q75_cv_entropy | max_cv_entropy | total_runtime_seconds |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 50  | 7 | 0.00783 | 0.00896 | 0.01640 | 0.01803 | 0.02084 | 0.02178 | 4.42 |
+| 100 | 7 | 0.00787 | 0.00896 | 0.01682 | 0.01887 | 0.02100 | 0.02293 | 7.62 |
+| 250 | 7 | 0.00762 | 0.00905 | 0.01512 | 0.01789 | 0.01966 | 0.02408 | 14.90 |
+
+### MSIGDB mode
+
+| n_resamples | n_runs | median_cv_pr | q75_cv_pr | max_cv_pr | median_cv_entropy | q75_cv_entropy | max_cv_entropy | total_runtime_seconds |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 50  | 7 | 0.00783 | 0.00896 | 0.01640 | 0.01803 | 0.02084 | 0.02178 | 4.52 |
+| 100 | 7 | 0.00787 | 0.00896 | 0.01682 | 0.01887 | 0.02100 | 0.02293 | 6.74 |
+| 250 | 7 | 0.00762 | 0.00905 | 0.01512 | 0.01789 | 0.01966 | 0.02408 | 14.69 |
+
+## Interpretation of Convergence
+
+Across `FULL`, `KEGG`, and `MSIGDB`, the convergence summaries show that both metrics stabilized rapidly.
+
+For participation ratio, the median coefficient of variation was consistently below 1%, and the maximum coefficient of variation was below approximately 1.7%.
+
+For eigenvalue entropy, the median coefficient of variation was below approximately 2%, and the maximum coefficient of variation was below approximately 2.4%.
+
+Increasing the number of resamples from 50 to 100 or 250 did not produce a systematic reduction in coefficient of variation. The small differences across resampling levels were not monotonic and were smaller than would justify the added computational cost.
+
+Runtime increased approximately linearly with the number of resamples. Therefore, larger resampling values increased computational cost without materially improving the stability of the diagnostic estimates.
+
+## Adopted Defaults
+
+Based on the convergence diagnostic, the following empirically calibrated defaults are adopted:
+
+```{r, eval=FALSE}
+# Complexity engine
+n_perm <- 100
+n_boot <- 100
+
+# Entropy engine
+n_perm <- 100
+```
+
+For the complexity engine, `n_perm` and `n_boot` retain distinct statistical meanings. The former controls permutation testing; the latter controls bootstrap confidence interval estimation.
+
+For the entropy engine, `n_perm` controls permutation testing only.
+
+Although 50 resamples already appeared sufficient in the diagnostic summaries, 100 was selected as a conservative default. This value provides a margin above the observed convergence point while avoiding the unnecessary computational cost associated with substantially larger values.
+
+## Scope and Limitations
+
+This calibration applies to the current analysis regime:
+
+- comparison-aware limma-filtered feature spaces
+- `logfc_cutoff <- 0.33`
+- `pval_cutoff <- 0.05`
+- tested modes: `FULL`, `KEGG`, and `MSIGDB`
+- representative covariance-spectrum metrics: participation ratio and eigenvalue entropy
+
+The calibration should be revisited if major changes are made to the filtering regime, gene-set inclusion criteria, matrix orientation, or resampling implementation.
+
+The current diagnostic supports a unified resampling setting across the tested modes. It does not provide evidence that higher values such as 250, 500, or 1000 are required under the present pipeline configuration.
+
+## Summary
+
+The pairwise complexity and entropy engines use resampling for related but distinct statistical purposes. Complexity uses both permutation testing and bootstrap confidence intervals, while entropy currently uses permutation testing only.
+
+A standalone convergence diagnostic showed that the relevant complexity and entropy summaries stabilize rapidly across `FULL`, `KEGG`, and `MSIGDB` modes. The diagnostic therefore supports setting both complexity and entropy permutation counts to 100, and setting the complexity bootstrap count to 100.
+
+This choice preserves the statistical structure of both engines while substantially reducing unnecessary computational overhead.
