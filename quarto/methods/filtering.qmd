@@ -8,7 +8,7 @@ editor:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-probes_table_base <- file.path("..", "..", "resources", "tables", "probes")
+probes_table_base <- file.path("..", "resources", "tables", "probes")
 
 carcinomas_probe_counts_path <- file.path(probes_table_base, "carcinomas_probe_counts.html")
 blastomas_probe_counts_path  <- file.path(probes_table_base, "blastomas_probe_counts.html")
@@ -245,31 +245,29 @@ It is a set of comparison-specific feature lists that define the input space for
 ## Filtered Probe Counts
 
 The following tables summarize filtered probe counts by tumor category.
-These tables are currently included from pre-rendered HTML resources.
-That is acceptable for documenting the existing report structure, but their role in PDF rendering should be reviewed separately when the reporting interface is audited.
 
 ### Carcinomas
 
 ```{r carcinomas_table, results='asis'}
-safe_include_html(here::here(carcinomas_probe_counts_path))
+safe_include_html(carcinomas_probe_counts_path)
 ```
 
 ### Blastomas
 
 ```{r blastomas_table, results='asis'}
-safe_include_html(here::here(blastomas_probe_counts_path))
+safe_include_html(blastomas_probe_counts_path)
 ```
 
 ### Leukemias
 
 ```{r leukemias_table, results='asis'}
-safe_include_html(here::here(leukemias_probe_counts_path))
+safe_include_html(leukemias_probe_counts_path)
 ```
 
 ### Lymphomas
 
 ```{r lymphomas_table, results='asis'}
-safe_include_html(here::here(lymphomas_probe_counts_path))
+safe_include_html(lymphomas_probe_counts_path)
 ```
 
 ------------------------------------------------------------------------

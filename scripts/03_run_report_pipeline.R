@@ -133,7 +133,7 @@ run_report_pipeline <- function() {
       )
     }
     
-    logger$log("✅ Reports saved.")
+    logger$log("✅ Summary exports saved.")
   }
   
   # ---- Stage 3: Generate comparison-level QMD reports ----

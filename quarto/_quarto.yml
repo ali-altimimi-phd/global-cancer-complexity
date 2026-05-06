@@ -32,16 +32,17 @@ book:
         - methods/filtering.qmd
         - methods/resampling_and_parameter_calibration.qmd
 
+    - part: "Structure of Filtered Probe Sets"
+      chapters:
+        - results/filtered_feature_space_structure.qmd
+        - results/probe_feature_space_concordance.qmd
+        - results/filtered_feature_space_structure_top_n.qmd
+ 
     - part: "Quantitative Framework"
       chapters:
         - framework/complexity_and_entropy_measures.qmd
         - framework/latent_space.qmd
         - framework/biological_complexity_dimensions.qmd
-
-    - part: "Structure of Filtered Probe Sets"
-      chapters:
-        - results/filtered_feature_space_structure.qmd
-        - results/filtered_feature_space_structure_top_n.qmd
 
     - part: "Results: Carcinomas"
       chapters:
@@ -71,45 +72,94 @@ book:
 
 execute:
   freeze: auto
+  cache: true
 
 resources:
   - output/global_cancer/plots/**
   - output/global_cancer/tables/**
 
+website:
+  page-navigation: true
+
 format:
   html:
+    page-layout: full
+
     toc: true
+    toc-location: left
+    toc-depth: 3
+    toc-expand: 2
+
     number-sections: true
-    theme: cosmo
+
+    theme:
+      - litera
+      - styles.scss
+
+    sidebar:
+      collapse-level: 1
+      style: docked
+
     html-math-method: mathjax
+
+    fig-align: center
+    code-fold: true
 
   pdf:
     documentclass: scrreprt
 
-    toc: true
-    number-sections: true
+    classoption:
+      - openany
+      - oneside
+      - DIV=12
 
     pdf-engine: xelatex
 
+    toc: true
+    number-sections: true
+
+    # Typography (major readability upgrade)
+    mainfont: TeX Gyre Pagella
+    sansfont: TeX Gyre Heros
+    monofont: Consolas
+    fontsize: 11pt
+    linestretch: 1.15
+
+    # Page layout
+    geometry:
+      - top=1in
+      - bottom=1in
+      - left=1in
+      - right=1in
+
+    # Figures (important for R plots)
+    fig-width: 6.5
+    fig-height: 4.5
+    fig-pos: "H"
+    fig-align: center
+
+    # Tables
+    tbl-colwidths: auto
+    tbl-cap-location: top
+
+    # Keep reproducibility artifacts
     keep-tex: true
     latex-auto-install: true
 
-    geometry: margin=0.75in
-
-    fig-width: 6
-    fig-height: 4
-    dpi: 150
-
-    tbl-colwidths: auto
-
+    # LaTeX enhancements
     include-in-header:
       text: |
         \usepackage{float}
         \usepackage{booktabs}
         \usepackage{longtable}
+        \usepackage{tabularx}
+        \usepackage{threeparttable}
         \usepackage{caption}
         \captionsetup{font=small}
+        \usepackage{setspace}
+        \setstretch{1.1}
+        \floatplacement{figure}{H}
+        \floatplacement{table}{H}
 
-    classoption:
-      - openany
-      - oneside
+crossref:
+  chapters: true

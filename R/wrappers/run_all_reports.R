@@ -58,17 +58,6 @@ run_all_reports <- function(summaries_combined_df,
   source(here::here("R/helpers/write_all_comparison_tables.R"))
   source(here::here("R/tables/write_probe_count_tables_html.R"))
   
-  # Commented out lines as they trigger an error:
-  # Error in vapply(mget(required_objects, inherits = TRUE, ifnotfound = NA),  :
-  #                   values must be length 1,
-  #                 but FUN(X[[1]]) result is length 990
-  
-  # required_objects <- c("summaries_combined_df", "complexity_df", "entropy_df", "res_hu35ksuba", "res_hu6800")
-  # missing <- required_objects[!vapply(mget(required_objects, inherits = TRUE, ifnotfound = NA), function(x) !is.na(x), logical(1))]
-  # if (length(missing) > 0) {
-  #   stop("Missing required data objects: ", paste(missing, collapse = ", "))
-  # }
-  
   args <- list(
     summaries_combined_df = summaries_combined_df,
     complexity_df = complexity_df,
@@ -155,7 +144,7 @@ run_all_reports <- function(summaries_combined_df,
     param_yaml <- glue(
       "---\n",
       "title: \"Comparison Report: {cmp}\"\n",
-      "author: \"Ali Al-Timimi, PhD\"\n",
+      "author: \"Ali M. Al-Timimi, PhD\"\n",
       "format: html\n",
       "params:\n",
       "  data_file: \"{normalizePath(rds_path, winslash = '/') }\"\n",
