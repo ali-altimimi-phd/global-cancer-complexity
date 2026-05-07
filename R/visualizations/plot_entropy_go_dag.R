@@ -1,3 +1,8 @@
+# Status: Legacy / exploratory visualization
+# Note:
+# This script predates the unified GO semantic summarization framework and
+# operates on deprecated entropy cluster outputs.
+
 #' Build GO DAG for clustered entropy terms and visualize it
 #'
 #' @param cmp Character. Comparison code (e.g., "PB/T-ALL") or category name if `category_mode = TRUE`.
@@ -7,7 +12,7 @@
 #' @param category_mode Logical. If TRUE, load and merge all comparisons for a tumor category.
 #'
 #' @return A `ggraph` plot object or NULL if DAG cannot be built.
-#' @export
+
 plot_entropy_go_dag <- function(
     cmp,
     ontology = "BP",

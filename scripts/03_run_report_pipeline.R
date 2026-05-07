@@ -5,7 +5,7 @@
 #   and optional Quarto rendering from aggregated analysis results.
 # Role: Pipeline driver (entry point)
 # Pipeline: Reporting
-# Project: Global Cancer Complexity
+# Project: Cancer Complexity Analysis
 # Author: Ali M. Al-Timimi
 # Created: 2026
 # ------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ run_report_pipeline <- function() {
     
     required_objects <- c()
     
-    if (isTRUE(run_summary_exports)) {
+    if (isTRUE(run_summary_exports) || isTRUE(run_go_clustering)) {
       required_objects <- c(required_objects, "entropy_df", "complexity_df")
     }
     
@@ -135,8 +135,27 @@ run_report_pipeline <- function() {
     
     logger$log("✅ Summary exports saved.")
   }
+
+  # ---- Stage 3: GO semantic summarization ----
+  if (isTRUE(run_go_clustering)) {
+    logger$log(sprintf("🧬 Running GO semantic summarization... (mode = %s)", go_mode))
+    
+    source(here::here("R/wrappers/run_go_clustering.R"))
+    
+    run_go_clustering_main(
+      summaries_combined_df = summaries_combined_df,
+      complexity_df = complexity_df,
+      entropy_df = entropy_df,
+      output_dir_base = here::here("quarto", "resources", "tables", "clusters"),
+      go_mode = go_mode,
+      similarity_cutoff = go_similarity_cutoff,
+      logger = logger
+    )   
+    
+    logger$log("✅ GO semantic summarization complete.")
+  }
   
-  # ---- Stage 3: Generate comparison-level QMD reports ----
+  # ---- Stage 4: Generate comparison-level QMD reports ----
   
   if (isTRUE(run_comparison_qmd_generation)) {
     source(here::here("R/wrappers/run_all_reports.R"))
@@ -151,29 +170,7 @@ run_report_pipeline <- function() {
     )
   }
   
-  # ---- Stage 4: GO clusters analysis ----
-  if (isTRUE(run_go_clustering)) {
-    # logger$log("🧬 Running GO clustering analysis...", {go_mode})
-    logger$log(sprintf("🧬 Running GO clustering analysis... (mode = %s)", go_mode))
-    
-    source(here::here("R/wrappers/run_go_clustering.R")) # Dispatcher for all comparisons
-    
-    run_go_clustering_main(
-      summaries_combined_df = summaries_combined_df,
-      complexity_df = complexity_df,
-      entropy_df = entropy_df,
-      output_dir_base = here::here("quarto", "resources", "tables", "clusters"),
-      go_mode = go_mode
-    )
-    
-    logger$log("✅ GO clustering analysis complete.")
-  }
-  
-  # ---- Stage 5: Create GO visualizations ----
-  # source("R/visualizations/plot_entropy_go_dag.R")
-  # plot_entropy_go_dag("PB/B-ALL")
-  
-  # ---- Stage 6: Render comparison reports from .qmd template ----
+  # ---- Stage 5: Render comparison reports from .qmd template ----
   if (run_quarto) {
     old <- getwd()
     setwd(here::here("quarto"))

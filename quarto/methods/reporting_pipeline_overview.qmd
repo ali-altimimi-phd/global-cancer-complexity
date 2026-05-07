@@ -8,8 +8,9 @@ editor:
 
 This document describes the reporting pipeline used to transform aggregated
 complexity, entropy, and pairwise-comparison results into human-readable summary
-files, generated comparison-specific Quarto source files, optional GO-clustering
-tables, and final rendered report outputs.
+files, generated comparison-specific Quarto source files, GO semantic-summary
+tables, generated comparison-specific Quarto source files, and final rendered
+report outputs.
 
 The reporting pipeline is intentionally downstream of the preprocessing and
 analysis pipelines. It does not rebuild `ExpressionSet` objects, recompute probe
@@ -46,8 +47,8 @@ artifacts.
 The goal of this reporting pipeline is to create a stable reporting layer on top
 of the analysis outputs. Its main responsibilities are to load previously saved
 summary and pairwise-comparison objects, generate cleaned summary artifacts,
-create comparison-specific Quarto files from templates, optionally generate
-GO-clustering tables, and optionally render the Quarto book/site.
+generate GO semantic summaries for interpretation, create comparison-specific
+Quarto files from templates, and optionally render the Quarto book/site.
 
 ------------------------------------------------------------------------
 
@@ -64,6 +65,7 @@ The reporting pipeline therefore performs a translation step:
 - from serialized R objects to cleaned report tables;
 - from comparison-level results to generated `.qmd` report files;
 - from GO/KEGG-associated analysis outputs to report-ready biological tables;
+- from statistically significant GO terms to semantic-summary tables;
 - and, when enabled, from Quarto source files to rendered HTML/PDF outputs.
 
 This design separates computational analysis from document generation. That
@@ -81,8 +83,8 @@ toggles are:
 | Toggle | Purpose |
 |---|---|
 | `run_summary_reports` | Generate text summaries and cleaned entropy/complexity files |
+| `run_go_clustering` | Run GO semantic summarization and write cluster/theme-support tables |
 | `run_reports` | Generate comparison-specific `.qmd` files from the reporting template |
-| `run_go_clustering` | Run GO-clustering analysis and write cluster tables |
 | `run_quarto` | Render the Quarto project after report sources are generated |
 | `run_visualization` | Placeholder toggle; visualization code is currently removed from the active pipeline |
 
@@ -92,9 +94,9 @@ The current GO-clustering configuration uses:
 go_mode <- "GO_BP"
 ```
 
-Other intended GO modes include `GO_MF` and `GO_UNSPECIFIED`, although the
-validity of a given mode depends on the downstream clustering script and the
-available annotation fields.
+Other supported GO modes include `GO_MF`, `GO_CC`, and `GO_ALL`, with the
+semantic-similarity calculations performed separately by ontology where
+appropriate.
 
 ------------------------------------------------------------------------
 
@@ -181,7 +183,42 @@ retained unless and until the Quarto reporting layer fully replaces it.
 
 ------------------------------------------------------------------------
 
-### 4. Generate Comparison-Specific Quarto Files {.unnumbered}
+### 4. Run GO Semantic Summarization {.unnumbered}
+
+**Purpose:** Generate ontology-aware semantic summaries of statistically
+significant GO terms for report integration.
+
+- Controlled by: `run_go_clustering`
+- Wrapper: `R/wrappers/run_go_clustering.R`
+- Current output base: `quarto/resources/tables/clusters/`
+- Current GO mode: `GO_BP`
+
+The driver calls:
+
+```r
+run_go_clustering_main(
+  summaries_combined_df = summaries_combined_df,
+  complexity_df = complexity_df,
+  entropy_df = entropy_df,
+  output_dir_base = here::here("quarto", "resources", "tables", "clusters"),
+  go_mode = go_mode,
+  logger = logger
+)
+```
+
+This stage uses the already-loaded `complexity_df` and `entropy_df` objects. It
+does not reload the primary entropy or complexity result tables from disk. The
+GO summarization layer filters to statistically significant GO terms before
+semantic grouping, separates BP/MF/CC ontology handling where needed, and writes
+structured CSV/RDS outputs for later Quarto inclusion.
+
+The outputs should be interpreted as biological-compression and interpretation
+support artifacts. They do not replace the original term-level statistical
+results and should not be treated as a new independent hypothesis-testing layer.
+
+------------------------------------------------------------------------
+
+### 5. Generate Comparison-Specific Quarto Files {.unnumbered}
 
 **Purpose:** Create one `.qmd` file per pairwise comparison from a report
 template.
@@ -205,6 +242,12 @@ This stage is responsible for generating comparison-level Quarto source files,
 not for rendering the final book. The source files are expected to be consumed
 later by the Quarto project under `quarto/`.
 
+GO semantic summaries are generated before this stage so that the report
+template can read cluster-summary resources directly if they are enabled. The
+current template may still display pre-clustering significant GO terms, but the
+pipeline order allows future templates to add semantic-summary tables without
+reordering the workflow.
+
 **Conceptual output:**
 
 - comparison-specific `.qmd` files, typically under
@@ -216,63 +259,7 @@ The actual Quarto rendering step is controlled separately by `run_quarto`.
 
 ------------------------------------------------------------------------
 
-### 5. Run GO-Clustering Analysis {.unnumbered}
-
-**Purpose:** Generate clustered GO-term tables for report integration.
-
-- Controlled by: `run_go_clustering`
-- Wrapper: `R/wrappers/run_go_clustering.R`
-- Current output base: `quarto/resources/tables/clusters/`
-- Current GO mode: `GO_BP`
-
-The driver calls:
-
-```r
-run_go_clustering_main(
-  summaries_combined_df = summaries_combined_df,
-  complexity_df = complexity_df,
-  entropy_df = entropy_df,
-  output_dir_base = here::here("quarto", "resources", "tables", "clusters"),
-  go_mode = go_mode
-)
-```
-
-This stage is currently disabled by default in `report_config.R`:
-
-```r
-run_go_clustering <- FALSE
-```
-
-When enabled, it should be treated as a biological-interpretation support layer,
-not as a replacement for the primary entropy and complexity summaries.
-
-------------------------------------------------------------------------
-
-### 6. Generate GO Visualizations {.unnumbered}
-
-**Purpose:** Placeholder for GO visualization code.
-
-This section is currently inactive. The driver contains commented code for a GO
-DAG plotting function:
-
-```r
-# source("R/visualizations/plot_entropy_go_dag.R")
-# plot_entropy_go_dag("PB/B-ALL")
-```
-
-The configuration file also contains:
-
-```r
-run_visualization <- FALSE
-```
-
-At present, visualization code should be considered outside the active reporting
-pipeline. It can be reintroduced later after the table-generation and Quarto
-rendering layers are stable.
-
-------------------------------------------------------------------------
-
-### 7. Render the Quarto Project {.unnumbered}
+### 6. Render the Quarto Project {.unnumbered}
 
 **Purpose:** Render the Quarto book/site from the generated source files.
 
@@ -322,7 +309,7 @@ The reporting pipeline exposes three downstream interfaces.
 | Location | Description |
 |---|---|
 | `quarto/reports/generated_reports/` | Comparison-specific `.qmd` files generated from templates |
-| `quarto/resources/tables/clusters/` | Optional GO-clustering tables for Quarto inclusion |
+| `quarto/resources/tables/clusters/` | Optional GO semantic-summary tables for Quarto inclusion |
 
 ### Rendered documentation outputs {.unnumbered}
 
@@ -382,29 +369,30 @@ run_quarto          <- FALSE
 This tests whether the entropy and complexity summaries can be generated and
 written to `output/global_cancer/reports/`.
 
-### Phase C: Quarto-source generation validation {.unnumbered}
+### Phase C: GO semantic-summary validation {.unnumbered}
 
 ```r
 run_summary_reports <- TRUE
-run_reports         <- TRUE
-run_go_clustering   <- FALSE
-run_quarto          <- FALSE
-```
-
-This tests whether comparison-specific `.qmd` files can be generated without
-triggering a full Quarto render.
-
-### Phase D: GO-clustering validation {.unnumbered}
-
-```r
-run_summary_reports <- TRUE
-run_reports         <- TRUE
 run_go_clustering   <- TRUE
+run_reports         <- FALSE
 run_quarto          <- FALSE
 ```
 
-This tests whether GO-clustering tables can be generated and made available to
-the Quarto reporting layer.
+This tests whether GO semantic-summary tables can be generated from the
+already-loaded entropy and complexity results.
+
+### Phase D: Quarto-source generation validation {.unnumbered}
+
+```r
+run_summary_reports <- TRUE
+run_go_clustering   <- TRUE
+run_reports         <- TRUE
+run_quarto          <- FALSE
+```
+
+This tests whether comparison-specific `.qmd` files can be generated after the
+semantic-summary resources are available, without triggering a full Quarto
+render.
 
 ### Phase E: Full reporting render {.unnumbered}
 
@@ -454,7 +442,7 @@ global-cancer-complexity/
     wrappers/
       run_all_reports.R
       run_go_clustering.R
-    visualizations/
+    legacy/
       plot_entropy_go_dag.R
   scripts/
     reporting/
@@ -506,7 +494,7 @@ This reporting pipeline can be adapted to other studies by:
 - updating the expected input directories under `output/<study_name>/RData/`;
 - modifying `geo_chip_map` if additional platforms are used;
 - adjusting `run_all_reports()` to accept the appropriate filtered-probe objects;
-- changing the GO mode or clustering output path; and
+- changing the GO mode, semantic-similarity cutoff, or clustering output path; and
 - updating the Quarto book structure so that generated report files are included
   in the desired order.
 

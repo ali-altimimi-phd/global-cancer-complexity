@@ -21,9 +21,9 @@ study_name <- "global_cancer"
 # ==============================================================================
 
 run_summary_exports           <- TRUE # Toggle to enable or disable
-run_pairwise_summary_html     <- FALSE
+run_pairwise_summary_html     <- TRUE
+run_go_clustering             <- TRUE
 run_comparison_qmd_generation <- TRUE
-run_go_clustering             <- FALSE
 run_quarto                    <- FALSE
 
 # Visualization code temporarily removed from pipeline
@@ -41,7 +41,7 @@ geo_chip_map <- list(
 
 # Other choices: GO_MF and GO_UNSPECIFIED
 go_mode <- "GO_BP"
-
+go_similarity_cutoff <- 0.5
 
 # ==============================================================================
 # 4. Core output and logging paths

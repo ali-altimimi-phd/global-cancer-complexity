@@ -275,14 +275,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../results/filtered_feature_space_structure_top_n.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Structure and Overlap of Top-N Variance Probe Sets</span></span></a>
+  <a href="../results/probe_feature_space_concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Probe Feature-Space Concordance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../results/probe_feature_space_concordance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Probe Feature-Space Concordance</span></span></a>
+  <a href="../results/filtered_feature_space_structure_top_n.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Structure and Overlap of Top-N Variance Probe Sets</span></span></a>
   </div>
 </li>
       </ul>
@@ -458,10 +458,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-reporting-configuration-and-start-logging" id="toc-load-reporting-configuration-and-start-logging" class="nav-link" data-scroll-target="#load-reporting-configuration-and-start-logging">1. Load Reporting Configuration and Start Logging</a></li>
   <li><a href="#load-analysis-outputs-into-the-reporting-environment" id="toc-load-analysis-outputs-into-the-reporting-environment" class="nav-link" data-scroll-target="#load-analysis-outputs-into-the-reporting-environment">2. Load Analysis Outputs into the Reporting Environment</a></li>
   <li><a href="#generate-summary-reports" id="toc-generate-summary-reports" class="nav-link" data-scroll-target="#generate-summary-reports">3. Generate Summary Reports</a></li>
-  <li><a href="#generate-comparison-specific-quarto-files" id="toc-generate-comparison-specific-quarto-files" class="nav-link" data-scroll-target="#generate-comparison-specific-quarto-files">4. Generate Comparison-Specific Quarto Files</a></li>
-  <li><a href="#run-go-clustering-analysis" id="toc-run-go-clustering-analysis" class="nav-link" data-scroll-target="#run-go-clustering-analysis">5. Run GO-Clustering Analysis</a></li>
-  <li><a href="#generate-go-visualizations" id="toc-generate-go-visualizations" class="nav-link" data-scroll-target="#generate-go-visualizations">6. Generate GO Visualizations</a></li>
-  <li><a href="#render-the-quarto-project" id="toc-render-the-quarto-project" class="nav-link" data-scroll-target="#render-the-quarto-project">7. Render the Quarto Project</a></li>
+  <li><a href="#run-go-semantic-summarization" id="toc-run-go-semantic-summarization" class="nav-link" data-scroll-target="#run-go-semantic-summarization">4. Run GO Semantic Summarization</a></li>
+  <li><a href="#generate-comparison-specific-quarto-files" id="toc-generate-comparison-specific-quarto-files" class="nav-link" data-scroll-target="#generate-comparison-specific-quarto-files">5. Generate Comparison-Specific Quarto Files</a></li>
+  <li><a href="#render-the-quarto-project" id="toc-render-the-quarto-project" class="nav-link" data-scroll-target="#render-the-quarto-project">6. Render the Quarto Project</a></li>
   </ul></li>
   <li><a href="#output-contract" id="toc-output-contract" class="nav-link" data-scroll-target="#output-contract">Output Contract</a>
   <ul class="collapse">
@@ -474,8 +473,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#phase-a-load-only-validation" id="toc-phase-a-load-only-validation" class="nav-link" data-scroll-target="#phase-a-load-only-validation">Phase A: Load-only validation</a></li>
   <li><a href="#phase-b-summary-output-validation" id="toc-phase-b-summary-output-validation" class="nav-link" data-scroll-target="#phase-b-summary-output-validation">Phase B: Summary-output validation</a></li>
-  <li><a href="#phase-c-quarto-source-generation-validation" id="toc-phase-c-quarto-source-generation-validation" class="nav-link" data-scroll-target="#phase-c-quarto-source-generation-validation">Phase C: Quarto-source generation validation</a></li>
-  <li><a href="#phase-d-go-clustering-validation" id="toc-phase-d-go-clustering-validation" class="nav-link" data-scroll-target="#phase-d-go-clustering-validation">Phase D: GO-clustering validation</a></li>
+  <li><a href="#phase-c-go-semantic-summary-validation" id="toc-phase-c-go-semantic-summary-validation" class="nav-link" data-scroll-target="#phase-c-go-semantic-summary-validation">Phase C: GO semantic-summary validation</a></li>
+  <li><a href="#phase-d-quarto-source-generation-validation" id="toc-phase-d-quarto-source-generation-validation" class="nav-link" data-scroll-target="#phase-d-quarto-source-generation-validation">Phase D: Quarto-source generation validation</a></li>
   <li><a href="#phase-e-full-reporting-render" id="toc-phase-e-full-reporting-render" class="nav-link" data-scroll-target="#phase-e-full-reporting-render">Phase E: Full reporting render</a></li>
   </ul></li>
   <li><a href="#directory-layout" id="toc-directory-layout" class="nav-link" data-scroll-target="#directory-layout">Directory Layout</a></li>
@@ -510,7 +509,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This document describes the reporting pipeline used to transform aggregated complexity, entropy, and pairwise-comparison results into human-readable summary files, generated comparison-specific Quarto source files, optional GO-clustering tables, and final rendered report outputs.</p>
+<p>This document describes the reporting pipeline used to transform aggregated complexity, entropy, and pairwise-comparison results into human-readable summary files, generated comparison-specific Quarto source files, GO semantic-summary tables, generated comparison-specific Quarto source files, and final rendered report outputs.</p>
 <p>The reporting pipeline is intentionally downstream of the preprocessing and analysis pipelines. It does not rebuild <code>ExpressionSet</code> objects, recompute probe annotations, or rerun the core entropy/complexity calculations. Instead, it loads previously generated analysis products and converts them into report-ready artifacts.</p>
 <hr>
 <section id="overview" class="level2 unnumbered">
@@ -536,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>output/global_cancer/logs/reports/reports_pipeline_log.txt</code></li>
 </ul>
-<p>The goal of this reporting pipeline is to create a stable reporting layer on top of the analysis outputs. Its main responsibilities are to load previously saved summary and pairwise-comparison objects, generate cleaned summary artifacts, create comparison-specific Quarto files from templates, optionally generate GO-clustering tables, and optionally render the Quarto book/site.</p>
+<p>The goal of this reporting pipeline is to create a stable reporting layer on top of the analysis outputs. Its main responsibilities are to load previously saved summary and pairwise-comparison objects, generate cleaned summary artifacts, generate GO semantic summaries for interpretation, create comparison-specific Quarto files from templates, and optionally render the Quarto book/site.</p>
 <hr>
 </section>
 <section id="methodological-context" class="level2 unnumbered">
@@ -547,6 +546,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>from serialized R objects to cleaned report tables;</li>
 <li>from comparison-level results to generated <code>.qmd</code> report files;</li>
 <li>from GO/KEGG-associated analysis outputs to report-ready biological tables;</li>
+<li>from statistically significant GO terms to semantic-summary tables;</li>
 <li>and, when enabled, from Quarto source files to rendered HTML/PDF outputs.</li>
 </ul>
 <p>This design separates computational analysis from document generation. That separation is important because rendering a full Quarto book can be fragile and slow, whereas summary-table generation and <code>.qmd</code> generation can be tested independently.</p>
@@ -572,12 +572,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Generate text summaries and cleaned entropy/complexity files</td>
 </tr>
 <tr class="even">
-<td><code>run_reports</code></td>
-<td>Generate comparison-specific <code>.qmd</code> files from the reporting template</td>
+<td><code>run_go_clustering</code></td>
+<td>Run GO semantic summarization and write cluster/theme-support tables</td>
 </tr>
 <tr class="odd">
-<td><code>run_go_clustering</code></td>
-<td>Run GO-clustering analysis and write cluster tables</td>
+<td><code>run_reports</code></td>
+<td>Generate comparison-specific <code>.qmd</code> files from the reporting template</td>
 </tr>
 <tr class="even">
 <td><code>run_quarto</code></td>
@@ -591,7 +591,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The current GO-clustering configuration uses:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>go_mode <span class="ot">&lt;-</span> <span class="st">"GO_BP"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Other intended GO modes include <code>GO_MF</code> and <code>GO_UNSPECIFIED</code>, although the validity of a given mode depends on the downstream clustering script and the available annotation fields.</p>
+<p>Other supported GO modes include <code>GO_MF</code>, <code>GO_CC</code>, and <code>GO_ALL</code>, with the semantic-similarity calculations performed separately by ontology where appropriate.</p>
 <hr>
 </section>
 <section id="workflow-steps" class="level2 unnumbered">
@@ -709,22 +709,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This appears to be a legacy or parallel R Markdown summary report. It should be retained unless and until the Quarto reporting layer fully replaces it.</p>
 <hr>
 </section>
+<section id="run-go-semantic-summarization" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="run-go-semantic-summarization">4. Run GO Semantic Summarization</h3>
+<p><strong>Purpose:</strong> Generate ontology-aware semantic summaries of statistically significant GO terms for report integration.</p>
+<ul>
+<li>Controlled by: <code>run_go_clustering</code></li>
+<li>Wrapper: <code>R/wrappers/run_go_clustering.R</code></li>
+<li>Current output base: <code>quarto/resources/tables/clusters/</code></li>
+<li>Current GO mode: <code>GO_BP</code></li>
+</ul>
+<p>The driver calls:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_go_clustering_main</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summaries_combined_df =</span> summaries_combined_df,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">complexity_df =</span> complexity_df,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entropy_df =</span> entropy_df,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_dir_base =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>, <span class="st">"resources"</span>, <span class="st">"tables"</span>, <span class="st">"clusters"</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">go_mode =</span> go_mode,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">logger =</span> logger</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This stage uses the already-loaded <code>complexity_df</code> and <code>entropy_df</code> objects. It does not reload the primary entropy or complexity result tables from disk. The GO summarization layer filters to statistically significant GO terms before semantic grouping, separates BP/MF/CC ontology handling where needed, and writes structured CSV/RDS outputs for later Quarto inclusion.</p>
+<p>The outputs should be interpreted as biological-compression and interpretation support artifacts. They do not replace the original term-level statistical results and should not be treated as a new independent hypothesis-testing layer.</p>
+<hr>
+</section>
 <section id="generate-comparison-specific-quarto-files" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="generate-comparison-specific-quarto-files">4. Generate Comparison-Specific Quarto Files</h3>
+<h3 class="unnumbered anchored" data-anchor-id="generate-comparison-specific-quarto-files">5. Generate Comparison-Specific Quarto Files</h3>
 <p><strong>Purpose:</strong> Create one <code>.qmd</code> file per pairwise comparison from a report template.</p>
 <ul>
 <li>Controlled by: <code>run_reports</code></li>
 <li>Wrapper: <code>R/wrappers/run_all_reports.R</code></li>
 </ul>
 <p>The driver passes the major reporting objects into <code>run_all_reports()</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_all_reports</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summaries_combined_df =</span> summaries_combined_df,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">complexity_df =</span> complexity_df,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entropy_df =</span> entropy_df,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">res_hu35ksuba =</span> res_hu35ksuba,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">res_hu6800 =</span> res_hu6800</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_all_reports</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summaries_combined_df =</span> summaries_combined_df,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">complexity_df =</span> complexity_df,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entropy_df =</span> entropy_df,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">res_hu35ksuba =</span> res_hu35ksuba,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">res_hu6800 =</span> res_hu6800</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This stage is responsible for generating comparison-level Quarto source files, not for rendering the final book. The source files are expected to be consumed later by the Quarto project under <code>quarto/</code>.</p>
+<p>GO semantic summaries are generated before this stage so that the report template can read cluster-summary resources directly if they are enabled. The current template may still display pre-clustering significant GO terms, but the pipeline order allows future templates to add semantic-summary tables without reordering the workflow.</p>
 <p><strong>Conceptual output:</strong></p>
 <ul>
 <li>comparison-specific <code>.qmd</code> files, typically under <code>quarto/reports/generated_reports/</code></li>
@@ -733,54 +756,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Despite the name <code>run_reports</code>, this stage primarily creates report source files. The actual Quarto rendering step is controlled separately by <code>run_quarto</code>.</p>
 <hr>
 </section>
-<section id="run-go-clustering-analysis" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="run-go-clustering-analysis">5. Run GO-Clustering Analysis</h3>
-<p><strong>Purpose:</strong> Generate clustered GO-term tables for report integration.</p>
-<ul>
-<li>Controlled by: <code>run_go_clustering</code></li>
-<li>Wrapper: <code>R/wrappers/run_go_clustering.R</code></li>
-<li>Current output base: <code>quarto/resources/tables/clusters/</code></li>
-<li>Current GO mode: <code>GO_BP</code></li>
-</ul>
-<p>The driver calls:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run_go_clustering_main</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">summaries_combined_df =</span> summaries_combined_df,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">complexity_df =</span> complexity_df,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entropy_df =</span> entropy_df,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_dir_base =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>, <span class="st">"resources"</span>, <span class="st">"tables"</span>, <span class="st">"clusters"</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">go_mode =</span> go_mode</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This stage is currently disabled by default in <code>report_config.R</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>run_go_clustering <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>When enabled, it should be treated as a biological-interpretation support layer, not as a replacement for the primary entropy and complexity summaries.</p>
-<hr>
-</section>
-<section id="generate-go-visualizations" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="generate-go-visualizations">6. Generate GO Visualizations</h3>
-<p><strong>Purpose:</strong> Placeholder for GO visualization code.</p>
-<p>This section is currently inactive. The driver contains commented code for a GO DAG plotting function:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># source("R/visualizations/plot_entropy_go_dag.R")</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_entropy_go_dag("PB/B-ALL")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The configuration file also contains:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>run_visualization <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>At present, visualization code should be considered outside the active reporting pipeline. It can be reintroduced later after the table-generation and Quarto rendering layers are stable.</p>
-<hr>
-</section>
 <section id="render-the-quarto-project" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="render-the-quarto-project">7. Render the Quarto Project</h3>
+<h3 class="unnumbered anchored" data-anchor-id="render-the-quarto-project">6. Render the Quarto Project</h3>
 <p><strong>Purpose:</strong> Render the Quarto book/site from the generated source files.</p>
 <ul>
 <li>Controlled by: <code>run_quarto</code></li>
 <li>Working directory during render: <code>quarto/</code></li>
 </ul>
 <p>When enabled, the driver temporarily changes into the Quarto directory, removes Quarto’s <code>_freeze</code> directory, and renders the project:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>old <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"_freeze"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>quarto<span class="sc">::</span><span class="fu">quarto_render</span>(<span class="st">"."</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(old)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>old <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="st">"_freeze"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>quarto<span class="sc">::</span><span class="fu">quarto_render</span>(<span class="st">"."</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(old)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The current configuration disables this step by default:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>run_quarto <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>run_quarto <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This is a conservative default. It allows the pipeline to regenerate source files and summary tables without forcing a full Quarto render on every reporting run.</p>
 <hr>
 </section>
@@ -849,7 +839,7 @@ Despite the name <code>run_reports</code>, this stage primarily creates report s
 </tr>
 <tr class="even">
 <td><code>quarto/resources/tables/clusters/</code></td>
-<td>Optional GO-clustering tables for Quarto inclusion</td>
+<td>Optional GO semantic-summary tables for Quarto inclusion</td>
 </tr>
 </tbody>
 </table>
@@ -923,53 +913,53 @@ Despite the name <code>run_reports</code>, this stage primarily creates report s
 <p>Recommended staged validation is:</p>
 <section id="phase-a-load-only-validation" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="phase-a-load-only-validation">Phase A: Load-only validation</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This tests whether the reporting configuration, logger, and upstream result loading functions can run without generating downstream files.</p>
 </section>
 <section id="phase-b-summary-output-validation" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="phase-b-summary-output-validation">Phase B: Summary-output validation</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This tests whether the entropy and complexity summaries can be generated and written to <code>output/global_cancer/reports/</code>.</p>
 </section>
-<section id="phase-c-quarto-source-generation-validation" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="phase-c-quarto-source-generation-validation">Phase C: Quarto-source generation validation</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This tests whether comparison-specific <code>.qmd</code> files can be generated without triggering a full Quarto render.</p>
+<section id="phase-c-go-semantic-summary-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-c-go-semantic-summary-validation">Phase C: GO semantic-summary validation</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tests whether GO semantic-summary tables can be generated from the already-loaded entropy and complexity results.</p>
 </section>
-<section id="phase-d-go-clustering-validation" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="phase-d-go-clustering-validation">Phase D: GO-clustering validation</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This tests whether GO-clustering tables can be generated and made available to the Quarto reporting layer.</p>
+<section id="phase-d-quarto-source-generation-validation" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="phase-d-quarto-source-generation-validation">Phase D: Quarto-source generation validation</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This tests whether comparison-specific <code>.qmd</code> files can be generated after the semantic-summary resources are available, without triggering a full Quarto render.</p>
 </section>
 <section id="phase-e-full-reporting-render" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="phase-e-full-reporting-render">Phase E: Full reporting render</h3>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>run_summary_reports <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>run_reports         <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>run_go_clustering   <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>run_quarto          <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This should be reserved for final validation because Quarto rendering is the most operationally fragile stage, especially when both HTML and PDF outputs are being generated.</p>
 <p>Key validation checks include:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"reports"</span>, <span class="st">"entropy_cleaned.csv"</span>)))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"reports"</span>, <span class="st">"complexity_cleaned.csv"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"reports"</span>, <span class="st">"entropy_cleaned.csv"</span>)))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output"</span>, <span class="st">"global_cancer"</span>, <span class="st">"reports"</span>, <span class="st">"complexity_cleaned.csv"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For generated Quarto files, a simple file-count check can be useful:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>generated <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>, <span class="st">"reports"</span>, <span class="st">"generated_reports"</span>),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.qmd$"</span>,</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(generated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>generated <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"quarto"</span>, <span class="st">"reports"</span>, <span class="st">"generated_reports"</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.qmd$"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(generated)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <hr>
 </section>
 </section>
@@ -987,7 +977,7 @@ Despite the name <code>run_reports</code>, this stage primarily creates report s
     wrappers/
       run_all_reports.R
       run_go_clustering.R
-    visualizations/
+    legacy/
       plot_entropy_go_dag.R
   scripts/
     reporting/
@@ -1028,7 +1018,7 @@ Despite the name <code>run_reports</code>, this stage primarily creates report s
 <li>updating the expected input directories under <code>output/&lt;study_name&gt;/RData/</code>;</li>
 <li>modifying <code>geo_chip_map</code> if additional platforms are used;</li>
 <li>adjusting <code>run_all_reports()</code> to accept the appropriate filtered-probe objects;</li>
-<li>changing the GO mode or clustering output path; and</li>
+<li>changing the GO mode, semantic-similarity cutoff, or clustering output path; and</li>
 <li>updating the Quarto book structure so that generated report files are included in the desired order.</li>
 </ul>
 
