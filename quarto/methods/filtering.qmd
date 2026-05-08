@@ -33,36 +33,21 @@ Latent-space modeling uses a related but distinct feature-selection strategy def
 
 ------------------------------------------------------------------------
 
-## Current Analysis Configuration
+## Filtering Regimes and Auxiliary Filter Products
 
-The current analysis configuration supports two comparison-level probe-selection regimes, with variance filtering available in two modes:
+The analysis framework supports two comparison-level probe-selection regimes, with variance filtering available in two modes:
 
 | Method / mode | Main parameters | Primary emphasis |
 |----------------------|----------------------------:|----------------------|
-| `limma` | `logfc_cutoff = 0.33`, `pval_cutoff = 0.05` | Differential-expression-oriented selection within each predefined normal-tumor comparison |
-| `variance`, `top_n` mode | `analysis_top_n = 3000` | Fixed-count high-variance probe selection within each predefined normal-tumor comparison |
-| `variance`, `threshold` mode | `var_threshold = 0.75` | Quantile-threshold high-variance probe selection within each predefined normal-tumor comparison |
+| `limma` | `logfc_cutoff`, `pval_cutoff` | Differential-expression-oriented selection within each predefined normal-tumor comparison |
+| `variance`, `top_n` mode | `analysis_top_n` | Fixed-count high-variance probe selection within each predefined normal-tumor comparison |
+| `variance`, `threshold` mode | `var_threshold` | Quantile-threshold high-variance probe selection within each predefined normal-tumor comparison |
 
-In the current configuration, the analysis pipeline uses:
+The canonical analysis run uses one active filtering regime. This defines the primary comparison-specific feature sets consumed by the pairwise complexity and entropy engines.
 
-``` r
-filter_method <- "variance"
-variance_selection_mode <- "top_n"
-analysis_top_n <- 3000
-```
+The pipeline can also generate auxiliary filter products under multiple filtering regimes. These auxiliary products do not replace the canonical filtered-probe objects. Rather, they provide additional feature spaces for sensitivity analysis, cross-filter comparison, and future downstream modules that may require more than one filtering perspective.
 
-This comparison-specific `analysis_top_n` setting is distinct from the global top-N feature-selection strategy used for latent-space export during preprocessing.
-Both may use the value 3000, but they define different feature spaces: the analysis setting defines local, comparison-specific high-variance probe sets, whereas the latent-space workflow uses a global chip-level high-variance feature set.
-
-The analysis pipeline applies probe selection in Stage 3, immediately after expression matrices and normal/tumor comparison maps have been built.
-The resulting filtered-probe objects are saved as chip-specific RDS files:
-
-| Output | Description |
-|------------------------------------|------------------------------------|
-| `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds` | Filtered probes for `hu35ksuba` comparisons |
-| `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds` | Filtered probes for `hu6800` comparisons |
-
-These files then provide the feature subsets used by the pairwise complexity and entropy engines.
+This distinction is important conceptually. The canonical filter defines the feature space for the main analysis, whereas auxiliary filters support comparative or exploratory analyses without changing the meaning of the primary pipeline run.
 
 ------------------------------------------------------------------------
 
@@ -223,10 +208,10 @@ The current threshold should be understood as a pragmatic baseline rather than a
 
 ## Application in the Current Analysis Pipeline
 
-Filtering is implemented as Stage 3 of the analysis workflow.
-The driver script sources the grouped filtering wrapper and high-variance helper, then runs filtering separately for each supported chip.
-During this stage, the pipeline validates `variance_selection_mode`, derives the `top_n` argument only when variance filtering is run in `top_n` mode, and passes the filtering method, variance-selection mode, and active parameters to the grouped filtering wrapper.
-The resulting RDS objects include provenance metadata describing the filtering regime used to generate them.
+Filtering is implemented as Stage 3 of the analysis workflow. At a conceptual level, this stage takes the expression matrices and predefined comparison maps produced earlier in the pipeline and converts them into comparison-specific feature spaces.
+
+The primary output is the canonical filtered-probe set for each chip, generated under the active filtering regime. When auxiliary multi-filtering is enabled, the same comparison structure can also be evaluated under additional filtering regimes. These auxiliary products are intended for sensitivity analysis and cross-filter comparisons; they do not change the canonical feature space used by the main pairwise analysis unless explicitly selected downstream.
+
 The current chips are:
 
 | Chip | GEO platform | Role |
@@ -314,7 +299,7 @@ This filtering document corresponds to the current analysis overview in the foll
 | Analysis overview section | Filtering document connection |
 |------------------------------------|------------------------------------|
 | Stage 2: Build expression matrix and comparison maps | Defines the normal/tumor comparison maps used by comparison-aware filtering |
-| Stage 3: Run probe selection | Main implementation point for this document |
+| Stage 3: Run probe selection | Main implementation point for canonical and optional auxiliary filter products |
 | Stage 4: Run pairwise complexity and entropy comparisons | Consumes the selected probe sets as feature spaces |
 | Stage 5: Aggregate engine results | Aggregates outputs whose values depend on the selected probe and gene-set filters |
 | Stage 6: Summarize comparison-level patterns | Summarizes complexity and entropy patterns conditional on filtering choices |

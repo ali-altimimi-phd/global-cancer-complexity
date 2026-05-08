@@ -1,6 +1,6 @@
 ---
 title: "Comparison Report"
-author: "Ali Al-Timimi, PhD"
+author: "Ali M. Al-Timimi, PhD"
 
 format:
   html:

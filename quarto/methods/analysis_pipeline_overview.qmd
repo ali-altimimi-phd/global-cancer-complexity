@@ -95,6 +95,7 @@ toggles are:
 |------------------------------------|------------------------------------|
 | `build_matrix_maps` | Build chip-specific tissue matrices and predefined comparison maps |
 | `run_filtering` | Run comparison-aware probe selection for each chip |
+| `run_multi_filtering` | Optionally generate auxiliary filtered-probe products under multiple filtering regimes |
 | `run_pairwise` | Run pairwise complexity and entropy comparisons |
 | `run_aggregator` | Aggregate pairwise engine results and attach gene-set names |
 | `run_comparison_summary` | Summarize comparison-level complexity and entropy patterns |
@@ -105,7 +106,7 @@ The current analysis configuration includes:
 
 ``` r
 # ---- Probe Selection Parameters ----
-filter_method <- "variance"  # "limma" or "variance"
+filter_method <- "limma"  # "limma" or "variance"
 
 # Limma mode parameters; used only when filter_method == "limma"
 logfc_cutoff <- 0.33
@@ -115,6 +116,10 @@ pval_cutoff  <- 0.05
 variance_selection_mode <- "top_n"  # "top_n" or "threshold"
 analysis_top_n <- 3000              # used when variance_selection_mode == "top_n"
 var_threshold  <- 0.75              # used when variance_selection_mode == "threshold"
+
+# Optional auxiliary filter products
+run_multi_filtering  <- TRUE
+multi_filter_methods <- c("variance", "limma")
 
 # ---- Pairwise Comparison Settings ----
 chips   <- c("hu35ksuba", "hu6800")
@@ -208,12 +213,19 @@ comparison using the configured probe-selection regime, thereby defining
 comparison-specific feature spaces for downstream analysis.
 
 -   Controlled by: `run_filtering`
+-   Optional auxiliary products controlled by: `run_multi_filtering`
 -   Loader: `R/helpers/load_results_into_global.R`
 -   Wrapper: `R/wrappers/run_grouped_probe_filtering.R`
 -   Variance helper: `R/filters/select_high_variance_probes.R`
--   Outputs:
+-   Canonical outputs:
     - `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba.rds`
     - `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800.rds`
+-   Auxiliary outputs, when `run_multi_filtering <- TRUE`:
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba_limma.rds`
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_hu35ksuba_variance.rds`
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800_limma.rds`
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_hu6800_variance.rds`
+    - `output/global_cancer/RData/filtered_probes/filtered_probes_multi_filters.rds`
 
 **Current probe-selection regimes:**
 
@@ -228,8 +240,18 @@ comparison-specific feature spaces for downstream analysis.
 -   Uses comparison maps to assemble the relevant normal and tumor matrices
 -   Produces comparison-specific probe sets rather than a single global
     feature space
--   Persists selected probe identifiers for reuse in downstream analysis
-    and reporting stages
+-   Saves the canonical chip-specific filtered-probe objects using the
+    active `filter_method`
+-   Optionally saves auxiliary filtered-probe objects for each method listed
+    in `multi_filter_methods`
+
+The canonical objects retain the existing pipeline contract: downstream
+pairwise analysis loads `filtered_probes_hu35ksuba.rds` and
+`filtered_probes_hu6800.rds` as the active feature sets. Auxiliary
+products are side outputs. They are available for sensitivity analysis,
+method comparison, or specialized downstream modules, but they do not
+change the primary pairwise analysis unless explicitly loaded by a later
+stage.
 
 This stage is comparison-aware: probe selection is performed separately
 within each predefined tissue-specific normal–tumor contrast. However,
@@ -246,6 +268,7 @@ These selected probe sets serve as the input to:
 -   complexity and entropy calculations in the legacy R framework
 -   downstream biological interpretation layers, including GO/KEGG summaries
 -   cross-framework comparison with latent-space analyses
+-   auxiliary sensitivity analyses that compare filtering regimes
 
 These probe sets define comparison-specific feature spaces for the R-side
 analysis pipeline. In contrast, latent-space workflows typically operate

@@ -22,10 +22,10 @@ study_name <- "global_cancer"
 
 build_matrix_maps      <- FALSE
 run_filtering          <- FALSE
+run_spectral_analysis  <- TRUE
 run_pairwise           <- FALSE
 run_aggregator         <- FALSE
 run_comparison_summary <- FALSE
-
 
 # ==============================================================================
 # 3. Probe-selection and filtering parameters
@@ -55,6 +55,18 @@ analysis_top_n <- 3000
 # Used only when variance_selection_mode == "threshold"
 var_threshold <- 0.75
 
+# ==============================================================================
+# 3b. Optional multi-filter products
+# ==============================================================================
+
+# Existing pipeline behavior remains controlled by `filter_method`.
+# If TRUE, additional filtered-probe objects are generated for multiple
+# filtering strategies without replacing the canonical
+# res_hu35ksuba / res_hu6800 objects.
+run_multi_filtering <- TRUE
+
+# Filtering methods to generate as auxiliary products.
+multi_filter_methods <- c("variance", "limma")
 
 # ==============================================================================
 # 4. Pairwise comparison and gene-set settings

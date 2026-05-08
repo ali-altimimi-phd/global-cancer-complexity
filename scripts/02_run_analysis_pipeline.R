@@ -77,6 +77,18 @@ run_analysis_pipeline <- function() {
     
     dir.create(filtered_probes_dir, recursive = TRUE, showWarnings = FALSE)
     
+    # ---- Validate primary filter method ----
+    if (!filter_method %in% c("limma", "variance")) {
+      logger$log(
+        sprintf(
+          "⚠️ Invalid filter_method ('%s'); defaulting to 'limma'.",
+          filter_method
+        ),
+        section = "WARNING"
+      )
+      filter_method <- "limma"
+    }
+    
     # ---- Validate variance selection mode ----
     if (!variance_selection_mode %in% c("top_n", "threshold")) {
       logger$log(
@@ -89,6 +101,7 @@ run_analysis_pipeline <- function() {
       variance_selection_mode <- "threshold"
     }
     
+    # ---- Canonical either/or filtering
     res_hu35ksuba <<- run_grouped_probe_filtering(
       matrix_list = matrices_hu35ksuba,
       comparison_map = comparison_map_hu35ksuba,
@@ -97,7 +110,10 @@ run_analysis_pipeline <- function() {
       logfc_cutoff = logfc_cutoff,
       pval_cutoff = pval_cutoff,
       var_threshold = var_threshold,
-      save_path = here::here(filtered_probes_dir, "filtered_probes_hu35ksuba.rds")
+      save_path = here::here(
+        filtered_probes_dir,
+        "filtered_probes_hu35ksuba.rds"
+      )
     )
     
     res_hu6800 <<- run_grouped_probe_filtering(
@@ -108,13 +124,150 @@ run_analysis_pipeline <- function() {
       logfc_cutoff = logfc_cutoff,
       pval_cutoff = pval_cutoff,
       var_threshold = var_threshold,
-      save_path = here::here(filtered_probes_dir, "filtered_probes_hu6800.rds")
+      save_path = here::here(
+        filtered_probes_dir,
+        "filtered_probes_hu6800.rds"
+      )
     )
+    
+    logger$log(
+      sprintf("✅ Completed primary probe selection using method: %s", filter_method)
+    )
+    
+    # ----  Optional multi-filter auxiliary products ----
+    if (isTRUE(run_multi_filtering)) {
+      
+      logger$log(
+        "🧪 Running optional multi-filter auxiliary products...",
+        section = "FILTERING"
+      )
+      
+      valid_dual_methods <- c("limma", "variance")
+      multi_filter_methods <- intersect(multi_filter_methods, valid_dual_methods)
+      
+      if (length(multi_filter_methods) == 0) {
+        logger$log(
+          "⚠️ No valid multi_filter_methods supplied; skipping multi-filtering products.",
+          section = "WARNING"
+        )
+      } else {
+        
+        res_multi_filters <<- list(
+          hu35ksuba = list(),
+          hu6800    = list()
+        )
+        
+        for (method_i in multi_filter_methods) {
+          
+          logger$log(
+            sprintf("🧬 Generating multi-filter product: %s", method_i),
+            section = "FILTERING"
+          )
+          
+          res_multi_filters$hu35ksuba[[method_i]] <<- run_grouped_probe_filtering(
+            matrix_list = matrices_hu35ksuba,
+            comparison_map = comparison_map_hu35ksuba,
+            chip_id = "hu35ksuba",
+            method = method_i,
+            logfc_cutoff = logfc_cutoff,
+            pval_cutoff = pval_cutoff,
+            var_threshold = var_threshold,
+            save_path = here::here(
+              filtered_probes_dir,
+              sprintf("filtered_probes_hu35ksuba_%s.rds", method_i)
+            )
+          )
+          
+          res_multi_filters$hu6800[[method_i]] <<- run_grouped_probe_filtering(
+            matrix_list = matrices_hu6800,
+            comparison_map = comparison_map_hu6800,
+            chip_id = "hu6800",
+            method = method_i,
+            logfc_cutoff = logfc_cutoff,
+            pval_cutoff = pval_cutoff,
+            var_threshold = var_threshold,
+            save_path = here::here(
+              filtered_probes_dir,
+              sprintf("filtered_probes_hu6800_%s.rds", method_i)
+            )
+          )
+        }
+        
+        saveRDS(
+          res_multi_filters,
+          here::here(filtered_probes_dir, "filtered_probes_multi_filters.rds")
+        )
+        
+        logger$log(
+          "✅ Completed optional multi-filter auxiliary products.",
+          section = "FILTERING"
+        )
+      }
+    }
     
     logger$log("✅ Completed probe selection.")
   }
   
-  # ---- Stage 4: Pairwise comparisons ----
+  # ---- Stage 4: Spectral organization analysis ----
+  if (isTRUE(run_spectral_analysis)) {
+    logger$timed("Spectral organization analysis", {
+      logger$log(
+        "🌊 Running spectral organization analysis...",
+        section = "SPECTRAL"
+      )
+      
+      source(here::here("R/helpers/load_results_into_global.R"))
+      
+      logger$log(
+        "🔀 Loading expression matrices and comparison maps...",
+        section = "SPECTRAL"
+      )
+      load_matrix_maps(matrices_path, overwrite = TRUE)
+      
+      logger$log(
+        "🔀 Checking filtered probe products...",
+        section = "SPECTRAL"
+      )
+      
+      required_spectral_probe_files <- c(
+        "filtered_probes_hu35ksuba_variance.rds",
+        "filtered_probes_hu35ksuba_limma.rds",
+        "filtered_probes_hu6800_variance.rds",
+        "filtered_probes_hu6800_limma.rds"
+      )
+      
+      missing_spectral_probe_files <- required_spectral_probe_files[
+        !file.exists(file.path(filtered_probes_dir, required_spectral_probe_files))
+      ]
+      
+      if (length(missing_spectral_probe_files) > 0) {
+        stop(
+          sprintf(
+            "Missing filtered probe files required for spectral analysis: %s",
+            paste(missing_spectral_probe_files, collapse = ", ")
+          ),
+          call. = FALSE
+        )
+      }
+      
+      source(
+        here::here("R", "wrappers", "run_marchenko_pastur_analysis.R"),
+        local = TRUE
+      )
+      
+      logger$log(
+        "✅ Spectral organization analysis completed successfully.",
+        section = "SPECTRAL"
+      )
+    })
+  } else {
+    logger$log(
+      "⏭️ Spectral organization analysis skipped.",
+      section = "SPECTRAL"
+    )
+  }
+  
+  # ---- Stage 5: Pairwise comparisons ----
   source(here::here("R/helpers/load_annotations.R"))
   
   if (isTRUE(run_pairwise)) {
@@ -148,7 +301,7 @@ run_analysis_pipeline <- function() {
     }
   }
   
-  # ---- Stage 5: Aggregation + gene set annotation ----
+  # ---- Stage 6: Aggregation + gene set annotation ----
   if (run_aggregator) {
     logger$log("🔀 Checking for pairwise comparison results...")
     source(here::here("R/helpers/load_results_into_global.R"))
@@ -185,7 +338,7 @@ run_analysis_pipeline <- function() {
     logger$log("✅ Aggregated complexity/entropy results saved.")
   }
   
-  # ---- Stage 6: Summarize comparison-level patterns ----
+  # ---- Stage 7: Summarize comparison-level patterns ----
   if (run_comparison_summary) {
     logger$log("🔀 Checking for cleaned pairwise comparison results...")
     source(here::here("R/helpers/load_results_into_global.R"))
@@ -213,7 +366,7 @@ run_analysis_pipeline <- function() {
   }
   
 
-  # ---- Stage 7: Latent-space Python + notebook execution ----
+  # ---- Stage 8: Latent-space Python + notebook execution ----
   if (isTRUE(run_latent_python_scripts) || isTRUE(run_latent_notebooks)) {
     logger$log("🐍 Running latent-space analysis stages...", section = "LATENT")
     source(here::here("R/wrappers/run_latent_python_scripts.R"))
@@ -232,7 +385,7 @@ run_analysis_pipeline <- function() {
     logger$log("⏭️ Latent-space stages skipped.", section = "LATENT")
   }
 
-  # ---- Stage 8: Latent-space postprocessing ----
+  # ---- Stage 9: Latent-space postprocessing ----
   if (isTRUE(run_latent_postprocessing)) {
     logger$timed("Latent-space postprocessing", {
       logger$log("🧾 Running latent-space postprocessing...", section = "LATENT_POST")
